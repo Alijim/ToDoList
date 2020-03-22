@@ -18,7 +18,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final ArrayList<String> myToDoList = new ArrayList<>();
+    //private final ArrayList<String> myToDoList = new ArrayList<>();
+    private final ArrayList<ItemToDo> myToDoList = new ArrayList<>();
     private RecyclerView myRecyclerView;
     private ToDoListAdapter myAdapter;
 
@@ -39,10 +40,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        for (int i=0; i<20; i++) {
-            myToDoList.add("Word " + i);
-        }
-
         /*myToDoList.add("aaaaaaa");
         myToDoList.add("bbbbbbb");
         myToDoList.add("cccccccc");*/
@@ -55,6 +52,18 @@ public class MainActivity extends AppCompatActivity {
         myRecyclerView.setAdapter(myAdapter);
         // Give the RecyclerView a default layout manager.
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        this.initialisationData();
+
+    }
+
+    public void initialisationData(){
+
+        for (int i=0; i<20; i++) {
+            //myToDoList.add("Word"+i);
+            myToDoList.add(new ItemToDo("Title"+i, "News"+i, R.drawable.img_addapicture));
+        }
+
     }
 
     @Override
