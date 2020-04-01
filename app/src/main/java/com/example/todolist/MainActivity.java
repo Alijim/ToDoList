@@ -48,12 +48,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home).setDrawerLayout(drawer).build();
-
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_todolist).setDrawerLayout(drawer).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -63,44 +60,33 @@ public class MainActivity extends AppCompatActivity {
         // Create an adapter and supply the data to be displayed.
         myAdapter = new ToDoListAdapter(this, myToDoList);
         // Connect the adapter with the RecyclerView.
+        // L'adapter est un composant qui permet de faire la liaison (Bind) entre la vue RecyclerView et une liste de données.
         myRecyclerView.setAdapter(myAdapter);
         // Give the RecyclerView a default layout manager.
+        // Le LayoutManager permet de positionner correctement l'ensemble des données de la liste.
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         this.initialisationData();
 
     }
 
+    //Méthode à redéfinir avec les données de la BD
     public void initialisationData(){
 
-        for (int i=0; i<20; i++) {
-            //myToDoList.add("Word"+i);
-            myToDoList.add(new ItemToDo("Title"+i, "News"+i, R.drawable.img_addapicture));
-        }
+        for (int i=0; i<10; i++) {
+            ArrayList<String> myItemList = new ArrayList<>();
+            myItemList.add("Item1");
+            myItemList.add("Item2");
+            myItemList.add("Item3");
+            myToDoList.add(new ItemToDo("Titre"+i, myItemList, R.drawable.img_addapicture));
 
+        }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-
-    }
-
+    //Active le bouton de la barre de navigation (les 3 trais horizontaux)
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
 }

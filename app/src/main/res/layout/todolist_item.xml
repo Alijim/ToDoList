@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="6dp">
-
-    <TextView
-        android:id="@+id/todo"
-        style="@style/todolist_title" />
-
-</LinearLayout>-->
 
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,45 +11,40 @@
     <RelativeLayout
         android:id="@+id/todo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="219dp">
 
         <ImageView
-            android:id="@+id/sportsImage"
+            android:id="@+id/Image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true" />
+            android:layout_height="83dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp" />
 
         <TextView
-            android:id="@+id/title"
-            style="@style/TextAppearance.AppCompat.Headline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="@string/title_placeholder"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark"
-            android:visibility="visible"
-            tools:visibility="visible" />
+            android:id="@+id/Titre"
+            android:layout_width="183dp"
+            android:layout_height="47dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="70dp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="91dp"
+            android:text="TextView" />
 
         <TextView
-            android:id="@+id/newsTitle"
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_marginTop="2dp"
-            android:padding="8dp"
-            android:text="@string/news_placeholder"
-            android:textColor="?android:textColorSecondary" />
-
-        <TextView
-            android:id="@+id/subTitle"
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/newsTitle"
-            android:layout_marginTop="2dp"
-            android:padding="8dp"
-            android:text="@string/info_placeholder" />
+            android:id="@+id/Item"
+            android:layout_width="183dp"
+            android:layout_height="69dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="72dp"
+            android:layout_marginLeft="72dp"
+            android:layout_marginBottom="7dp"
+            android:text="TextView" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
