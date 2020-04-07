@@ -10,9 +10,23 @@
         android:id="@+id/titleDisplay"
         android:layout_width="251dp"
         android:layout_height="33dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="68dp"
         android:text="TextView"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageTask" />
+
+    <ImageView
+        android:id="@+id/imageTask"
+        android:layout_width="410dp"
+        android:layout_height="138dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginBottom="68dp"
+        app:layout_constraintBottom_toTopOf="@+id/titleDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic[5]" />
 </androidx.constraintlayout.widget.ConstraintLayout>
