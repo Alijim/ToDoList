@@ -1,24 +1,36 @@
 package com.example.todolist;
 
+import android.content.ClipData;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.todolist.menu.EditionTagFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    //private final ArrayList<String> myToDoList = new ArrayList<>();
+    private AppBarConfiguration myAppBarConfiguration;
+
     private final ArrayList<ItemToDo> myToDoList = new ArrayList<>();
     private RecyclerView myRecyclerView;
     private ToDoListAdapter myAdapter;
@@ -28,65 +40,59 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Toolbar toolbar = this.findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        Toolbar toolbar = this.findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        /*myToDoList.add("aaaaaaa");
-        myToDoList.add("bbbbbbb");
-        myToDoList.add("cccccccc");*/
 
         // Get a handle to the RecyclerView.
         myRecyclerView = findViewById(R.id.recyclerview);
         // Create an adapter and supply the data to be displayed.
         myAdapter = new ToDoListAdapter(this, myToDoList);
         // Connect the adapter with the RecyclerView.
+        // L'adapter est un composant qui permet de faire la liaison (Bind) entre la vue RecyclerView et une liste de données.
         myRecyclerView.setAdapter(myAdapter);
         // Give the RecyclerView a default layout manager.
+        // Le LayoutManager permet de positionner correctement l'ensemble des données de la liste.
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         this.initialisationData();
 
+        //Creation du menu
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        myAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_todolist).setDrawerLayout(drawer).build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, myAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
     }
 
-    public void initialisationData(){
+    //Méthode à redéfinir avec les données de la BD
+    public void initialisationData() {
 
-        for (int i=0; i<20; i++) {
-            //myToDoList.add("Word"+i);
-            myToDoList.add(new ItemToDo("Title"+i, "News"+i, R.drawable.img_addapicture));
+        for (int i = 0; i < 10; i++) {
+            ArrayList<String> myItemList = new ArrayList<>();
+            myItemList.add("Item1");
+            myItemList.add("Item2");
+            myItemList.add("Item3");
+            myToDoList.add(new ItemToDo("Titre" + i, myItemList, R.drawable.img_addapicture));
+
         }
-
     }
 
+    //Active le bouton de la barre de navigation (les 3 trais horizontaux)
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, myAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-
+    //Activité lancé lorsqu'on clique sur le fab+ ou sur une carte
+    public void launchTaskEditionActivity(View view) {
+        Intent intent = new Intent(this, TaskEditionActivity.class);
+        startActivity(intent);
     }
+
+
 
 }
