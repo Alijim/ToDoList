@@ -1,11 +1,15 @@
 package com.example.todolist;
 
+import android.content.ClipData;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.todolist.menu.EditionTagFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,14 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration mAppBarConfiguration;
+    private AppBarConfiguration myAppBarConfiguration;
 
-    //private final ArrayList<String> myToDoList = new ArrayList<>();
     private final ArrayList<ItemToDo> myToDoList = new ArrayList<>();
     private RecyclerView myRecyclerView;
     private ToDoListAdapter myAdapter;
@@ -40,20 +44,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_todolist).setDrawerLayout(drawer).build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
 
         // Get a handle to the RecyclerView.
         myRecyclerView = findViewById(R.id.recyclerview);
@@ -67,17 +57,25 @@ public class MainActivity extends AppCompatActivity {
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.initialisationData();
 
+        //Creation du menu
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        myAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_todolist).setDrawerLayout(drawer).build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, myAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
     }
 
     //Méthode à redéfinir avec les données de la BD
-    public void initialisationData(){
+    public void initialisationData() {
 
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             ArrayList<String> myItemList = new ArrayList<>();
             myItemList.add("Item1");
             myItemList.add("Item2");
             myItemList.add("Item3");
-            myToDoList.add(new ItemToDo("Titre"+i, myItemList, R.drawable.img_addapicture));
+            myToDoList.add(new ItemToDo("Titre" + i, myItemList, R.drawable.img_addapicture));
 
         }
     }
@@ -86,7 +84,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, myAppBarConfiguration) || super.onSupportNavigateUp();
     }
+
+    //Activité lancé lorsqu'on clique sur le fab+ ou sur une carte
+    public void launchTaskEditionActivity(View view) {
+        Intent intent = new Intent(this, TaskEditionActivity.class);
+        startActivity(intent);
+    }
+
+
 
 }

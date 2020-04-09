@@ -5,5 +5,6 @@
     <string name="news_placeholder">News</string>
     <string name="info_placeholder">Here is some news</string>
     <string name="menu_todolist">ToDoList</string>
-    <string name="menu_editiontag">Edition Tag</string>
+    <string name="menu_editiontag">EditionTag</string>
+    <string name="tag_list">Edition Tag</string>
 </resources>

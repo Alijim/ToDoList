@@ -1,6 +1,7 @@
 package com.example.todolist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+
+import static androidx.core.content.ContextCompat.startActivities;
+import static androidx.core.content.ContextCompat.startActivity;
 
 //L'adapter est un composant qui permet de faire la liaison (Bind) entre la vue RecyclerView et une liste de données.
 public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoListViewHolder> {
@@ -47,7 +51,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
     }
 
     //Ce composant permet de représenter visuellement un élément de la liste de données dans le RecyclerView (Une ligne).
-    class ToDoListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ToDoListViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener*/ {
 
         private TextView myTitre;
         private TextView myItem;
@@ -61,7 +65,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
             myImage = itemView.findViewById(R.id.Image);
 
             // Set the OnClickListener to the entire view.
-            itemView.setOnClickListener(this);
+            //itemView.setOnClickListener(this);
         }
 
         public void bindTo(ItemToDo myCurrent){
@@ -82,10 +86,13 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
         }
 
         // Ici on implémente l'action qui suit un click sur la cards
-        @Override
+        /*@Override
         public void onClick(View view) {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-        }
+            // Mettre ici un Intent pour lancer TaskEditionActivity
+            //Intent intent = new Intent(myContext, TaskEditionActivity.class);
+            //startActivity(intent);
+        }*/
     }
 }
 
