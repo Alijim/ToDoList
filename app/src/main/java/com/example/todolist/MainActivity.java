@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < 10; i++) {
             ArrayList<String> myItemList = new ArrayList<>();
-            myItemList.add("Item1");
-            myItemList.add("Item2");
-            myItemList.add("Item3");
+            myItemList.add("Item_1");
+            myItemList.add("Item_2");
+            myItemList.add("Item_3");
             myToDoList.add(new ItemToDo("Titre" + i, myItemList, R.drawable.img_addapicture));
 
         }
