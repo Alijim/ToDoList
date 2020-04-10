@@ -1,36 +1,96 @@
 package com.example.todolist;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.ClipData;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 
-import database.FeedReaderContract;
-import database.FeedReaderDbHelper;
+import com.example.todolist.menu.EditionTagFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    private AppBarConfiguration myAppBarConfiguration;
+
+    private final ArrayList<ItemToDo> myToDoList = new ArrayList<>();
+    private RecyclerView myRecyclerView;
+    private ToDoListAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Toolbar toolbar = this.findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        ContentValues values = new ContentValues();
-        values.put(FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING, "coucou");
-        db.insertWithOnConflict(FeedReaderContract.TagsEntry.TABLE_NAME,
-                null,
-                values,
-                SQLiteDatabase.CONFLICT_REPLACE);
-        db.close();
+        FloatingActionButton fab = findViewById(R.id.fab);
 
-        TextView displayTitle = findViewById(R.id.titleDisplay);
-        displayTitle.setText("Yeah");
+        // Get a handle to the RecyclerView.
+        myRecyclerView = findViewById(R.id.recyclerview);
+        // Create an adapter and supply the data to be displayed.
+        myAdapter = new ToDoListAdapter(this, myToDoList);
+        // Connect the adapter with the RecyclerView.
+        // L'adapter est un composant qui permet de faire la liaison (Bind) entre la vue RecyclerView et une liste de données.
+        myRecyclerView.setAdapter(myAdapter);
+        // Give the RecyclerView a default layout manager.
+        // Le LayoutManager permet de positionner correctement l'ensemble des données de la liste.
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.initialisationData();
 
+        //Creation du menu
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        myAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_todolist).setDrawerLayout(drawer).build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, myAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
 
     }
+
+    //Méthode à redéfinir avec les données de la BD
+    public void initialisationData() {
+
+        for (int i = 0; i < 10; i++) {
+            ArrayList<String> myItemList = new ArrayList<>();
+            myItemList.add("Item1");
+            myItemList.add("Item2");
+            myItemList.add("Item3");
+            myToDoList.add(new ItemToDo("Titre" + i, myItemList, R.drawable.img_addapicture));
+
+        }
+    }
+
+    //Active le bouton de la barre de navigation (les 3 trais horizontaux)
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, myAppBarConfiguration) || super.onSupportNavigateUp();
+    }
+
+    //Activité lancé lorsqu'on clique sur le fab+ ou sur une carte
+    public void launchTaskEditionActivity(View view) {
+        Intent intent = new Intent(this, TaskEditionActivity.class);
+        startActivity(intent);
+    }
+
+
+
 }
