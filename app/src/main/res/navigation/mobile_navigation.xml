@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_todolist">
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+
+    <fragment
+        android:id="@+id/nav_todolist"
+        android:name="com.example.todolist.menu.ToDoListFragment"
+        android:label="@string/menu_todolist" />
+        <!--tools:layout="@layout/content_main" />-->
+
+    <fragment
+        android:id="@+id/nav_editiontag"
+        android:label="@string/menu_editiontag"
+        android:name="com.example.todolist.menu.EditionTagFragment"/>
+    <!--tools:layout="@layout/activity_tag_list" />-->
+
+    <!--<fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.example.myapplication.ui.gallery.GalleryFragment"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.example.myapplication.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_tools"
+        android:name="com.example.myapplication.ui.tools.ToolsFragment"
+        android:label="@string/menu_tools"
+        tools:layout="@layout/fragment_tools" />
+
+    <fragment
+        android:id="@+id/nav_share"
+        android:name="com.example.myapplication.ui.share.ShareFragment"
+        android:label="@string/menu_share"
+        tools:layout="@layout/fragment_share" />
+
+    <fragment
+        android:id="@+id/nav_send"
+        android:name="com.example.myapplication.ui.send.SendFragment"
+        android:label="@string/menu_send"
+        tools:layout="@layout/fragment_send" />-->
+</navigation>
