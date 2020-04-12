@@ -25,6 +25,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import java.util.ArrayList;
 
+import database.FeedReaderDbHelper;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration myAppBarConfiguration;
@@ -65,8 +67,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     //Méthode à redéfinir avec les données de la BD
     public void initialisationData() {
+//        FeedReaderDbHelper db = new FeedReaderDbHelper(this);
+//
+//        db.insertFakeData();
+//        ArrayList itemList = (ArrayList) db.readFakeData();
+
 
         for (int i = 0; i < 10; i++) {
             ArrayList<String> myItemList = new ArrayList<>();
@@ -90,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TaskEditionActivity.class);
         startActivity(intent);
     }
-
+    
 
 
 }
