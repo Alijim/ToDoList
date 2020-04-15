@@ -1,6 +1,8 @@
 package com.example.todolist;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 import java.util.ArrayList;
 
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<ItemToDo> myToDoList = new ArrayList<>();
     private RecyclerView myRecyclerView;
     private ToDoListAdapter myAdapter;
+    private FeedReaderDbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +103,27 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TaskEditionActivity.class);
         startActivity(intent);
     }
-    
 
+
+    public void launchEditionDialog(View v) {
+        dbHelper = new FeedReaderDbHelper(this);
+
+        // Création d'un alert dialog pour l'ajout d'une tâche
+        final EditText taskEditText = new EditText(this);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Ajouter une nouvelle tâche")
+                .setMessage("Créer votre tâche")
+                .setView(taskEditText)
+                .setPositiveButton("Ajouter", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String task = String.valueOf(taskEditText.getText());
+                        dbHelper.insertFakeData();
+                    }
+                })
+                .setNegativeButton("Annuler", null)
+                .create();
+        dialog.show();
+    }
 
 }

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +22,7 @@ import database.FeedReaderDbHelper;
 public class TaskEditionActivity extends AppCompatActivity {
 
     private FeedReaderDbHelper mHelper;
+    private ListView mTaskListView;
 
 
     @Override
@@ -31,10 +33,11 @@ public class TaskEditionActivity extends AppCompatActivity {
         mHelper = new FeedReaderDbHelper(this);
 
         //mHelper.insertFakeData();
-
-        TextView myText = findViewById(R.id.titleDisplay);
-        myText.setText(mHelper.readFakeData());
+        ListView myList = findViewById(R.id.taskListView);
+        //TextView myText = findViewById(R.id.titleDisplay);
+        //myList.set(mHelper.readFakeData());
     }
+    
 
 
 }
