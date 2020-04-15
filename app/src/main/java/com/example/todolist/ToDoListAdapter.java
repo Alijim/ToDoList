@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static androidx.core.content.ContextCompat.startActivities;
 import static androidx.core.content.ContextCompat.startActivity;
@@ -73,7 +74,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
             myTitre.setText(myCurrent.getTitle());
             String myListItem = "Vide";
             if (myCurrent.getListItem() != null) {
-                ArrayList<String> myItemTab = myCurrent.getListItem();
+                List myItemTab = myCurrent.getListItem();
                 StringBuilder sb = new StringBuilder();
                 for (int i=0; i<myItemTab.size(); i++) {
                     sb.append(myItemTab.get(i)+"\n");

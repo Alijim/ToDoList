@@ -131,7 +131,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         long itemsRow1 = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
 
         valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING, "Apprendre SQL");
-        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, Boolean.FALSE);
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, Boolean.TRUE);
         valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_FK, getAnyID("Items", "title", "Devenir développeur"));
         long tasksRow1 = db.insert(FeedReaderContract.TaskEntry.TABLE_NAME, null, valuesTasks);
 
@@ -305,7 +305,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return items.toString();
     }
 
-    public String readAllTasks() {
+    public HashMap<Long, List> readAllTasks() {
         String s = "";
         SQLiteDatabase db = getReadableDatabase();
 
@@ -333,23 +333,22 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                 sortOrder               // The sort order
         );
 
-        List values = new ArrayList<>();
-        //HashMap<Long, List>items = new HashMap<Long, List>();
-        HashMap<Long, String>items = new HashMap<Long, String>();
+        HashMap<Long, List>items = new HashMap<Long, List>();
+//        HashMap<Long, String>items = new HashMap<Long, String>();
         while(cursor.moveToNext()) {
-
+            List values = new ArrayList<>();
             long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TaskEntry._ID));
-            //values.add(cursor.getInt(cursor.getColumnIndex("fk_items")));
-            //values.add(cursor.getString(cursor.getColumnIndex("wording")));
-            //values.add(cursor.getString(cursor.getColumnIndex("done")));
+            values.add(cursor.getInt(cursor.getColumnIndex("fk_Items")));
+            values.add(cursor.getString(cursor.getColumnIndex("wording")));
+            values.add(cursor.getInt(cursor.getColumnIndex("done")));
             //items.put(itemId, values);
-            String value = cursor.getString(cursor.getColumnIndex("fk_Items"));
-            items.put(itemId, value);
-
-
-            values.clear();
+//            String value = cursor.getString(cursor.getColumnIndex("fk_Items"));
+            items.put(itemId, values);
         }
-        return items.toString();
+
+        return items;
+
+        //return items.toString();
     }
 
     public String readAny(String tableName, String columnName, String args)  {

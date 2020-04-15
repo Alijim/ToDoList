@@ -27,6 +27,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import database.FeedReaderDbHelper;
 
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<ItemToDo> myToDoList = new ArrayList<>();
     private RecyclerView myRecyclerView;
     private ToDoListAdapter myAdapter;
-    private FeedReaderDbHelper dbHelper;
+    private FeedReaderDbHelper mHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,21 +77,35 @@ public class MainActivity extends AppCompatActivity {
 
     //Méthode à redéfinir avec les données de la BD
     public void initialisationData() {
-//        FeedReaderDbHelper db = new FeedReaderDbHelper(this);
-//
-//        db.insertFakeData();
-//        ArrayList itemList = (ArrayList) db.readFakeData();
+
+        mHelper = new FeedReaderDbHelper(this);
+
+        HashMap<Long, List> dbItemList = new HashMap<Long, List>();
+
+        dbItemList = mHelper.readAllTasks();
 
 
-        for (int i = 0; i < 10; i++) {
-            ArrayList<String> myItemList = new ArrayList<>();
-            myItemList.add("Item_1");
-            myItemList.add("Item_2");
-            myItemList.add("Item_3");
+        for (long i = 1; i < dbItemList.size(); i++) {
+
+            dbItemList.get(i);
+           ArrayList<String> myItemList = new ArrayList<>(dbItemList.get(i));
+           myItemList.add(dbItemList.get(i).get(0).toString());
+           myItemList.add(dbItemList.get(i).get(1).toString());
+           myItemList.add(dbItemList.get(i).get(2).toString());
+
             myToDoList.add(new ItemToDo("Titre" + i, myItemList, R.drawable.img_addapicture));
 
         }
-    }
+
+//        for (long i = 0; i < dbItemList.size(); i++) {
+//            ArrayList<String> myItemList = new ArrayList<>();
+//            myItemList.add("Item_1");
+//            myItemList.add("Item_2");
+//            myItemList.add("Item_3");
+//            myToDoList.add(new ItemToDo("Titre" + i, myItemList, R.drawable.img_addapicture));
+//
+//        }
+   }
 
     //Active le bouton de la barre de navigation (les 3 trais horizontaux)
     @Override
@@ -106,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void launchEditionDialog(View v) {
-        dbHelper = new FeedReaderDbHelper(this);
+        mHelper = new FeedReaderDbHelper(this);
 
         // Création d'un alert dialog pour l'ajout d'une tâche
         final EditText taskEditText = new EditText(this);
@@ -118,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String task = String.valueOf(taskEditText.getText());
-                        dbHelper.insertFakeData();
+                        mHelper.insertFakeData();
                     }
                 })
                 .setNegativeButton("Annuler", null)

@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import database.FeedReaderContract;
 import database.FeedReaderDbHelper;
@@ -42,8 +43,12 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         Integer i = mHelper.getAnyID("Tags", "wording", "ECOLE");
 
+        List l = new ArrayList<>();
+        long idd = 1;
+        l.addAll((mHelper.readAllTasks().get(idd)));
+
         myText.setText(i.toString());
-        txt.setText(mHelper.readAllTasks());
+        txt.setText(l.toString());
     }
 
 
