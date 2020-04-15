@@ -78,6 +78,14 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         long newRowId = db.insert(FeedReaderContract.TagsEntry.TABLE_NAME, null, values);
     }
 
+    public void deleteAllData() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(FeedReaderContract.TagsEntry.TABLE_NAME, null, null);
+        db.delete(FeedReaderContract.ItemsEntry.TABLE_NAME, null, null);
+        db.delete(FeedReaderContract.TagsItemsEntry.TABLE_NAME, null, null);
+        db.delete(FeedReaderContract.TaskEntry.TABLE_NAME, null, null);
+    }
+
     public String readFakeData() {
         String s = "";
         SQLiteDatabase db = getReadableDatabase();

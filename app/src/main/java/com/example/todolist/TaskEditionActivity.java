@@ -33,11 +33,12 @@ public class TaskEditionActivity extends AppCompatActivity {
         mHelper = new FeedReaderDbHelper(this);
 
         //mHelper.insertFakeData();
+        //mHelper.deleteAllData();
         ListView myList = findViewById(R.id.taskListView);
-        //TextView myText = findViewById(R.id.titleDisplay);
-        //myList.set(mHelper.readFakeData());
+        TextView myText = findViewById(R.id.titleDisplay);
+        myText.setText(mHelper.readFakeData());
     }
-    
+
 
 
 }
