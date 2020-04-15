@@ -182,6 +182,18 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         //long newRowId = db.insert(FeedReaderContract.TagsEntry.TABLE_NAME, null, values);
     }
 
+    public void insertIntoItems(String title, String deadLine, String img) {
+
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues valuesItems = new ContentValues();
+
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, title);
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, deadLine);
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, img);
+
+        long itemsRow1 = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
+    }
+
     public void deleteAllData() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(FeedReaderContract.TagsEntry.TABLE_NAME, null, null);

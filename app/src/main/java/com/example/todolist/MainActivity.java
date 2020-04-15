@@ -116,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void refreshUI() {
+        finish();
+        startActivity(getIntent());
+    }
+
 
     public void launchEditionDialog(View v) {
         mHelper = new FeedReaderDbHelper(this);
@@ -130,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String task = String.valueOf(taskEditText.getText());
-                        mHelper.insertFakeData();
+                        mHelper.insertIntoItems(task, "", "");
+                        refreshUI();
                     }
                 })
                 .setNegativeButton("Annuler", null)
