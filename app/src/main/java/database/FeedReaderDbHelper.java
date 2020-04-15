@@ -67,15 +67,119 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     }
 
 
+    public int getAnyID(String tableName, String columnName, String args) {
+        String s = "";
+        int id = 0;
+        SQLiteDatabase db = getReadableDatabase();
+
+
+
+        String[] projection = {
+                BaseColumns._ID,
+                columnName,
+        };
+
+        String selection = columnName + " = ?";
+        String[] selectionArgs = { args };
+
+        String sortOrder =
+                columnName + " DESC";
+
+        Cursor cursor = db.query(
+                tableName,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+        HashMap<Long, String> items = new HashMap<Long, String>();
+        while(cursor.moveToNext()) {
+            id = cursor.getInt(cursor.getColumnIndex("_id"));
+        }
+
+        return id;
+    }
+
+
+
+
     public void insertFakeData() {
         SQLiteDatabase db = getWritableDatabase();
 
 // Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put( FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING, "Test");
+        //ContentValues valuesTagsItem = new ContentValues();
+        ContentValues valuesItems = new ContentValues();
+        ContentValues valuesTags = new ContentValues();
+        ContentValues valuesTasks = new ContentValues();
+
+
+        valuesTags.put( FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING, "DEV");
+        long tagsRow1 = db.insert(FeedReaderContract.TagsEntry.TABLE_NAME, null, valuesTags);
+
+        valuesTags.put( FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING, "HEG");
+        long tagsRow2 = db.insert(FeedReaderContract.TagsEntry.TABLE_NAME, null, valuesTags);
+
+        valuesTags.put( FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING, "ECOLE");
+        long tagsRow3 = db.insert(FeedReaderContract.TagsEntry.TABLE_NAME, null, valuesTags);
+
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, "Devenir développeur");
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, "");
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, "sql.jpg");
+        long itemsRow1 = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
+
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING, "Apprendre SQL");
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, Boolean.FALSE);
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_FK, getAnyID("Items", "title", "Devenir développeur"));
+        long tasksRow1 = db.insert(FeedReaderContract.TaskEntry.TABLE_NAME, null, valuesTasks);
+
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING, "Apprendre JAVA");
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, Boolean.FALSE);
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_FK, getAnyID("Items", "title", "Devenir développeur"));
+        long tasksRow3 = db.insert(FeedReaderContract.TaskEntry.TABLE_NAME, null, valuesTasks);
+
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, "Faire le grand écart");
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, "");
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, "sport.jpg");
+        long itemsRow2 = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
+
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING, "S'inscrire à un fitness");
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, Boolean.TRUE);
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_FK, getAnyID("Items", "Title", "Faire le grand écart"));
+        long tasksRow4 = db.insert(FeedReaderContract.TaskEntry.TABLE_NAME, null, valuesTasks);
+
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING, "Améliorer sa souplesse");
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, Boolean.FALSE);
+        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_FK, getAnyID("Items", "Title", "Faire le grand écart"));
+        long tasksRow2 = db.insert(FeedReaderContract.TaskEntry.TABLE_NAME, null, valuesTasks);
+
+
+//        long newRowId = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
+//
+
+//
+
+//        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_FK, "Test");
+//
+//
+
+//
+
+//        valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_FK, "Test");
+//
+//        valuesTags.put( FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING, "SPORT");
+//
+//        valuesTags.put( FeedReaderContract.TaskEntry.COLUMN_NAME_FK, "Test");
+
+
+
+
+
 
 // Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(FeedReaderContract.TagsEntry.TABLE_NAME, null, values);
+        //long newRowId = db.insert(FeedReaderContract.TagsEntry.TABLE_NAME, null, values);
     }
 
     public void deleteAllData() {
@@ -99,7 +203,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
 // Filter results WHERE "title" = 'My Title'
         String selection = FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING + " = ?";
-        String[] selectionArgs = { "Test" };
+        String[] selectionArgs = { "SPORT" };
 
 // How you want the results sorted in the resulting Cursor
         String sortOrder =
@@ -107,6 +211,167 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(
                 FeedReaderContract.TagsEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+        HashMap<Long, String> items = new HashMap<Long, String>();
+        while(cursor.moveToNext()) {
+            long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TagsEntry._ID));
+            String value = cursor.getString(cursor.getColumnIndex("wording"));
+            items.put(itemId, value);
+        }
+        return items.toString();
+    }
+
+    public String readAllFromTable(String tableName) {
+        String s = "";
+        int id = 0;
+        SQLiteDatabase db = getReadableDatabase();
+
+
+
+        String[] projection = {
+                BaseColumns._ID,
+        };
+
+        //String selection = columnName + " = ?";
+        //String[] selectionArgs = { args };
+
+        String sortOrder =  " DESC";
+
+        Cursor cursor = db.query(
+                tableName,   // The table to query
+                null,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+        return cursor.toString();
+//        List itemIds = new ArrayList<>();
+//
+//        HashMap<Long, String> items = new HashMap<Long, String>();
+//        while(cursor.moveToNext()) {
+//            String value = cursor.getString(cursor.getColumnIndex(columnName));
+//            items.put(itemId, value);
+//        }
+//        return items.toString();
+    }
+
+    public String readAllItems() {
+        String s = "";
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        String[] projection = {
+                BaseColumns._ID,
+                FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING,
+        };
+
+        String selection = FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING + " = ?";
+        String[] selectionArgs = { "SPORT" };
+
+        String sortOrder =
+                FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING + " DESC";
+
+        Cursor cursor = db.query(
+                FeedReaderContract.ItemsEntry.TABLE_NAME,   // The table to query
+                null,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+        List values = new ArrayList<>();
+        HashMap<Long, List>items = new HashMap<Long, List>();
+        while(cursor.moveToNext()) {
+
+            long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TagsEntry._ID));
+            values.add(cursor.getString(cursor.getColumnIndex("title")));
+            values.add(cursor.getString(cursor.getColumnIndex("deadline")));
+            values.add(cursor.getString(cursor.getColumnIndex("image")));
+            items.put(itemId, values);
+            values.clear();
+        }
+        return items.toString();
+    }
+
+    public String readAllTasks() {
+        String s = "";
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        String[] projection = {
+                BaseColumns._ID,
+                FeedReaderContract.TaskEntry.COLUMN_NAME_FK,
+                FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING,
+                FeedReaderContract.TaskEntry.COLUMN_NAME_DONE
+        };
+
+        String selection = FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING + " = ?";
+        String[] selectionArgs = { "SPORT" };
+
+        String sortOrder =
+                FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING + " DESC";
+
+        Cursor cursor = db.query(
+                FeedReaderContract.TaskEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+        List values = new ArrayList<>();
+        //HashMap<Long, List>items = new HashMap<Long, List>();
+        HashMap<Long, String>items = new HashMap<Long, String>();
+        while(cursor.moveToNext()) {
+
+            long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TaskEntry._ID));
+            //values.add(cursor.getInt(cursor.getColumnIndex("fk_items")));
+            //values.add(cursor.getString(cursor.getColumnIndex("wording")));
+            //values.add(cursor.getString(cursor.getColumnIndex("done")));
+            //items.put(itemId, values);
+            String value = cursor.getString(cursor.getColumnIndex("fk_Items"));
+            items.put(itemId, value);
+
+
+            values.clear();
+        }
+        return items.toString();
+    }
+
+    public String readAny(String tableName, String columnName, String args)  {
+        String s = "";
+        int id = 0;
+        SQLiteDatabase db = getReadableDatabase();
+
+
+
+        String[] projection = {
+                BaseColumns._ID,
+                columnName,
+        };
+
+        String selection = columnName + " = ?";
+        String[] selectionArgs = { args };
+
+        String sortOrder =
+                columnName + " DESC";
+
+        Cursor cursor = db.query(
+                tableName,   // The table to query
                 projection,             // The array of columns to return (pass null to get all)
                 selection,              // The columns for the WHERE clause
                 selectionArgs,          // The values for the WHERE clause
@@ -125,3 +390,4 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     }
 
 }
+
