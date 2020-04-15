@@ -82,29 +82,25 @@ public class MainActivity extends AppCompatActivity {
 
         HashMap<Long, List> dbItemList = new HashMap<Long, List>();
 
-        dbItemList = mHelper.readAllTasks();
+        dbItemList = mHelper.readAllItems();
 
 
-        for (long i = 1; i < dbItemList.size(); i++) {
+
+        for (long i = 1; i <= dbItemList.size(); i++) {
 
             dbItemList.get(i);
-           ArrayList<String> myItemList = new ArrayList<>(dbItemList.get(i));
-           myItemList.add(dbItemList.get(i).get(0).toString());
-           myItemList.add(dbItemList.get(i).get(1).toString());
-           myItemList.add(dbItemList.get(i).get(2).toString());
+            ArrayList<String> myItemList = new ArrayList<>();
+            String itemName = dbItemList.get(i).get(0).toString();
+            List<String> l = new ArrayList<String>( mHelper.getTaskFromItem(itemName));
 
-            myToDoList.add(new ItemToDo("Titre" + i, myItemList, R.drawable.img_addapicture));
+            for ( String s : l) {
+                myItemList.add(s);
+            }
+
+            myToDoList.add(new ItemToDo(itemName, myItemList, R.drawable.img_addapicture));
 
         }
 
-//        for (long i = 0; i < dbItemList.size(); i++) {
-//            ArrayList<String> myItemList = new ArrayList<>();
-//            myItemList.add("Item_1");
-//            myItemList.add("Item_2");
-//            myItemList.add("Item_3");
-//            myToDoList.add(new ItemToDo("Titre" + i, myItemList, R.drawable.img_addapicture));
-//
-//        }
    }
 
     //Active le bouton de la barre de navigation (les 3 trais horizontaux)

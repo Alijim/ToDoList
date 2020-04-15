@@ -45,7 +45,7 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         List l = new ArrayList<>();
         long idd = 1;
-        l.addAll((mHelper.readAllTasks().get(idd)));
+        //l.addAll((mHelper.getTaskFromItem("Devenir développeur").get(idd)));
 
         myText.setText(i.toString());
         txt.setText(l.toString());

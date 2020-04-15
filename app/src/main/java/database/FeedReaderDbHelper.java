@@ -265,25 +265,27 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 //        return items.toString();
     }
 
-    public String readAllItems() {
+    public HashMap<Long, List> readAllItems() {
         String s = "";
         SQLiteDatabase db = getReadableDatabase();
 
 
         String[] projection = {
                 BaseColumns._ID,
-                FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING,
+                FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE,
+                FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE,
+                FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE
         };
 
-        String selection = FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING + " = ?";
-        String[] selectionArgs = { "SPORT" };
+//        String selection = FeedReaderContract.ItemsEntry.COLUMN_NAME_WORDING + " = ?";
+//        String[] selectionArgs = { "SPORT" };
 
         String sortOrder =
-                FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING + " DESC";
+                FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE + " DESC";
 
         Cursor cursor = db.query(
                 FeedReaderContract.ItemsEntry.TABLE_NAME,   // The table to query
-                null,             // The array of columns to return (pass null to get all)
+                projection,             // The array of columns to return (pass null to get all)
                 null,              // The columns for the WHERE clause
                 null,          // The values for the WHERE clause
                 null,                   // don't group the rows
@@ -291,18 +293,61 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                 sortOrder               // The sort order
         );
 
-        List values = new ArrayList<>();
         HashMap<Long, List>items = new HashMap<Long, List>();
+//        HashMap<Long, String>items = new HashMap<Long, String>();
         while(cursor.moveToNext()) {
-
-            long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TagsEntry._ID));
+            List values = new ArrayList<>();
+            long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.ItemsEntry._ID));
             values.add(cursor.getString(cursor.getColumnIndex("title")));
-            values.add(cursor.getString(cursor.getColumnIndex("deadline")));
+            values.add(cursor.getString(cursor.getColumnIndex("deadLine")));
             values.add(cursor.getString(cursor.getColumnIndex("image")));
+            //items.put(itemId, values);
+//            String value = cursor.getString(cursor.getColumnIndex("fk_Items"));
             items.put(itemId, values);
-            values.clear();
         }
-        return items.toString();
+
+        return items;
+    }
+
+    public List<String> getTaskFromItem(String args) {
+        String s = "";
+        Integer id = getAnyID("Items", "Title", args);
+        List values = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        String[] projection = {
+                BaseColumns._ID,
+                FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING,
+        };
+
+        String selection = FeedReaderContract.TaskEntry.COLUMN_NAME_FK + " = ?";
+        String[] selectionArgs = {  id.toString()};
+
+        String sortOrder =
+                FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING + " DESC";
+
+        Cursor cursor = db.query(
+                FeedReaderContract.TaskEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+//        HashMap<Long, String>items = new HashMap<Long, String>();
+//        HashMap<Long, String>items = new HashMap<Long, String>();
+        while(cursor.moveToNext()) {
+            //long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TaskEntry._ID));
+            values.add(cursor.getString(cursor.getColumnIndex("wording")));
+            //items.put(itemId, cursor.getString(cursor.getColumnIndex("wording")));
+        }
+
+        return values;
+
+        //return items.toString();
     }
 
     public HashMap<Long, List> readAllTasks() {
