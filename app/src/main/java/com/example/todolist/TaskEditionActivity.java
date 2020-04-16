@@ -48,9 +48,7 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         items = new ArrayList<String>(mHelper.getTasksFromItem(txt));
 
-
-        itemsAdapter =
-                new ArrayAdapter<String>(this,R.layout.item_todo, R.id.task_title, items);
+        itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.task_title, items);
 
         ListView lv = findViewById(R.id.taskListView);
         lv.setAdapter(itemsAdapter);

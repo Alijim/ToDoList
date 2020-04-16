@@ -118,6 +118,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void launchTaskEditionActivity(String txt) {
+        Intent intent = new Intent(this, TaskEditionActivity.class);
+        intent.putExtra("nom", txt);
+
+        startActivity(intent);
+    }
+
     public void refreshUI() {
         finish();
         startActivity(getIntent());
@@ -138,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String task = String.valueOf(taskEditText.getText());
                         mHelper.insertIntoItems(task, "", "");
-                        refreshUI();
+                        launchTaskEditionActivity(task);
                     }
                 })
                 .setNegativeButton("Annuler", null)
