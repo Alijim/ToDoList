@@ -1,15 +1,13 @@
 package com.example.todolist;
 
-import android.content.ClipData;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.todolist.menu.EditionTagFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,13 +17,15 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import database.FeedReaderDbHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,11 +34,15 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<ItemToDo> myToDoList = new ArrayList<>();
     private RecyclerView myRecyclerView;
     private ToDoListAdapter myAdapter;
+    private FeedReaderDbHelper mHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mHelper = new FeedReaderDbHelper(this);
+        //mHelper.insertFakeData();
 
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,18 +71,36 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     //Méthode à redéfinir avec les données de la BD
     public void initialisationData() {
 
-        for (int i = 0; i < 10; i++) {
+        mHelper = new FeedReaderDbHelper(this);
+
+        HashMap<Long, List> dbItemList = new HashMap<Long, List>();
+
+        dbItemList = mHelper.readAllItems();
+
+
+
+        for (long i = 1; i <= dbItemList.size(); i++) {
+
+            dbItemList.get(i);
             ArrayList<String> myItemList = new ArrayList<>();
-            myItemList.add("Item1");
-            myItemList.add("Item2");
-            myItemList.add("Item3");
-            myToDoList.add(new ItemToDo("Titre" + i, myItemList, R.drawable.img_addapicture));
+            String itemName = dbItemList.get(i).get(0).toString();
+            //String itemId = dbItemList.get(i).get(0).toString();
+            List<String> l = new ArrayList<String>( mHelper.getTasksFromItem(itemName));
+
+            for ( String s : l) {
+                myItemList.add(s);
+            }
+
+            myToDoList.add(new ItemToDo(itemName, myItemList, R.drawable.img_addapicture));
 
         }
-    }
+
+   }
 
     //Active le bouton de la barre de navigation (les 3 trais horizontaux)
     @Override
@@ -90,9 +112,38 @@ public class MainActivity extends AppCompatActivity {
     //Activité lancé lorsqu'on clique sur le fab+ ou sur une carte
     public void launchTaskEditionActivity(View view) {
         Intent intent = new Intent(this, TaskEditionActivity.class);
+        TextView txt = view.findViewById(R.id.cv_Title);
+        intent.putExtra("nom", txt.getText());
+
         startActivity(intent);
     }
 
+    public void refreshUI() {
+        finish();
+        startActivity(getIntent());
+    }
 
+
+    public void launchEditionDialog(View v) {
+        mHelper = new FeedReaderDbHelper(this);
+
+        // Création d'un alert dialog pour l'ajout d'une tâche
+        final EditText taskEditText = new EditText(this);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Ajouter une nouvelle tâche")
+                .setMessage("Créer votre tâche")
+                .setView(taskEditText)
+                .setPositiveButton("Ajouter", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String task = String.valueOf(taskEditText.getText());
+                        mHelper.insertIntoItems(task, "", "");
+                        refreshUI();
+                    }
+                })
+                .setNegativeButton("Annuler", null)
+                .create();
+        dialog.show();
+    }
 
 }

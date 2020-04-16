@@ -10,7 +10,6 @@
     tools:openDrawer="start">
 
     <include layout="@layout/content_main" />
-
     <include
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
@@ -25,4 +24,3 @@
         app:menu="@menu/activity_main_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
-

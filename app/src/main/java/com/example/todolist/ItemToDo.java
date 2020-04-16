@@ -6,7 +6,7 @@ import java.util.List;
 public class ItemToDo {
 
     private String title;
-    private ArrayList<String> listItem;
+    private List listItem;
     private int imageResource;
 
     public ItemToDo(){};
@@ -21,7 +21,7 @@ public class ItemToDo {
         return title;
     }
 
-    public ArrayList<String> getListItem() {
+    public List getListItem() {
         return listItem;
     }
 
