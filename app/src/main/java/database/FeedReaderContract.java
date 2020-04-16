@@ -26,6 +26,7 @@ public final class FeedReaderContract {
             public static final String TABLE_NAME = "Tags";
             public static final String COLUMN_NAME_WORDING = "wording";
         }
+
         public static class TagsItemsEntry implements BaseColumns {
             public static final String TABLE_NAME = "TagsItem";
             public static final String COLUMN_NAME_FK_ITEMS = "fk_items";

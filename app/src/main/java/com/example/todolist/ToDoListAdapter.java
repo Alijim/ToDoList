@@ -1,24 +1,20 @@
 package com.example.todolist;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.core.content.ContextCompat.startActivities;
-import static androidx.core.content.ContextCompat.startActivity;
 
 //L'adapter est un composant qui permet de faire la liaison (Bind) entre la vue RecyclerView et une liste de données.
 public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoListViewHolder> {
@@ -61,7 +57,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
         ToDoListViewHolder(View itemView, ToDoListAdapter adapter) {
             super(itemView);
             // Initialize the views.
-            myTitre = itemView.findViewById(R.id.Titre);
+            myTitre = itemView.findViewById(R.id.cv_Title);
             myItem = itemView.findViewById(R.id.Item);
             myImage = itemView.findViewById(R.id.Image);
 

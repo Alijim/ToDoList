@@ -33,50 +33,21 @@ public class TaskEditionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_edition);
-        List items = new ArrayList<String>();
-        items.add("salut");
-        items.add("yo");
-        items.add("wsh");
+        mHelper = new FeedReaderDbHelper(this);
+
+        Bundle extras = getIntent().getExtras();
+
+        String txt = extras.getString("nom");
+
+
+        List items = new ArrayList<String>(mHelper.getTasksFromItem(txt));
+
 
         ArrayAdapter<String> itemsAdapter =
                 new ArrayAdapter<String>(this,R.layout.item_todo, R.id.task_title, items);
 
         ListView lv = (ListView) findViewById(R.id.taskListView);
         lv.setAdapter(itemsAdapter);
-
-
-//
-//        mHelper = new FeedReaderDbHelper(this);
-//        mTaskListView = (ListView) findViewById(R.id.taskListView);
-//
-//        if (mAdapter == null) {
-//            mAdapter = new ArrayAdapter<String>(this,
-//                    R.layout.item_todo,
-//                    R.id.task_title,
-//                    (List<String>) mTaskListView);
-//            mTaskListView.setAdapter(mAdapter);
-//        } else {
-//            mAdapter.clear();
-//            mAdapter.addAll((Collection<? extends String>) mTaskListView);
-//            mAdapter.notifyDataSetChanged();
-//        }
-//
-
-
-        //  mHelper.deleteAllData();
-
-//        //mHelper.insertFakeData();
-//        ListView myList = findViewById(R.id.taskListView);
-//
-//        TextView myText = findViewById(R.id.titleDisplay);
-//        TextView txt = findViewById(R.id.itemsDisplay);
-//
-//        Integer i = mHelper.getAnyID("Tags", "wording", "ECOLE");
-//
-//        List l = new ArrayList<>();
-//        long idd = 1;
-//        //l.addAll((mHelper.getTaskFromItem("Devenir développeur").get(idd)));
-
 //        myText.setText(i.toString());
 //        txt.setText(l.toString());
     }

@@ -23,7 +23,7 @@
             android:layout_marginRight="0dp" />
 
         <TextView
-            android:id="@+id/Titre"
+            android:id="@+id/cv_Title"
             android:layout_width="183dp"
             android:layout_height="47dp"
             android:layout_alignParentStart="true"

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mHelper = new FeedReaderDbHelper(this);
+        //mHelper.insertFakeData();
 
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -108,6 +112,9 @@ public class MainActivity extends AppCompatActivity {
     //Activité lancé lorsqu'on clique sur le fab+ ou sur une carte
     public void launchTaskEditionActivity(View view) {
         Intent intent = new Intent(this, TaskEditionActivity.class);
+        TextView txt = view.findViewById(R.id.cv_Title);
+        intent.putExtra("nom", txt.getText());
+
         startActivity(intent);
     }
 

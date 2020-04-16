@@ -25,20 +25,20 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_TAGS =
             "CREATE TABLE " + FeedReaderContract.TagsEntry.TABLE_NAME + " (" +
-                    FeedReaderContract.TagsEntry._ID + " INTEGER PRIMARY KEY," +
+                    FeedReaderContract.TagsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING + " TEXT)";
 
 
     private static final String SQL_CREATE_ITEMS =
             "CREATE TABLE " + FeedReaderContract.ItemsEntry.TABLE_NAME + " (" +
-                    FeedReaderContract.ItemsEntry._ID + " INTEGER PRIMARY KEY," +
+                    FeedReaderContract.ItemsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE + " TEXT," +
                     FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE + " DATE," +
                     FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE + " TEXT)";
 
     private static final String SQL_CREATE_TAGITEMS =
             "CREATE TABLE " + FeedReaderContract.TagsItemsEntry.TABLE_NAME + " (" +
-                    FeedReaderContract.TagsItemsEntry._ID + " INTEGER PRIMARY KEY," +
+                    FeedReaderContract.TagsItemsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_ITEMS + " INTEGER," +
                     FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_TAGS + " INTEGER)";
 
