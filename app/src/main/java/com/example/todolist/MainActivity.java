@@ -1,17 +1,13 @@
 package com.example.todolist;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.todolist.menu.EditionTagFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -22,10 +18,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
             dbItemList.get(i);
             ArrayList<String> myItemList = new ArrayList<>();
             String itemName = dbItemList.get(i).get(0).toString();
-            List<String> l = new ArrayList<String>( mHelper.getTaskFromItem(itemName));
+            //String itemId = dbItemList.get(i).get(0).toString();
+            List<String> l = new ArrayList<String>( mHelper.getTasksFromItem(itemName));
 
             for ( String s : l) {
                 myItemList.add(s);

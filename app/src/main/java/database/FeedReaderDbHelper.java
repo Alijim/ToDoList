@@ -321,7 +321,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<String> getTaskFromItem(String args) {
+    public List<String> getTasksFromItem(String args) {
         String s = "";
         Integer id = getAnyID("Items", "Title", args);
         List values = new ArrayList<>();
