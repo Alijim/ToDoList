@@ -44,9 +44,10 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         String txt = extras.getString("nom");
         this.item = txt;
-
-
         items = new ArrayList<String>(mHelper.getTasksFromItem(txt));
+
+        TextView txtV = findViewById(R.id.titleDisplay);
+        txtV.setText(item);
 
         itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.task_title, items);
 

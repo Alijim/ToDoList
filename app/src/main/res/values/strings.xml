@@ -7,4 +7,5 @@
     <string name="menu_todolist">ToDoList</string>
     <string name="menu_editiontag">EditionTag</string>
     <string name="tag_list">Edition Tag</string>
+    <string name="TaskActivityLabel">Edition Task</string>
 </resources>

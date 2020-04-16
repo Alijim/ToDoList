@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mHelper = new FeedReaderDbHelper(this);
-        //mHelper.insertFakeData();
+        //mHelper.deleteAllData();
+//        mHelper.insertFakeData();
 
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void launchTaskEditionActivity(String txt) {
+    public void launchTaskEditionActivityF(String txt) {
         Intent intent = new Intent(this, TaskEditionActivity.class);
         intent.putExtra("nom", txt);
 
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String task = String.valueOf(taskEditText.getText());
                         mHelper.insertIntoItems(task, "", "");
-                        launchTaskEditionActivity(task);
+                        launchTaskEditionActivityF(task);
                     }
                 })
                 .setNegativeButton("Annuler", null)
