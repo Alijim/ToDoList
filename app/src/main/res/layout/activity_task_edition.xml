@@ -20,6 +20,7 @@
         android:id="@+id/taskListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/btnDelete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnAddTask" />
@@ -32,7 +33,8 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
         android:text="Titre"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageTask" />
 
@@ -57,8 +59,10 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
+        android:background="@color/colorPrimary"
         android:onClick="insertTaskIntoItem"
         android:text="Ajouter"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleDisplay" />
 
@@ -70,8 +74,10 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimaryDark"
         android:onClick="deleteThisItem"
         android:text="Supprimer"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taskListView" />
