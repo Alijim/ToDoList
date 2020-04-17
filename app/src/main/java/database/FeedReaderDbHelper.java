@@ -106,6 +106,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
 
 
+
     public void insertFakeData() {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -287,6 +288,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 //        return items.toString();
     }
 
+
     public HashMap<Long, List> readAllItems() {
         String s = "";
         SQLiteDatabase db = getReadableDatabase();
@@ -347,7 +349,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         String[] selectionArgs = {  id.toString()};
 
         String sortOrder =
-                FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING + " DESC";
+                FeedReaderContract.TaskEntry.COLUMN_NAME_DONE + " DESC";
 
         Cursor cursor = db.query(
                 FeedReaderContract.TaskEntry.TABLE_NAME,   // The table to query
@@ -455,5 +457,74 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return items.toString();
     }
 
+    public Integer readDone(Integer id) {
+        String s = "";
+        Integer bDone = 0;
+        SQLiteDatabase db = getReadableDatabase();
+
+        String[] projection = {
+                BaseColumns._ID,
+                FeedReaderContract.TaskEntry.COLUMN_NAME_DONE,
+        };
+
+        String selection = FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING + " = ?";
+        String[] selectionArgs = { id.toString() };
+
+        String sortOrder =
+                FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING + " DESC";
+
+        Cursor cursor = db.query(
+                FeedReaderContract.TaskEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+        HashMap<Long, String> items = new HashMap<Long, String>();
+        while(cursor.moveToNext()) {
+            bDone = cursor.getInt(cursor.getColumnIndex("done"));
+        }
+        return bDone;
+    }
+
+    public void changeDone(Integer id) {
+        SQLiteDatabase db = getWritableDatabase();
+        Integer done;
+
+        if(readDone(id) == 0) {
+            done = 1;
+        } else {
+            done = 0;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, done);
+
+        String selection = FeedReaderContract.TaskEntry._ID + " = '"+id+"'";
+        //String[] selectionArgs = { id.toString() };
+
+        int count = db.update(
+                FeedReaderContract.TaskEntry.TABLE_NAME,
+                values,
+                selection,
+                null);
+
+    }
+
+    public String testDone (Integer id) {
+        String txt = "AVANT :";
+        txt += " "+readDone(id).toString();
+        changeDone(id);
+        txt += " | APRES : "+readDone(id).toString();
+
+        return txt;
+
+    }
+
 }
+
+
 

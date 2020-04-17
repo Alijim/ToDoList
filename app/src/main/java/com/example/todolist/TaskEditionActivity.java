@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.view.View;
@@ -44,11 +45,19 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         String txt = extras.getString("nom");
         this.item = txt;
+        List<String> intermediaire = new ArrayList<String>(mHelper.getTasksFromItem(txt));
         items = new ArrayList<String>(mHelper.getTasksFromItem(txt));
 
-        TextView txtV = findViewById(R.id.titleDisplay);
-        txtV.setText(item);
+//        for(String s : intermediaire) {
+//
+//        }
 
+        TextView txtV = findViewById(R.id.titleDisplay);
+        //txtV.setPaintFlags(txtV.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+        //txtV.setText(item);
+//        String vvvvv = mHelper.readDone("salut").toString();
+
+        txtV.setText(mHelper.testDone(1));
         itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.task_title, items);
 
         ListView lv = findViewById(R.id.taskListView);
