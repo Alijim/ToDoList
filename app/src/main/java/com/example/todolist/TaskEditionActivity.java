@@ -61,7 +61,7 @@ public class TaskEditionActivity extends AppCompatActivity {
         //txtV.setText(item);
 //        String vvvvv = mHelper.readDone("salut").toString();
 
-        txtV.setText(mHelper.testDone(1));
+        txtV.setText(item);
         itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.task_title, items);
 
         ListView lv = findViewById(R.id.taskListView);
