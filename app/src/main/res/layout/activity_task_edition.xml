@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".TaskEditionActivity">
 
     <ImageView
@@ -34,6 +35,7 @@
         android:layout_marginTop="15dp"
         android:text="Titre"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageTask" />
@@ -42,11 +44,15 @@
         android:id="@+id/txtTask"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toLeftOf="@+id/btnAddTask"
         android:ems="10"
-        android:hint="Créer une tâche"
+        android:hint="Ajouter une étape"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/btnAddTask"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,9 +60,10 @@
 
     <Button
         android:id="@+id/btnAddTask"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
         android:background="@color/colorPrimary"
