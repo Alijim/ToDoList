@@ -15,7 +15,7 @@
         app:layout_constraintBottom_toTopOf="@+id/titleDisplay"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="-2dp"
-        tools:srcCompat="@tools:sample/backgrounds/scenic[5]" />
+        tools:srcCompat="@android:mipmap/sym_def_app_icon" />
 
     <ListView
         android:id="@+id/taskListView"
@@ -73,7 +73,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleDisplay" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,10 +83,12 @@
         android:layout_marginBottom="16dp"
         android:background="@color/colorPrimaryDark"
         android:onClick="deleteThisItem"
+        android:src="@android:drawable/ic_menu_delete"
         android:text="Supprimer"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskListView" />
+        app:layout_constraintTop_toBottomOf="@+id/taskListView"
+        tools:src="@android:drawable/ic_menu_delete" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
