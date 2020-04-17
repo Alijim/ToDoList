@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -289,7 +290,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     }
 
 
-    public HashMap<Long, List> readAllItems() {
+    public HashMap<Integer, List> readAllItems() {
         String s = "";
         SQLiteDatabase db = getReadableDatabase();
 
@@ -317,11 +318,11 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                 sortOrder               // The sort order
         );
 
-        HashMap<Long, List>items = new HashMap<Long, List>();
+        HashMap<Integer, List>items = new HashMap<Integer, List>();
 //        HashMap<Long, String>items = new HashMap<Long, String>();
         while(cursor.moveToNext()) {
             List values = new ArrayList<>();
-            long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.ItemsEntry._ID));
+            Integer itemId = cursor.getInt(cursor.getColumnIndexOrThrow(FeedReaderContract.ItemsEntry._ID));
             values.add(cursor.getString(cursor.getColumnIndex("title")));
             values.add(cursor.getString(cursor.getColumnIndex("deadLine")));
             values.add(cursor.getString(cursor.getColumnIndex("image")));
@@ -333,9 +334,9 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<String> getTasksFromItem(String args) {
+    public List<String> getTasksFromItem(Integer id) {
         String s = "";
-        Integer id = getAnyID("Items", "Title", args);
+//        Integer id = getAnyID("Items", "Title", args);
         List values = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
 
@@ -366,6 +367,47 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         while(cursor.moveToNext()) {
             //long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TaskEntry._ID));
             values.add(cursor.getString(cursor.getColumnIndex("wording")));
+            //items.put(itemId, cursor.getString(cursor.getColumnIndex("wording")));
+        }
+
+        return values;
+
+        //return items.toString();
+    }
+    public List<Integer> getTasksIdFromItem(Integer id) {
+        String s = "";
+//        Integer id = getAnyID("Items", "Title", args);
+        List values = new ArrayList<Integer>();
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        String[] projection = {
+                BaseColumns._ID,
+                FeedReaderContract.TaskEntry._ID,
+                FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING
+        };
+
+        String selection = FeedReaderContract.TaskEntry.COLUMN_NAME_FK + " = ?";
+        String[] selectionArgs = {  id.toString()};
+
+        String sortOrder =
+                FeedReaderContract.TaskEntry.COLUMN_NAME_DONE + " DESC";
+
+        Cursor cursor = db.query(
+                FeedReaderContract.TaskEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+//        HashMap<Long, String>items = new HashMap<Long, String>();
+//        HashMap<Long, String>items = new HashMap<Long, String>();
+        while(cursor.moveToNext()) {
+            //long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TaskEntry._ID));
+            values.add(cursor.getInt(cursor.getColumnIndex("_id")));
             //items.put(itemId, cursor.getString(cursor.getColumnIndex("wording")));
         }
 
@@ -522,6 +564,36 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         return txt;
 
+    }
+
+
+    public void deleteTask(Integer id){
+        SQLiteDatabase db = getWritableDatabase();
+
+        String selection = FeedReaderContract.TaskEntry._ID + " LIKE ?";
+        String[] selectionArgs = { id.toString() };
+        int deletedRows = db.delete(FeedReaderContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public void deleteItem(Integer id) {
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        List<Integer> l = new ArrayList<Integer>(getTasksIdFromItem(id));
+
+//        deleteTask(25);
+
+        for(Integer i : l) {
+            deleteTask(i);
+        }
+
+        String selection = FeedReaderContract.ItemsEntry._ID + " LIKE ?";
+        String[] selectionArgs = { id.toString() };
+        int deletedRows = db.delete(FeedReaderContract.ItemsEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public void testDelete(Integer id) {
+        deleteItem(4);
     }
 
 }

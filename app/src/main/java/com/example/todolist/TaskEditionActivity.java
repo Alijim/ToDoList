@@ -31,6 +31,7 @@ public class TaskEditionActivity extends AppCompatActivity {
     private FeedReaderDbHelper mHelper;
     private ListView mTaskListView;
     private List items;
+    private Integer idItem;
     private String item;
     private ArrayAdapter<String> itemsAdapter;
 
@@ -42,11 +43,14 @@ public class TaskEditionActivity extends AppCompatActivity {
         mHelper = new FeedReaderDbHelper(this);
 
         Bundle extras = getIntent().getExtras();
-
-        String txt = extras.getString("nom");
+        String txt = extras.getString("name");
         this.item = txt;
-        List<String> intermediaire = new ArrayList<String>(mHelper.getTasksFromItem(txt));
-        items = new ArrayList<String>(mHelper.getTasksFromItem(txt));
+        this.idItem = mHelper.getAnyID("Items", "title", txt);
+
+
+
+        List<String> intermediaire = new ArrayList<String>(mHelper.getTasksFromItem(idItem));
+        items = new ArrayList<String>(mHelper.getTasksFromItem(idItem));
 
 //        for(String s : intermediaire) {
 //
@@ -76,6 +80,15 @@ public class TaskEditionActivity extends AppCompatActivity {
         itemsAdapter.notifyDataSetChanged();
         edtTask.getText().clear();
         //startActivity(intent);
+    }
+
+    public void deleteThisItem(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+
+        mHelper.deleteItem(this.idItem);
+
+        startActivity(intent);
+
     }
 
 

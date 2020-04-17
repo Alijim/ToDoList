@@ -3,11 +3,13 @@ package com.example.todolist;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import database.FeedReaderDbHelper;
 
@@ -79,19 +82,21 @@ public class MainActivity extends AppCompatActivity {
 
         mHelper = new FeedReaderDbHelper(this);
 
-        HashMap<Long, List> dbItemList = new HashMap<Long, List>();
+        HashMap<Integer, List> dbItemList = new HashMap<Integer, List>();
 
         dbItemList = mHelper.readAllItems();
 
 
 
-        for (long i = 1; i <= dbItemList.size(); i++) {
+        for (Map.Entry<Integer, List> entries : dbItemList.entrySet()) {
+            Integer key = entries.getKey();
+            List lv = entries.getValue();
 
-            dbItemList.get(i);
             ArrayList<String> myItemList = new ArrayList<>();
-            String itemName = dbItemList.get(i).get(0).toString();
-            //String itemId = dbItemList.get(i).get(0).toString();
-            List<String> l = new ArrayList<String>( mHelper.getTasksFromItem(itemName));
+
+            String itemName =  lv.get(0).toString();
+
+            List<String> l = new ArrayList<String>( mHelper.getTasksFromItem(key));
 
             for ( String s : l) {
                 myItemList.add(s);
@@ -100,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             myToDoList.add(new ItemToDo(itemName, myItemList, R.drawable.img_addapicture));
 
         }
+
 
    }
 
@@ -114,14 +120,14 @@ public class MainActivity extends AppCompatActivity {
     public void launchTaskEditionActivity(View view) {
         Intent intent = new Intent(this, TaskEditionActivity.class);
         TextView txt = view.findViewById(R.id.cv_Title);
-        intent.putExtra("nom", txt.getText());
+        intent.putExtra("name", txt.getText());
 
         startActivity(intent);
     }
 
     public void launchTaskEditionActivityF(String txt) {
         Intent intent = new Intent(this, TaskEditionActivity.class);
-        intent.putExtra("nom", txt);
+        intent.putExtra("name", txt);
 
         startActivity(intent);
     }
