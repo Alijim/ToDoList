@@ -2,8 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainEdition"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bckgrdWhite"
     tools:context=".TaskEditionActivity">
 
     <ImageView
@@ -14,23 +16,31 @@
         app:layout_constraintBottom_toTopOf="@+id/titleDisplay"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="-2dp"
-        tools:srcCompat="@tools:sample/backgrounds/scenic[5]" />
+        tools:srcCompat="@android:mipmap/sym_def_app_icon" />
 
     <ListView
         android:id="@+id/taskListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddTask" />
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnDelete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAddTask">
+
+    </ListView>
 
     <TextView
         android:id="@+id/titleDisplay"
-        android:layout_width="174dp"
-        android:layout_height="26dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
-        android:text="Ajouter une tâche"
+        android:onClick="updateTitle"
+        android:text="Titre"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageTask" />
 
@@ -38,26 +48,126 @@
         android:id="@+id/txtTask"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toLeftOf="@+id/btnAddTask"
         android:ems="10"
+        android:hint="Ajouter une étape"
         android:inputType="textPersonName"
-        android:text="Créer une tâche"
         app:layout_constraintEnd_toStartOf="@+id/btnAddTask"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleDisplay" />
 
     <Button
         android:id="@+id/btnAddTask"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
+        android:background="@color/colorPrimary"
         android:onClick="insertTaskIntoItem"
         android:text="Ajouter"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleDisplay" />
+
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimaryDark"
+        android:onClick="deleteThisItem"
+        android:src="@android:drawable/ic_menu_delete"
+        android:text="Supprimer"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/horizontalScrollView"
+        app:layout_constraintTop_toBottomOf="@+id/taskListView"
+        tools:src="@android:drawable/ic_menu_delete" />
+
+
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskListView"
+        app:srcCompat="@android:drawable/ic_popup_reminder" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="267dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginLeft="14dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButton3"
+        app:layout_constraintTop_toBottomOf="@+id/taskListView"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnGreen"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/bckgrdGreen"
+                android:onClick="goGreen" />
+
+            <Button
+                android:id="@+id/btnBlue"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/bckgrdBlue"
+                android:onClick="goBlue" />
+
+            <Button
+                android:id="@+id/btnYellow"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/bckgrdYellow"
+                android:onClick="goYellow" />
+
+            <Button
+                android:id="@+id/btnRed"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/bckgrdRed"
+                android:onClick="goRed" />
+        </LinearLayout>
+
+
+    </HorizontalScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
