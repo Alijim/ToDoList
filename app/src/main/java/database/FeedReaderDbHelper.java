@@ -106,10 +106,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return id;
     }
 
-
-
-
-
     public void insertFakeData() {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -290,7 +286,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 //        }
 //        return items.toString();
     }
-
 
     public HashMap<Integer, List> readAllItems() {
         String s = "";
@@ -560,7 +555,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     }
 
-
     public void updateItemTitle(Integer id, String newTitle) {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -585,7 +579,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return txt;
 
     }
-
 
     public void deleteTask(Integer id){
         SQLiteDatabase db = getWritableDatabase();
@@ -629,6 +622,53 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, "test.jpg");
 
         long itemsRow1 = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
+    }
+
+    public void updateBackgroundColorFromItem(Integer id, Integer color) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR, color.toString());
+
+        String selection = FeedReaderContract.ItemsEntry._ID + " =  "+id.toString();
+
+        int count = db.update(
+                FeedReaderContract.ItemsEntry.TABLE_NAME,
+                values,
+                selection,
+                null);
+    }
+
+    public Integer getBackgroundColorFromItem(Integer id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Integer color = 0;
+
+        String[] projection = {
+                BaseColumns._ID,
+                FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR,
+        };
+
+        String selection = FeedReaderContract.ItemsEntry._ID + " = ?";
+        String[] selectionArgs = { id.toString() };
+
+        String sortOrder =
+                FeedReaderContract.ItemsEntry._ID + " DESC";
+
+        Cursor cursor = db.query(
+                FeedReaderContract.ItemsEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+        HashMap<Long, String> items = new HashMap<Long, String>();
+        while(cursor.moveToNext()) {
+            color = cursor.getInt(cursor.getColumnIndex("background_color"));
+        }
+        return color;
     }
 
 }
