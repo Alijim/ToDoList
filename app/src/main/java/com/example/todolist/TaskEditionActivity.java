@@ -124,8 +124,8 @@ public class TaskEditionActivity extends AppCompatActivity {
             dialog.show();
         }
 
-
-     public void goGreen(View view) {
+        
+    public void goGreen(View view) {
          ConstraintLayout l = findViewById(R.id.mainEdition);
          l.setBackgroundResource(R.color.bckgrdGreen);
     }
@@ -140,5 +140,9 @@ public class TaskEditionActivity extends AppCompatActivity {
     public void goRed(View view) {
          ConstraintLayout l = findViewById(R.id.mainEdition);
          l.setBackgroundResource(R.color.bckgrdRed);
+    }
+    public void goWhite(View view) {
+         ConstraintLayout l = findViewById(R.id.mainEdition);
+         l.setBackgroundResource(R.color.bckgrdWhite);
     }
 }
