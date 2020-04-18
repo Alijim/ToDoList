@@ -20,6 +20,7 @@ public final class FeedReaderContract {
             public static final String COLUMN_NAME_TITLE = "title";
             public static final String COLUMN_NAME_DEADLINE = "deadLine";
             public static final String COLUMN_NAME_IMAGE  = "image";
+            public static final String COLUMN_NAME_BGCOLOR  = "background_color";
         }
 
         public static class TagsEntry implements BaseColumns {
