@@ -370,7 +370,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 //        HashMap<Long, String>items = new HashMap<Long, String>();
 //        HashMap<Long, String>items = new HashMap<Long, String>();
         while(cursor.moveToNext()) {
-             Integer id = cursor.getInt(cursor.getColumnIndexOrThrow(FeedReaderContract.ItemsEntry._ID));
+             Integer id = cursor.getInt(cursor.getColumnIndex("_id"));
             String title_1 = cursor.getString(cursor.getColumnIndex("title"));
             List<Task> tasks = getTasksFromItem(id);
             String deadLine = cursor.getString(cursor.getColumnIndex("deadLine"));
@@ -623,7 +623,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, i.getTitle());
-        values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline().toString());
+//        values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline().toString());
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, i.getImage());
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR, i.getBackground_color());
 

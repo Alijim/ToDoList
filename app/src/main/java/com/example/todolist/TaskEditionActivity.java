@@ -3,6 +3,7 @@ package com.example.todolist;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,14 +33,16 @@ public class TaskEditionActivity extends AppCompatActivity {
     private Integer idItem;
     private ArrayAdapter<String> itemsAdapter;
 
-
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_edition);
-        View l = findViewById(R.id.mainEdition).getRootView();
+//        View l = findViewById(R.id.cv_Title).getRootView();
+        ConstraintLayout l = findViewById(R.id.mainEdition);
         mHelper = new FeedReaderDbHelper(this);
         String txt = "";
+
 
         Bundle extras = getIntent().getExtras();
 
@@ -47,6 +50,11 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         this.item = mHelper.researchItem(txt);
         this.tasks = new ArrayList<String>();
+
+        Integer color = Integer.parseInt(item.getBackground_color());
+
+
+        l.setBackgroundResource(color);
 
 
         TextView txtV = findViewById(R.id.titleDisplay);
@@ -132,31 +140,37 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     public void goGreen(View view) {
          ConstraintLayout l = findViewById(R.id.mainEdition);
-         mHelper.updateBackgroundColorFromItem(idItem, R.color.bckgrdGreen);
-         l.setBackgroundResource(R.color.bckgrdGreen);
+        Integer color = R.color.bckgrdGreen;
+        item.setBackground_color(color.toString());
+        mHelper.updateItem(item);
+      l.setBackgroundResource(R.color.bckgrdGreen);
     }
     public void goBlue(View view) {
-         ConstraintLayout l = findViewById(R.id.mainEdition);
-        mHelper.updateBackgroundColorFromItem(idItem, R.color.bckgrdBlue);
-
-        l.setBackgroundResource(R.color.bckgrdBlue);
+        ConstraintLayout l = findViewById(R.id.mainEdition);
+        Integer color = R.color.bckgrdBlue;
+        item.setBackground_color(color.toString());
+        mHelper.updateItem(item);
+        l.setBackgroundResource(color);
     }
     public void goYellow(View view) {
-         ConstraintLayout l = findViewById(R.id.mainEdition);
-        mHelper.updateBackgroundColorFromItem(idItem, R.color.bckgrdYellow);
-
+        ConstraintLayout l = findViewById(R.id.mainEdition);
+        Integer color = R.color.bckgrdYellow;
+        item.setBackground_color(color.toString());
+        mHelper.updateItem(item);
         l.setBackgroundResource(R.color.bckgrdYellow);
     }
     public void goRed(View view) {
-         ConstraintLayout l = findViewById(R.id.mainEdition);
-        mHelper.updateBackgroundColorFromItem(idItem, R.color.bckgrdRed);
-
-        l.setBackgroundResource(R.color.bckgrdRed);
+        ConstraintLayout l = findViewById(R.id.mainEdition);
+        Integer color = R.color.bckgrdRed;
+        item.setBackground_color(color.toString());
+        mHelper.updateItem(item);
+        l.setBackgroundResource(color);
     }
     public void goWhite(View view) {
          ConstraintLayout l = findViewById(R.id.mainEdition);
-        mHelper.updateBackgroundColorFromItem(idItem, R.color.bckgrdWhite);
-
+        Integer color = R.color.bckgrdWhite;
+        item.setBackground_color(color.toString());
+        mHelper.updateItem(item);
         l.setBackgroundResource(R.color.bckgrdWhite);
     }
 }

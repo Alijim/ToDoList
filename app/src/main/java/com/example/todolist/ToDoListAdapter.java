@@ -75,7 +75,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
                 List<Task> myItemTab = myCurrent.getListTasks();
                 StringBuilder sb = new StringBuilder();
                 for(Task t : myItemTab){
-                    sb.append(t.getWording());
+                    sb.append(t.getWording()+"\n");
                 }
                 myListItem = sb.toString();
             }
