@@ -142,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Item i = new Item();
                         i.setTitle(String.valueOf(taskEditText.getText()));
+                        Integer color = R.color.bckgrdWhite;
+                        i.setBackground_color(color.toString());
 //                        i.setBackground_color(R.color.bckgrdWhite);
                         mHelper.insertIntoItems(i);
                         launchTaskEditionActivityF(i.getTitle());
