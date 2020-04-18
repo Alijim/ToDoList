@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -374,6 +375,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         //return items.toString();
     }
+
     public List<Integer> getTasksIdFromItem(Integer id) {
         String s = "";
 //        Integer id = getAnyID("Items", "Title", args);
@@ -594,6 +596,21 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     public void testDelete(Integer id) {
         deleteItem(4);
+    }
+
+    public void testDate(){
+        SQLiteDatabase db = getWritableDatabase();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ContentValues valuesItems = new ContentValues();
+//        String date =
+//        valuesItems.put(, dateFormat.format(lsd));
+
+
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, "TEST");
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, "skuksuksusksu");
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, "test.jpg");
+
+        long itemsRow1 = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
     }
 
 }

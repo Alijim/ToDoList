@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         // Give the RecyclerView a default layout manager.
         // Le LayoutManager permet de positionner correctement l'ensemble des données de la liste.
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        mHelper.testDate();
+
         this.initialisationData();
 
         //Creation du menu
