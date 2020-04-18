@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.todolist.model.Item;
+import com.example.todolist.model.Task;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +25,11 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     private FeedReaderDbHelper mHelper;
     private View vw;
+    private Item item;
     private ListView mTaskListView;
-    private List<String> items;
+    private List<String> tasks;
     private List<Integer> itemsId;
     private Integer idItem;
-    private String item;
     private ArrayAdapter<String> itemsAdapter;
 
 
@@ -34,42 +37,33 @@ public class TaskEditionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_edition);
-
         View l = findViewById(R.id.mainEdition).getRootView();
-
-
-
         mHelper = new FeedReaderDbHelper(this);
-
-
+        String txt = "";
 
         Bundle extras = getIntent().getExtras();
-        String txt = extras.getString("name");
-        this.item = txt;
-        this.idItem = mHelper.getAnyID("Items", "title", txt);
 
-        l.setBackgroundResource(mHelper.getBackgroundColorFromItem(idItem));
+        txt = extras.getString("name");
 
+        this.item = mHelper.researchItem(txt);
+        this.tasks = new ArrayList<String>();
 
-        List<String> intermediaire = new ArrayList<String>(mHelper.getTasksFromItem(idItem));
-        items = new ArrayList<String>(mHelper.getTasksFromItem(idItem));
-        itemsId = new ArrayList<Integer>(mHelper.getTasksIdFromItem(idItem));
-
-//        for(String s : intermediaire) {
-//
-//        }
 
         TextView txtV = findViewById(R.id.titleDisplay);
         //txtV.setPaintFlags(txtV.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
         //txtV.setText(item);
 //        String vvvvv = mHelper.readDone("salut").toString();
 
-        txtV.setText(item);
+        txtV.setText(item.getTitle());
+
+        for(Task t : item.getListTasks()) {
+            tasks.add(t.getWording());
+        }
 
 //        itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.task_title, items);
 
 //        CheckBoxAdapter cbxAdapter = new CheckBoxAdapter(this, items );
-        itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.chkBox, items);
+        itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.chkBox, tasks);
 
 //        for (Integer i : itemsId) {
 //            if(mHelper.readDone(i) == 0) {
@@ -93,10 +87,11 @@ public class TaskEditionActivity extends AppCompatActivity {
     public void insertTaskIntoItem(View view) {
         EditText edtTask = findViewById(R.id.txtTask);
 
-        mHelper.insertTask(item, edtTask.getText().toString());
+        Task t = new Task(edtTask.getText().toString(), Boolean.FALSE);
 
-
-        items.add(edtTask.getText().toString());
+        mHelper.insertTask(item.getId(), t);
+        item.getListTasks().add(t);
+        tasks.add(edtTask.getText().toString());
         itemsAdapter.notifyDataSetChanged();
         edtTask.getText().clear();
         //startActivity(intent);
@@ -104,9 +99,7 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     public void deleteThisItem(View view){
         Intent intent = new Intent(this, MainActivity.class);
-
-        mHelper.deleteItem(this.idItem);
-
+        mHelper.deleteItemById(item.getId());
         startActivity(intent);
 
     }
@@ -125,7 +118,8 @@ public class TaskEditionActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String task = String.valueOf(taskEditText.getText());
-                            mHelper.updateItemTitle(idItem, task);
+                            item.setTitle(task);
+                            mHelper.updateItem(item);
                             TextView txtV = findViewById(R.id.titleDisplay);
                             txtV.setText(task);
                         }
