@@ -36,8 +36,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderContract.ItemsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE + " TEXT," +
                     FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE + " DATE," +
-                    FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE + " TEXT"+
-                    FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR + "TEXT)";
+                    FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE + " TEXT, "+
+                    FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR + " TEXT)";
 
     private static final String SQL_CREATE_TAGITEMS =
             "CREATE TABLE " + FeedReaderContract.TagsItemsEntry.TABLE_NAME + " (" +
