@@ -512,11 +512,11 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                 FeedReaderContract.TaskEntry.COLUMN_NAME_DONE,
         };
 
-        String selection = FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING + " = ?";
+        String selection = FeedReaderContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = { id.toString() };
 
         String sortOrder =
-                FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING + " DESC";
+                FeedReaderContract.TaskEntry._ID + " DESC";
 
         Cursor cursor = db.query(
                 FeedReaderContract.TaskEntry.TABLE_NAME,   // The table to query
@@ -538,6 +538,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public void changeDone(Integer id) {
         SQLiteDatabase db = getWritableDatabase();
         Integer done;
+        Integer test = 1;
 
         if(readDone(id) == 0) {
             done = 1;
@@ -548,8 +549,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, done);
 
-        String selection = FeedReaderContract.TaskEntry._ID + " = '"+id+"'";
-        //String[] selectionArgs = { id.toString() };
+        String selection = FeedReaderContract.TaskEntry._ID + " =  "+test.toString();
+        String[] selectionArgs = {test.toString() };
 
         int count = db.update(
                 FeedReaderContract.TaskEntry.TABLE_NAME,
@@ -557,6 +558,22 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                 selection,
                 null);
 
+    }
+
+
+    public void updateItemTitle(Integer id, String newTitle) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, newTitle);
+
+        String selection = FeedReaderContract.ItemsEntry._ID + " =  "+id.toString();
+
+        int count = db.update(
+                FeedReaderContract.ItemsEntry.TABLE_NAME,
+                values,
+                selection,
+                null);
     }
 
     public String testDone (Integer id) {

@@ -114,13 +114,16 @@ public class TaskEditionActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String task = String.valueOf(taskEditText.getText());
-                            mHelper.insertIntoItems(task, "", "");
+                            mHelper.updateItemTitle(idItem, task);
+                            TextView txtV = findViewById(R.id.titleDisplay);
+                            txtV.setText(task);
                         }
                     })
                     .setNegativeButton("Annuler", null)
                     .create();
             dialog.show();
         }
+
 
      public void goGreen(View view) {
          ConstraintLayout l = findViewById(R.id.mainEdition);
