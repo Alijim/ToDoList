@@ -264,14 +264,15 @@ public class TaskEditionActivity extends AppCompatActivity {
         Integer i = Integer.parseInt(cbx.getText().toString());
 
         Task t = new Task(i, txtv_task.getText().toString(), cbx.isChecked());
-        cbx.setChecked(t.getDone());
         if(t.getDone() == true) {
-            txtv_task.setPaintFlags(0);
-            txtv_task.setText(t.getWording());
-        } else {
             txtv_task.setPaintFlags(txtv_task.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
             txtv_task.setText(t.getWording());
+        } else {
+            txtv_task.setPaintFlags(0);
+            txtv_task.setText(t.getWording());
         }
+        cbx.setChecked(t.getDone());
+
 
         mHelper.updateTask(t);
     }
