@@ -191,4 +191,29 @@
 
     </HorizontalScrollView>
 
+    <TextView
+        android:id="@+id/txtv_Date"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/btnAddTask"
+        app:layout_constraintEnd_toStartOf="@+id/btn_Date"
+        app:layout_constraintTop_toBottomOf="@+id/imageTask" />
+
+    <ImageButton
+        android:id="@+id/btn_Date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="onClickDatePicker"
+        app:layout_constraintBottom_toTopOf="@+id/btnAddTask"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageTask"
+        app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

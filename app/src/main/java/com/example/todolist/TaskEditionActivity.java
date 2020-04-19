@@ -5,12 +5,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,6 +22,7 @@ import com.example.todolist.model.Item;
 import com.example.todolist.model.Task;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import database.FeedReaderDbHelper;
@@ -25,6 +30,8 @@ import database.FeedReaderDbHelper;
 public class TaskEditionActivity extends AppCompatActivity {
 
     private FeedReaderDbHelper mHelper;
+    private ImageButton btnDatePicker;
+    private TextView txt_Date;
     private View vw;
     private Item item;
     private ListView mTaskListView;
@@ -32,6 +39,7 @@ public class TaskEditionActivity extends AppCompatActivity {
     private List<Integer> itemsId;
     private Integer idItem;
     private ArrayAdapter<String> itemsAdapter;
+    private int mYear, mMonth, mDay;
 
     @SuppressLint("ResourceType")
     @Override
@@ -40,6 +48,10 @@ public class TaskEditionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task_edition);
 //        View l = findViewById(R.id.cv_Title).getRootView();
         ConstraintLayout l = findViewById(R.id.mainEdition);
+        btnDatePicker= findViewById(R.id.btn_Date);
+        txt_Date = findViewById(R.id.txtv_Date);
+
+
         mHelper = new FeedReaderDbHelper(this);
         String txt = "";
 
@@ -92,6 +104,30 @@ public class TaskEditionActivity extends AppCompatActivity {
     }
 
 
+
+    public void onClickDatePicker(View v) {
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        long now = c.getTimeInMillis();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+
+                        txt_Date.setText(dayOfMonth + " " + (getTextMonthFR(mMonth+1)) + " " + year);
+
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        datePickerDialog.show();
+    }
+
     public void insertTaskIntoItem(View view) {
         EditText edtTask = findViewById(R.id.txtTask);
 
@@ -103,6 +139,24 @@ public class TaskEditionActivity extends AppCompatActivity {
         itemsAdapter.notifyDataSetChanged();
         edtTask.getText().clear();
         //startActivity(intent);
+    }
+
+    public String getTextMonthFR(Integer m) {
+        switch(m){
+            case 1 : return "janvier";
+            case 2 : return "février";
+            case 3 : return "mars";
+            case 4 : return "avril";
+            case 5 : return "mai";
+            case 6 : return "juin";
+            case 7 : return "juillet";
+            case 8 : return "août";
+            case 9 : return "septembre";
+            case 10 : return "octobre";
+            case 11 : return "novembre";
+            case 12 : return "décembre";
+            default :return"erreur";
+        }
     }
 
     public void deleteThisItem(View view){
