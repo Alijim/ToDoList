@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,12 +18,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.todolist.model.Item;
 import com.example.todolist.model.Task;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import database.FeedReaderDbHelper;
@@ -34,12 +37,14 @@ public class TaskEditionActivity extends AppCompatActivity {
     private TextView txt_Date;
     private View vw;
     private Item item;
+    private String txtDate = "";
+
     private ListView mTaskListView;
     private List<String> tasks;
     private List<Integer> itemsId;
     private Integer idItem;
     private ArrayAdapter<String> itemsAdapter;
-    private int mYear, mMonth, mDay;
+    private int mYear, mMonth, mDay, mHour, mMinute;
 
     @SuppressLint("ResourceType")
     @Override
@@ -105,7 +110,7 @@ public class TaskEditionActivity extends AppCompatActivity {
 
 
 
-    public void onClickDatePicker(View v) {
+    public void onClickDatePicker(final View v) {
         // Get Current Date
         final Calendar c = Calendar.getInstance();
         long now = c.getTimeInMillis();
@@ -119,13 +124,35 @@ public class TaskEditionActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
+                        txtDate = dayOfMonth + " " + (getTextMonthFR(mMonth+1)) + " " + year;
+                        displayTimePickerDialog(v);
+//                        txt_Date.setText(dayOfMonth + " " + (getTextMonthFR(mMonth+1)) + " " + year);
 
-                        txt_Date.setText(dayOfMonth + " " + (getTextMonthFR(mMonth+1)) + " " + year);
 
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
+    }
+
+    public void displayTimePickerDialog(View v) {
+        final Calendar c = Calendar.getInstance();
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
+
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+
+                        txtDate += " à "+hourOfDay+ ":"+ minute;
+                        txt_Date.setText(txtDate);
+                    }
+                }, mHour, mMinute, true);
+        timePickerDialog.show();
     }
 
     public void insertTaskIntoItem(View view) {
@@ -190,6 +217,12 @@ public class TaskEditionActivity extends AppCompatActivity {
                     .create();
             dialog.show();
         }
+
+    public void updateDate(Integer y, Integer m, Integer d) {
+        Date dt = new Date();
+//        dt.
+//        item.setDeadline();
+    }
 
 
     public void goGreen(View view) {
