@@ -37,14 +37,14 @@ public class CheckBoxAdapter extends ArrayAdapter {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Task itemTodo = (Task)getItem(position);
+        Task task = (Task) getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo, parent, false);
         }
         TextView name = convertView.findViewById(R.id.txtv_task);
         CheckBox checkBox = convertView.findViewById(R.id.chkBox);
-        name.setText(itemTodo.getWording());
-        if(itemTodo.getDone()){
+        name.setText(task.getWording());
+        if(task.getDone() == true){
             checkBox.setChecked(true);
         } else {
             checkBox.setChecked(false);

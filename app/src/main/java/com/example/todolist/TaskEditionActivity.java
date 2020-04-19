@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -250,6 +251,14 @@ public class TaskEditionActivity extends AppCompatActivity {
                     .create();
             dialog.show();
         }
+
+//    public void updateCheckBox(View view){
+//        Task t = new Task();
+//        View parent = (View) view.getParent();
+//        CheckBox cbx = parent.findViewById(R.id.chkBox);
+//        TextView nameItem = parent.findViewById(R.id.txtv_task);
+//        mHelper.updateCheckedItemTodo(erwer.getNumID(), cbx.isChecked(), nameItem.getText().toString());
+//    }
 
     public void updateDate(Integer y, Integer m, Integer d) {
         Date dt = new Date();

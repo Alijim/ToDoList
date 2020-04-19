@@ -53,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+//        Task t = new Task(2, "salut", true);
+//        mHelper.updateTask(t);
+
         FloatingActionButton fab = findViewById(R.id.fab);
 
         // Get a handle to the RecyclerView.
