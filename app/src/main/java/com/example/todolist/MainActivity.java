@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    //
     //Méthode à redéfinir avec les données de la BD
     public void initialisationData() {
 
