@@ -197,7 +197,8 @@
         android:layout_height="26dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="TextView"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btnAddTask"
         app:layout_constraintEnd_toStartOf="@+id/btn_Date"
         app:layout_constraintTop_toBottomOf="@+id/imageTask" />
@@ -210,6 +211,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
+        android:background="#FF1744"
         android:onClick="onClickDatePicker"
         app:layout_constraintBottom_toTopOf="@+id/btnAddTask"
         app:layout_constraintEnd_toEndOf="parent"
