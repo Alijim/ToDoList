@@ -406,7 +406,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         String[] selectionArgs = {  id.toString()};
 
         String sortOrder =
-                FeedReaderContract.TaskEntry._ID + " DESC";
+                FeedReaderContract.TaskEntry.COLUMN_NAME_DONE + " ASC ";
 
         Cursor cursor = db.query(
                 FeedReaderContract.TaskEntry.TABLE_NAME,   // The table to query
@@ -628,7 +628,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, i.getTitle());
-        values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline().toString());
+//        values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline().toString());
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, i.getImage());
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR, i.getBackground_color());
 

@@ -51,6 +51,7 @@ public class CheckBoxAdapter extends ArrayAdapter {
             name.setText(task.getWording());
             checkBox.setChecked(true);
         } else {
+            name.setPaintFlags(0);
             name.setText(task.getWording());
             checkBox.setText(task.getId().toString());
             checkBox.setChecked(false);
