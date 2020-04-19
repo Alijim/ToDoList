@@ -191,14 +191,14 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         ContentValues valuesItems = new ContentValues();
 
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, i.getTitle());
-//        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline());
+//        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline().);
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, i.getImage());
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR, i.getBackground_color());
 
         long itemsRow1 = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
     }
 
-    public void insertTask(Integer id, Task t) {
+    public long insertTask(Integer id, Task t) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues valuesTasks = new ContentValues();
 
@@ -206,6 +206,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, t.getDone());
         valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_FK, id);
         long tasksRow1 = db.insert(FeedReaderContract.TaskEntry.TABLE_NAME, null, valuesTasks);
+        return  tasksRow1;
     }
 
     public void deleteAllData() {
@@ -398,13 +399,14 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         String[] projection = {
                 BaseColumns._ID,
                 FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING,
+                FeedReaderContract.TaskEntry.COLUMN_NAME_DONE
         };
 
         String selection = FeedReaderContract.TaskEntry.COLUMN_NAME_FK + " = ?";
         String[] selectionArgs = {  id.toString()};
 
         String sortOrder =
-                FeedReaderContract.TaskEntry._ID + " DESC";
+                FeedReaderContract.TaskEntry.COLUMN_NAME_DONE + " ASC ";
 
         Cursor cursor = db.query(
                 FeedReaderContract.TaskEntry.TABLE_NAME,   // The table to query
@@ -422,6 +424,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
             Boolean b = Boolean.FALSE ;
             Integer idTask = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
             String wording = cursor.getString(cursor.getColumnIndex("wording"));
+            b = cursor.getInt(cursor.getColumnIndex("done")) > 0;
 //            Integer done = cursor.getInt(cursor.getColumnIndex("done"));
 //            if(done == 1) {
 //                 b = Boolean.FALSE;
@@ -633,6 +636,21 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         int count = db.update(
                 FeedReaderContract.ItemsEntry.TABLE_NAME,
+                values,
+                selection,
+                null);
+    }
+    public void updateTask(Task t) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(FeedReaderContract.TaskEntry.COLUMN_NAME_WORDING, t.getWording());
+        values.put(FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, t.getDone());
+
+        String selection = FeedReaderContract.TaskEntry._ID + " =  "+t.getId().toString();
+
+        int count = db.update(
+                FeedReaderContract.TaskEntry.TABLE_NAME,
                 values,
                 selection,
                 null);

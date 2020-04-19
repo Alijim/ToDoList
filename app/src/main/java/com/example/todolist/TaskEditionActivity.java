@@ -1,23 +1,40 @@
 package com.example.todolist;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.todolist.model.Item;
 import com.example.todolist.model.Task;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import database.FeedReaderDbHelper;
@@ -25,13 +42,20 @@ import database.FeedReaderDbHelper;
 public class TaskEditionActivity extends AppCompatActivity {
 
     private FeedReaderDbHelper mHelper;
+    private ImageButton btnDatePicker;
+    private TextView txt_Date;
     private View vw;
     private Item item;
+    private String txtDate = "";
+
     private ListView mTaskListView;
     private List<String> tasks;
+    private List<Task> listTask;
     private List<Integer> itemsId;
     private Integer idItem;
+    private CheckBoxAdapter cbxAdapter;
     private ArrayAdapter<String> itemsAdapter;
+    private int mYear, mMonth, mDay, mHour, mMinute;
 
     @SuppressLint("ResourceType")
     @Override
@@ -40,6 +64,10 @@ public class TaskEditionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task_edition);
 //        View l = findViewById(R.id.cv_Title).getRootView();
         ConstraintLayout l = findViewById(R.id.mainEdition);
+        btnDatePicker= findViewById(R.id.btn_Date);
+        txt_Date = findViewById(R.id.txtv_Date);
+
+
         mHelper = new FeedReaderDbHelper(this);
         String txt = "";
 
@@ -50,11 +78,19 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         this.item = mHelper.researchItem(txt);
         this.tasks = new ArrayList<String>();
+        this.listTask = item.getListTasks();
 
         Integer color = Integer.parseInt(item.getBackground_color());
 
 
         l.setBackgroundResource(color);
+
+        if (cbxAdapter != null) {
+            tasks.clear();
+            cbxAdapter.clear();
+        }
+//        listItems = mHelper.getListItemByTodo(task.getNumID());
+        cbxAdapter = new CheckBoxAdapter(this, listTask);
 
 
         TextView txtV = findViewById(R.id.titleDisplay);
@@ -85,24 +121,108 @@ public class TaskEditionActivity extends AppCompatActivity {
 //        itemsAdapter.add("test");
 
         ListView lv = findViewById(R.id.taskListView);
-        lv.setAdapter(itemsAdapter);
+        lv.setAdapter(cbxAdapter);
+
+//        lv.setAdapter(itemsAdapter);
 
 
 
     }
 
 
+
+    public void onClickDatePicker(final View v) {
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        long now = c.getTimeInMillis();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        txtDate = dayOfMonth + " " + (getTextMonthFR(mMonth+1)) + " " + year;
+                        displayTimePickerDialog(v);
+//                        txt_Date.setText(dayOfMonth + " " + (getTextMonthFR(mMonth+1)) + " " + year);
+
+
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        datePickerDialog.show();
+    }
+
+    public void displayTimePickerDialog(View v) {
+        final Calendar c = Calendar.getInstance();
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
+
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+
+                        txtDate += " à "+hourOfDay+ ":"+ minute;
+//                        String date = mYear+"-"+mMonth+"-"+mDay+" "+mHour+":"+mMinute;
+                        String date = mDay+"-"+mMonth+1+"-"+mYear+" "+mHour+":"+mMinute;
+                        Date datee = null;
+
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm");
+                        try {
+                            datee = new SimpleDateFormat("dd-M-yyyy hh:mm").parse(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        String str = datee.toString();
+
+                        item.setDeadline(datee);
+                        txt_Date.setText(txtDate);
+                    }
+                }, mHour, mMinute, true);
+        timePickerDialog.show();
+    }
+
     public void insertTaskIntoItem(View view) {
         EditText edtTask = findViewById(R.id.txtTask);
 
         Task t = new Task(edtTask.getText().toString(), Boolean.FALSE);
 
-        mHelper.insertTask(item.getId(), t);
-        item.getListTasks().add(t);
+        long id = mHelper.insertTask(item.getId(), t);
+        Integer iId = (int) (long) id;
+
+        Task tWithId = new Task(iId, t.getWording(), t.getDone());
+
+        item.getListTasks().add(tWithId);
         tasks.add(edtTask.getText().toString());
         itemsAdapter.notifyDataSetChanged();
         edtTask.getText().clear();
         //startActivity(intent);
+    }
+
+    public String getTextMonthFR(Integer m) {
+        switch(m){
+            case 1 : return "janvier";
+            case 2 : return "février";
+            case 3 : return "mars";
+            case 4 : return "avril";
+            case 5 : return "mai";
+            case 6 : return "juin";
+            case 7 : return "juillet";
+            case 8 : return "août";
+            case 9 : return "septembre";
+            case 10 : return "octobre";
+            case 11 : return "novembre";
+            case 12 : return "décembre";
+            default :return"erreur";
+        }
     }
 
     public void deleteThisItem(View view){
@@ -136,6 +256,33 @@ public class TaskEditionActivity extends AppCompatActivity {
                     .create();
             dialog.show();
         }
+
+    public void updateCheckBox(View view){
+        View parent = (View) view.getParent();
+        CheckBox cbx = parent.findViewById(R.id.chkBox);
+        TextView txtv_task = parent.findViewById(R.id.txtv_task);
+        Integer i = Integer.parseInt(cbx.getText().toString());
+
+        Task t = new Task(i, txtv_task.getText().toString(), cbx.isChecked());
+        cbx.setChecked(t.getDone());
+        if(t.getDone() == true) {
+            txtv_task.setPaintFlags(txtv_task.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+
+            txtv_task.setText(t.getWording());
+        } else {
+            txtv_task.setPaintFlags(0);
+
+            txtv_task.setText(t.getWording());
+        }
+
+        mHelper.updateTask(t);
+    }
+
+    public void updateDate(Integer y, Integer m, Integer d) {
+        Date dt = new Date();
+//        dt.
+//        item.setDeadline();
+    }
 
 
     public void goGreen(View view) {

@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -51,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+//        Task t = new Task(2, "salut", true);
+//        mHelper.updateTask(t);
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
