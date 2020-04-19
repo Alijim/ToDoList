@@ -14,9 +14,10 @@
         android:layout_height="138dp"
         android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toTopOf="@+id/titleDisplay"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-2dp"
-        tools:srcCompat="@android:mipmap/sym_def_app_icon" />
+        app:srcCompat="@drawable/img_addapicture"
+        tools:srcCompat="@drawable/img_addapicture" />
 
     <ListView
         android:id="@+id/taskListView"
