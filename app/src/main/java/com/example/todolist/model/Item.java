@@ -1,5 +1,8 @@
 package com.example.todolist.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +12,7 @@ public class Item {
     private String title;
     private Date deadline;
     private List<Task> listTasks;
+    private List<Tag> listTags;
     private String image;
     private String background_color;
     private Integer imageRessource;

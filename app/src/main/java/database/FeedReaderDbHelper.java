@@ -191,7 +191,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         ContentValues valuesItems = new ContentValues();
 
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, i.getTitle());
-//        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline());
+//        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline().);
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, i.getImage());
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR, i.getBackground_color());
 
@@ -625,7 +625,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, i.getTitle());
-//        values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline().toString());
+        values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline().toString());
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, i.getImage());
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR, i.getBackground_color());
 

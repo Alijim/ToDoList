@@ -1,5 +1,6 @@
 package com.example.todolist;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -9,6 +10,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -23,6 +25,11 @@ import android.widget.TimePicker;
 import com.example.todolist.model.Item;
 import com.example.todolist.model.Task;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,8 +48,10 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     private ListView mTaskListView;
     private List<String> tasks;
+    private List<Task> listTask;
     private List<Integer> itemsId;
     private Integer idItem;
+    private CheckBoxAdapter cbxAdapter;
     private ArrayAdapter<String> itemsAdapter;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
@@ -67,11 +76,19 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         this.item = mHelper.researchItem(txt);
         this.tasks = new ArrayList<String>();
+        this.listTask = item.getListTasks();
 
         Integer color = Integer.parseInt(item.getBackground_color());
 
 
         l.setBackgroundResource(color);
+
+        if (cbxAdapter != null) {
+            tasks.clear();
+            cbxAdapter.clear();
+        }
+//        listItems = mHelper.getListItemByTodo(task.getNumID());
+        cbxAdapter = new CheckBoxAdapter(this, listTask);
 
 
         TextView txtV = findViewById(R.id.titleDisplay);
@@ -102,7 +119,9 @@ public class TaskEditionActivity extends AppCompatActivity {
 //        itemsAdapter.add("test");
 
         ListView lv = findViewById(R.id.taskListView);
-        lv.setAdapter(itemsAdapter);
+        lv.setAdapter(cbxAdapter);
+
+//        lv.setAdapter(itemsAdapter);
 
 
 
@@ -144,11 +163,25 @@ public class TaskEditionActivity extends AppCompatActivity {
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                 new TimePickerDialog.OnTimeSetListener() {
 
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay,
                                           int minute) {
 
                         txtDate += " à "+hourOfDay+ ":"+ minute;
+//                        String date = mYear+"-"+mMonth+"-"+mDay+" "+mHour+":"+mMinute;
+                        String date = mDay+"-"+mMonth+1+"-"+mYear+" "+mHour+":"+mMinute;
+                        Date datee = null;
+
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm");
+                        try {
+                            datee = new SimpleDateFormat("dd-M-yyyy hh:mm").parse(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        String str = datee.toString();
+
+                        item.setDeadline(datee);
                         txt_Date.setText(txtDate);
                     }
                 }, mHour, mMinute, true);

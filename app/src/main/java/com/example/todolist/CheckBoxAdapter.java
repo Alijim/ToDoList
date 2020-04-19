@@ -12,6 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.todolist.model.Item;
+import com.example.todolist.model.Task;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +26,7 @@ public class CheckBoxAdapter extends ArrayAdapter {
     List<Integer> itemsState;
     List<String> checkboxItems;
 
-    public CheckBoxAdapter(Context context, List<String> resource) {
+    public CheckBoxAdapter(Context context, List<Task> resource) {
         super(context, 0, resource);
 
         this.context = context;
@@ -34,8 +37,19 @@ public class CheckBoxAdapter extends ArrayAdapter {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return super.getView(position, convertView, parent);
-
+        Task itemTodo = (Task)getItem(position);
+        if(convertView == null){
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo, parent, false);
+        }
+        TextView name = convertView.findViewById(R.id.txtv_task);
+        CheckBox checkBox = convertView.findViewById(R.id.chkBox);
+        name.setText(itemTodo.getWording());
+        if(itemTodo.getDone()){
+            checkBox.setChecked(true);
+        } else {
+            checkBox.setChecked(false);
+        }
+        return convertView;
 
     }
 
