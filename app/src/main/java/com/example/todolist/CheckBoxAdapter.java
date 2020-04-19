@@ -2,6 +2,7 @@ package com.example.todolist;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +44,15 @@ public class CheckBoxAdapter extends ArrayAdapter {
         }
         TextView name = convertView.findViewById(R.id.txtv_task);
         CheckBox checkBox = convertView.findViewById(R.id.chkBox);
-        name.setText(task.getWording());
+//        name.setText(task.getWording());
         if(task.getDone() == true){
+            checkBox.setText(task.getId().toString());
+            name.setPaintFlags(name.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+            name.setText(task.getWording());
             checkBox.setChecked(true);
         } else {
+            name.setText(task.getWording());
+            checkBox.setText(task.getId().toString());
             checkBox.setChecked(false);
         }
         return convertView;

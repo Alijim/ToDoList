@@ -10,6 +10,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -194,8 +195,12 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         Task t = new Task(edtTask.getText().toString(), Boolean.FALSE);
 
-        mHelper.insertTask(item.getId(), t);
-        item.getListTasks().add(t);
+        long id = mHelper.insertTask(item.getId(), t);
+        Integer iId = (int) (long) id;
+
+        Task tWithId = new Task(iId, t.getWording(), t.getDone());
+
+        item.getListTasks().add(tWithId);
         tasks.add(edtTask.getText().toString());
         itemsAdapter.notifyDataSetChanged();
         edtTask.getText().clear();
@@ -252,13 +257,26 @@ public class TaskEditionActivity extends AppCompatActivity {
             dialog.show();
         }
 
-//    public void updateCheckBox(View view){
-//        Task t = new Task();
-//        View parent = (View) view.getParent();
-//        CheckBox cbx = parent.findViewById(R.id.chkBox);
-//        TextView nameItem = parent.findViewById(R.id.txtv_task);
-//        mHelper.updateCheckedItemTodo(erwer.getNumID(), cbx.isChecked(), nameItem.getText().toString());
-//    }
+    public void updateCheckBox(View view){
+        View parent = (View) view.getParent();
+        CheckBox cbx = parent.findViewById(R.id.chkBox);
+        TextView txtv_task = parent.findViewById(R.id.txtv_task);
+        Integer i = Integer.parseInt(cbx.getText().toString());
+
+        Task t = new Task(i, txtv_task.getText().toString(), cbx.isChecked());
+        cbx.setChecked(t.getDone());
+        if(t.getDone() == true) {
+            txtv_task.setPaintFlags(txtv_task.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+
+            txtv_task.setText(t.getWording());
+        } else {
+            txtv_task.setPaintFlags(0);
+
+            txtv_task.setText(t.getWording());
+        }
+
+        mHelper.updateTask(t);
+    }
 
     public void updateDate(Integer y, Integer m, Integer d) {
         Date dt = new Date();
