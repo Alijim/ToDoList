@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.todolist.model.Item;
+import com.example.todolist.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,12 @@ import static androidx.core.content.ContextCompat.startActivities;
 //L'adapter est un composant qui permet de faire la liaison (Bind) entre la vue RecyclerView et une liste de données.
 public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoListViewHolder> {
 
-    private final ArrayList<ItemToDo> myToDoList;
+    private final List<Item> myToDoList;
     private LayoutInflater myInflater;
     private Context myContext;
 
     //Constructeur
-    public ToDoListAdapter(Context context, ArrayList<ItemToDo> toDoList) {
+    public ToDoListAdapter(Context context, List<Item> toDoList) {
         myInflater = LayoutInflater.from(context);
         myContext = context;
         this.myToDoList = toDoList;
@@ -38,7 +40,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
 
     @Override
     public void onBindViewHolder(ToDoListAdapter.ToDoListViewHolder holder, int position) {
-        ItemToDo myCurrent = myToDoList.get(position);
+        Item myCurrent = myToDoList.get(position);
         holder.bindTo(myCurrent);
     }
 
@@ -65,21 +67,39 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
             //itemView.setOnClickListener(this);
         }
 
-        public void bindTo(ItemToDo myCurrent){
+        public void bindTo(Item myCurrent){
             // Populate the textviews with data.
             myTitre.setText(myCurrent.getTitle());
-            String myListItem = "Vide";
-            if (myCurrent.getListItem() != null) {
-                List myItemTab = myCurrent.getListItem();
+            Integer color = Integer.parseInt(myCurrent.getBackground_color());
+            myTitre.getRootView().setBackgroundResource(color);
+
+            String myListItem = "";
+            if (myCurrent.getListTasks() != null) {
+                List<Task> myItemTab = myCurrent.getListTasks();
                 StringBuilder sb = new StringBuilder();
-                for (int i=0; i<myItemTab.size(); i++) {
-                    sb.append(myItemTab.get(i)+"\n");
+                for(Task t : myItemTab){
+                    sb.append(t.getWording()+"\n");
                 }
                 myListItem = sb.toString();
             }
             myItem.setText(myListItem);
             // Load the images into the ImageView using the Glide library.
-            Glide.with(myContext).load(myCurrent.getImageResource()).into(myImage);
+            Glide.with(myContext).load(myCurrent.getImageRessource()).into(myImage);
+
+//
+//            myTitre.setText(myCurrent.getTitle());
+//            String myListItem = "Vide";
+//            if (myCurrent.getListTasks() != null) {
+//                List myItemTab = myCurrent.getListTasks();
+//                StringBuilder sb = new StringBuilder();
+//                for (int i=0; i<myItemTab.size(); i++) {
+//                    sb.append(myItemTab.get(i)+"\n");
+//                }
+//                myListItem = sb.toString();
+//            }
+//            myItem.setText(myListItem);
+//            // Load the images into the ImageView using the Glide library.
+//            Glide.with(myContext).load(myCurrent.getImage()).into(myImage);
         }
 
         // Ici on implémente l'action qui suit un click sur la cards

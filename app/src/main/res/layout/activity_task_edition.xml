@@ -100,7 +100,7 @@
 
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/btnNotify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -115,9 +115,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
         android:layout_marginLeft="14dp"
-        android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageButton3"
+        app:layout_constraintStart_toEndOf="@+id/btnNotify"
         app:layout_constraintTop_toBottomOf="@+id/taskListView"
         app:layout_constraintVertical_bias="0.0">
 
@@ -131,19 +130,25 @@
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@color/bckgrdGreen"
-                android:onClick="goGreen" />
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btngreen_shape_round"
+                android:onClick="goGreen"
+                android:shadowColor="#000000"
+                android:singleLine="false" />
 
             <Button
                 android:id="@+id/btnBlue"
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@color/bckgrdBlue"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btnblue_shape_round"
                 android:onClick="goBlue" />
 
             <Button
@@ -151,9 +156,11 @@
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@color/bckgrdYellow"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btnyellow_shape_round"
                 android:onClick="goYellow" />
 
             <Button
@@ -161,10 +168,24 @@
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@color/bckgrdRed"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btnred_shape_round"
                 android:onClick="goRed" />
+
+            <Button
+                android:id="@+id/btnWhite"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btnwhite_shape_round"
+                android:onClick="goWhite" />
         </LinearLayout>
 
 

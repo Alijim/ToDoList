@@ -5,76 +5,89 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.example.todolist.model.Item;
+import com.example.todolist.model.Task;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
-import database.FeedReaderContract;
 import database.FeedReaderDbHelper;
 
 public class TaskEditionActivity extends AppCompatActivity {
 
     private FeedReaderDbHelper mHelper;
     private View vw;
+    private Item item;
     private ListView mTaskListView;
-    private List items;
+    private List<String> tasks;
+    private List<Integer> itemsId;
     private Integer idItem;
-    private String item;
     private ArrayAdapter<String> itemsAdapter;
 
-
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_edition);
-
-
+//        View l = findViewById(R.id.cv_Title).getRootView();
+        ConstraintLayout l = findViewById(R.id.mainEdition);
         mHelper = new FeedReaderDbHelper(this);
+        String txt = "";
+
 
         Bundle extras = getIntent().getExtras();
-        String txt = extras.getString("name");
-        this.item = txt;
-        this.idItem = mHelper.getAnyID("Items", "title", txt);
+
+        txt = extras.getString("name");
+
+        this.item = mHelper.researchItem(txt);
+        this.tasks = new ArrayList<String>();
+
+        Integer color = Integer.parseInt(item.getBackground_color());
 
 
+        l.setBackgroundResource(color);
 
-        List<String> intermediaire = new ArrayList<String>(mHelper.getTasksFromItem(idItem));
-        items = new ArrayList<String>(mHelper.getTasksFromItem(idItem));
-
-//        for(String s : intermediaire) {
-//
-//        }
 
         TextView txtV = findViewById(R.id.titleDisplay);
         //txtV.setPaintFlags(txtV.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
         //txtV.setText(item);
 //        String vvvvv = mHelper.readDone("salut").toString();
 
-        txtV.setText(item);
-        itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.task_title, items);
+        txtV.setText(item.getTitle());
+
+        for(Task t : item.getListTasks()) {
+            tasks.add(t.getWording());
+        }
+
+//        itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.task_title, items);
+
+//        CheckBoxAdapter cbxAdapter = new CheckBoxAdapter(this, items );
+        itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.chkBox, tasks);
+
+//        for (Integer i : itemsId) {
+//            if(mHelper.readDone(i) == 0) {
+//                CheckBox cbx = null;
+//                cbx.setChecked(true);
+//                itemsAdapter.add(cbx);
+//            } else {
+//
+//            }
+//        }
+//        itemsAdapter.add("test");
 
         ListView lv = findViewById(R.id.taskListView);
         lv.setAdapter(itemsAdapter);
+
+
 
     }
 
@@ -82,10 +95,11 @@ public class TaskEditionActivity extends AppCompatActivity {
     public void insertTaskIntoItem(View view) {
         EditText edtTask = findViewById(R.id.txtTask);
 
-        mHelper.insertTask(item, edtTask.getText().toString());
+        Task t = new Task(edtTask.getText().toString(), Boolean.FALSE);
 
-
-        items.add(edtTask.getText().toString());
+        mHelper.insertTask(item.getId(), t);
+        item.getListTasks().add(t);
+        tasks.add(edtTask.getText().toString());
         itemsAdapter.notifyDataSetChanged();
         edtTask.getText().clear();
         //startActivity(intent);
@@ -93,9 +107,7 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     public void deleteThisItem(View view){
         Intent intent = new Intent(this, MainActivity.class);
-
-        mHelper.deleteItem(this.idItem);
-
+        mHelper.deleteItemById(item.getId());
         startActivity(intent);
 
     }
@@ -114,7 +126,10 @@ public class TaskEditionActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String task = String.valueOf(taskEditText.getText());
-                            mHelper.insertIntoItems(task, "", "");
+                            item.setTitle(task);
+                            mHelper.updateItem(item);
+                            TextView txtV = findViewById(R.id.titleDisplay);
+                            txtV.setText(task);
                         }
                     })
                     .setNegativeButton("Annuler", null)
@@ -122,20 +137,40 @@ public class TaskEditionActivity extends AppCompatActivity {
             dialog.show();
         }
 
-     public void goGreen(View view) {
+
+    public void goGreen(View view) {
          ConstraintLayout l = findViewById(R.id.mainEdition);
-         l.setBackgroundResource(R.color.bckgrdGreen);
+        Integer color = R.color.bckgrdGreen;
+        item.setBackground_color(color.toString());
+        mHelper.updateItem(item);
+      l.setBackgroundResource(R.color.bckgrdGreen);
     }
     public void goBlue(View view) {
-         ConstraintLayout l = findViewById(R.id.mainEdition);
-         l.setBackgroundResource(R.color.bckgrdBlue);
+        ConstraintLayout l = findViewById(R.id.mainEdition);
+        Integer color = R.color.bckgrdBlue;
+        item.setBackground_color(color.toString());
+        mHelper.updateItem(item);
+        l.setBackgroundResource(color);
     }
     public void goYellow(View view) {
-         ConstraintLayout l = findViewById(R.id.mainEdition);
-         l.setBackgroundResource(R.color.bckgrdYellow);
+        ConstraintLayout l = findViewById(R.id.mainEdition);
+        Integer color = R.color.bckgrdYellow;
+        item.setBackground_color(color.toString());
+        mHelper.updateItem(item);
+        l.setBackgroundResource(R.color.bckgrdYellow);
     }
     public void goRed(View view) {
+        ConstraintLayout l = findViewById(R.id.mainEdition);
+        Integer color = R.color.bckgrdRed;
+        item.setBackground_color(color.toString());
+        mHelper.updateItem(item);
+        l.setBackgroundResource(color);
+    }
+    public void goWhite(View view) {
          ConstraintLayout l = findViewById(R.id.mainEdition);
-         l.setBackgroundResource(R.color.bckgrdRed);
+        Integer color = R.color.bckgrdWhite;
+        item.setBackground_color(color.toString());
+        mHelper.updateItem(item);
+        l.setBackgroundResource(R.color.bckgrdWhite);
     }
 }

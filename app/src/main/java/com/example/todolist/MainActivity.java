@@ -3,13 +3,13 @@ package com.example.todolist;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
+import com.example.todolist.model.Item;
+import com.example.todolist.model.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,10 +34,11 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration myAppBarConfiguration;
 
-    private final ArrayList<ItemToDo> myToDoList = new ArrayList<>();
+    private final List<Item> myToDoList = new ArrayList<Item>();
     private RecyclerView myRecyclerView;
     private ToDoListAdapter myAdapter;
     private FeedReaderDbHelper mHelper;
+    private List<Item> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,29 +87,16 @@ public class MainActivity extends AppCompatActivity {
 
         HashMap<Integer, List> dbItemList = new HashMap<Integer, List>();
 
-        dbItemList = mHelper.readAllItems();
+        this.items = mHelper.getAllItems();
 
 
 
-        for (Map.Entry<Integer, List> entries : dbItemList.entrySet()) {
-            Integer key = entries.getKey();
-            List lv = entries.getValue();
+        for (Item i : items) {
+            i.setImageRessource(R.drawable.img_addapicture);
 
-            ArrayList<String> myItemList = new ArrayList<>();
-
-            String itemName =  lv.get(0).toString();
-
-            List<String> l = new ArrayList<String>( mHelper.getTasksFromItem(key));
-
-            for ( String s : l) {
-                myItemList.add(s);
-            }
-
-            myToDoList.add(new ItemToDo(itemName, myItemList, R.drawable.img_addapicture));
+            myToDoList.add(i);
 
         }
-
-
    }
 
     //Active le bouton de la barre de navigation (les 3 trais horizontaux)
@@ -127,9 +115,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void launchTaskEditionActivityF(String txt) {
+    public void launchTaskEditionActivityF(String s) {
         Intent intent = new Intent(this, TaskEditionActivity.class);
-        intent.putExtra("name", txt);
+        intent.putExtra("name", s);
 
         startActivity(intent);
     }
@@ -152,9 +140,13 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Ajouter", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String task = String.valueOf(taskEditText.getText());
-                        mHelper.insertIntoItems(task, "", "");
-                        launchTaskEditionActivityF(task);
+                        Item i = new Item();
+                        i.setTitle(String.valueOf(taskEditText.getText()));
+                        Integer color = R.color.bckgrdWhite;
+                        i.setBackground_color(color.toString());
+//                        i.setBackground_color(R.color.bckgrdWhite);
+                        mHelper.insertIntoItems(i);
+                        launchTaskEditionActivityF(i.getTitle());
                     }
                 })
                 .setNegativeButton("Annuler", null)
