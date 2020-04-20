@@ -149,10 +149,8 @@ public class EditionTagActivity extends AppCompatActivity {
                     }
                 }
 
-                tags.remove(tDelete);
-
+                tagsItem.remove(tDelete);
                 mHelper.deleteTagItem(item.getId(), tDelete.getId());
-//                tagListAdapter.remove(t);
 //                tagListAdapter.notifyDataSetChanged();
                 btn.setBackgroundColor(btn.getContext().getResources().getColor(R.color.bckgrdGreen));
                 btn.setText("Ajouter");
@@ -171,6 +169,11 @@ public class EditionTagActivity extends AppCompatActivity {
 //                Tag tat = new Tag(id, tAdd.getWording());
                 tagsItem.add(tAdd);
                 mHelper.insertTagItems(item, tAdd);
+//                tagListAdapter.notifyDataSetChanged();
+
+//                ListView lv = findViewById(R.id.lv_Tag);
+//                tagListAdapter = new TagListAdapter(this, tags, item);
+//                lv.setAdapter(tagListAdapter);
 //                tagListAdapter.add(tAdd);
 //                tagListAdapter.notifyDataSetChanged();
 //                tv.getText().clear();

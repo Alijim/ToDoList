@@ -885,12 +885,13 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         int deletedRows = db.delete(FeedReaderContract.TagsEntry.TABLE_NAME, selection, selectionArgs);
     }
 
-    public void deleteTagItem(Integer i, Integer t){
+    public int deleteTagItem(Integer i, Integer t){
         SQLiteDatabase db = getWritableDatabase();
 
         String selection = FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_TAGS + " LIKE ? AND "+FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_ITEMS+" LIKE ?";
         String[] selectionArgs = { i.toString(), t.toString() };
         int deletedRows = db.delete(FeedReaderContract.TagsItemsEntry.TABLE_NAME, selection, selectionArgs);
+        return deletedRows;
     }
 
     public void deleteItemById(Integer id) {

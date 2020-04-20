@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
 //
 //        String s = ";";
 
+//        Integer delete = mHelper.deleteTagItem(2,2);
+//
+//        String s = "";
+
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
