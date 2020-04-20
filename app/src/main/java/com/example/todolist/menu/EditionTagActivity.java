@@ -22,6 +22,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import database.FeedReaderDbHelper;
 
@@ -82,12 +83,17 @@ public class EditionTagActivity extends AppCompatActivity {
         Integer index = tags.indexOf(t);
         tagList.remove(tagList.indexOf(t));
 
+
+
         for(Tag tagg : tags) {
             if(tagg.getWording().equals(t)) {
                 tDelete = tagg;
-                tags.remove(tags.indexOf(tagg));
+//                tags.remove(tags.indexOf(tagg));
             }
         }
+
+        tags.remove(tDelete);
+
 
         mHelper.deleteTag(tDelete.getId());
         itemsAdapter.remove(t);
