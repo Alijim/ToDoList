@@ -17,6 +17,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.todolist.R;
+import com.example.todolist.model.Item;
 import com.example.todolist.model.Tag;
 import com.google.android.material.navigation.NavigationView;
 
@@ -30,6 +31,8 @@ public class EditionTagActivity extends AppCompatActivity {
 
     private FeedReaderDbHelper mHelper;
     private List<Tag> tags;
+    private List<Tag> tagsItem;
+    private Item item;
     private List<String> tagList;
     private ArrayAdapter<String> itemsAdapter;
 
@@ -38,19 +41,43 @@ public class EditionTagActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag_list);
         Button btnAdd = findViewById(R.id.btn_AddTag);
+
+        TextView textViewTag = findViewById(R.id.txtv_DisplayTxtTag);
+        Bundle extras = getIntent().getExtras();
         mHelper = new FeedReaderDbHelper(this);
+
+
+
+        String txt = extras.getString("name");
+
+        if(txt != null){
+            item = mHelper.researchItem(txt);
+            textViewTag.setText("Gérer les tags de : "+item.getTitle());
+        }
+
         this.tags = new ArrayList<Tag>();
+        this.tagsItem = new ArrayList<Tag>();
         this.tagList = new ArrayList<String>();
         tags = mHelper.getAllTags();
-
-        if(tags.size() >= 1) {
-            for(Tag t : tags) {
-                tagList.add(t.getWording());
+        if(txt != null){
+           tags = mHelper.getTagFromItem(item.getId());
+            if(tags.size() >= 1) {
+                for(Tag t : tags) {
+                    tagList.add(t.getWording());
+                }
+            }
+        } else {
+            if(tags.size() >= 1) {
+                for(Tag t : tags) {
+                    tagList.add(t.getWording());
+                }
             }
         }
-        tagList.add("Coucou");
 
-        itemsAdapter = new ArrayAdapter<String>(this,R.layout.tag_item, R.id.txtv_TagItem, tagList);
+
+//        tagList.add("Coucou");
+            itemsAdapter = new ArrayAdapter<String>(this,R.layout.tag_item, R.id.txtv_TagItem, tagList);
+
 
 
         ListView lv = findViewById(R.id.lv_Tag);
@@ -62,16 +89,32 @@ public class EditionTagActivity extends AppCompatActivity {
 
 
     public void createNewTag(View view) {
-        Tag t = new Tag();
-        EditText tv = findViewById(R.id.edtxt_Tag);
 
-        t.setWording(tv.getText().toString());
-        Integer id = mHelper.insertTag(t);
-        Tag tt = new Tag(id, t.getWording());
-        tags.add(tt);
-        itemsAdapter.add(t.getWording());
-        itemsAdapter.notifyDataSetChanged();
-        tv.getText().clear();
+        if(item != null){
+            Tag t = new Tag();
+            EditText tv = findViewById(R.id.edtxt_Tag);
+
+            t.setWording(tv.getText().toString());
+            Integer id = mHelper.insertTag(t);
+            Tag tt = new Tag(id, t.getWording());
+            mHelper.insertTagItems(item, tt);
+            tags.add(tt);
+            itemsAdapter.add(t.getWording());
+            itemsAdapter.notifyDataSetChanged();
+            tv.getText().clear();
+        } else {
+            Tag t = new Tag();
+            EditText tv = findViewById(R.id.edtxt_Tag);
+
+            t.setWording(tv.getText().toString());
+            Integer id = mHelper.insertTag(t);
+            Tag tt = new Tag(id, t.getWording());
+            tags.add(tt);
+            itemsAdapter.add(t.getWording());
+            itemsAdapter.notifyDataSetChanged();
+            tv.getText().clear();
+        }
+
     }
 
 

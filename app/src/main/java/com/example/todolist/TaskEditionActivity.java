@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.todolist.menu.EditionTagActivity;
 import com.example.todolist.model.Item;
 import com.example.todolist.model.Task;
 
@@ -130,6 +131,13 @@ public class TaskEditionActivity extends AppCompatActivity {
     }
 
 
+    public void addTag(View view) {
+        Intent intent = new Intent(this, EditionTagActivity.class);
+//        TextView txt = view.findViewById(R.id.cv_Title);
+        intent.putExtra("name", item.getTitle());
+
+        startActivity(intent);
+    }
 
     public void onClickDatePicker(final View v) {
         // Get Current Date

@@ -18,8 +18,33 @@ public class Item {
     private Integer imageRessource;
 
 
+    public List<Tag> getListTags() {
+        return listTags;
+    }
+
+    public void setListTags(List<Tag> listTags) {
+        this.listTags = listTags;
+    }
 
     public Item(){};
+
+    public Item(Integer id, String title, Date deadline, List<Task> listTasks, List<Tag> listTags, String image, String background_color) {
+        this.id = id;
+        this.title = title;
+        this.deadline = deadline;
+        this.listTasks = listTasks;
+        this.listTags = listTags;
+        this.image = image;
+        this.background_color = background_color;
+    }
+    public Item(Integer id, String title, List<Task> listTasks, List<Tag> listTags, String image, String background_color) {
+        this.id = id;
+        this.title = title;
+        this.listTasks = listTasks;
+        this.listTags = listTags;
+        this.image = image;
+        this.background_color = background_color;
+    }
 
     public Item(Integer id, String title, List<Task> listTasks, String image, String background_color) {
         this.id = id;

@@ -19,17 +19,6 @@
         app:srcCompat="@drawable/img_addapicture"
         tools:srcCompat="@drawable/img_addapicture" />
 
-    <ListView
-        android:id="@+id/taskListView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnDelete"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddTask">
-
-    </ListView>
-
     <TextView
         android:id="@+id/titleDisplay"
         android:layout_width="wrap_content"
@@ -44,6 +33,17 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageTask" />
+
+    <ListView
+        android:id="@+id/taskListView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/lv_ItemTag"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAddTask">
+
+    </ListView>
 
     <EditText
         android:id="@+id/txtTask"
@@ -84,7 +84,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
@@ -96,30 +95,29 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/horizontalScrollView"
-        app:layout_constraintTop_toBottomOf="@+id/taskListView"
         tools:src="@android:drawable/ic_menu_delete" />
 
 
     <ImageButton
         android:id="@+id/btnNotify"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="addTag"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskListView"
         app:srcCompat="@android:drawable/ic_popup_reminder" />
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="267dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="14dp"
         android:layout_marginLeft="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnNotify"
-        app:layout_constraintTop_toBottomOf="@+id/taskListView"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintStart_toEndOf="@+id/btnNotify">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -218,5 +216,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageTask"
         app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+
+    <ListView
+        android:id="@+id/lv_ItemTag"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnDelete"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskListView">
+
+    </ListView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
