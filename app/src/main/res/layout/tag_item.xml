@@ -30,7 +30,7 @@
         android:layout_marginRight="8dp"
         android:background="@color/bckgrdRed"
         android:onClick="deleteTag"
-        android:text="Delete"
+        android:text="Supprimer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
