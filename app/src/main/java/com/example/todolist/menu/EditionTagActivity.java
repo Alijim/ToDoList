@@ -68,9 +68,41 @@ public class EditionTagActivity extends AppCompatActivity {
         Integer id = mHelper.insertTag(t);
         Tag tt = new Tag(id, t.getWording());
         tags.add(tt);
-
+        itemsAdapter.add(t.getWording());
         itemsAdapter.notifyDataSetChanged();
         tv.getText().clear();
+    }
+
+
+    public void deleteTag(View view) {
+        View parent = (View) view.getParent();
+        Tag tDelete = new Tag();
+        TextView tag = (TextView) parent.findViewById(R.id.txtv_TagItem);
+        String t = String.valueOf(tag.getText());
+        Integer index = tags.indexOf(t);
+        tagList.remove(tagList.indexOf(t));
+
+        for(Tag tagg : tags) {
+            if(tagg.getWording().equals(t)) {
+                tDelete = tagg;
+                tags.remove(tags.indexOf(tagg));
+            }
+        }
+
+        mHelper.deleteTag(tDelete.getId());
+        itemsAdapter.remove(t);
+        itemsAdapter.notifyDataSetChanged();
+
+//
+//       TextView tv = view.findViewById(R.id.txtv_TagItem);
+//       TextView tvv = findViewById(R.id.txtv_TagItem);
+//
+//       String t = tvv.getText().toString();
+//
+//       t += " !";
+
+
+
 
     }
 }
