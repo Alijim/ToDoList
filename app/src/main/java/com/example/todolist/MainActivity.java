@@ -50,6 +50,18 @@ public class MainActivity extends AppCompatActivity {
         //mHelper.deleteAllData();
 //        mHelper.insertFakeData();
 
+//        Boolean bTest = Boolean.FALSE;
+//        Boolean bTrue = Boolean.FALSE;
+//
+//        bTest = mHelper.isTagItem(10, 17);
+//        bTrue = mHelper.isTagItem(10, 20);
+//
+//        String s = ";";
+
+//        Integer delete = mHelper.deleteTagItem(2,2);
+//
+//        String s = "";
+
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

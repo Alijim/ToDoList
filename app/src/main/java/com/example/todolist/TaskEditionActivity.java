@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.todolist.menu.EditionTagActivity;
 import com.example.todolist.model.Item;
 import com.example.todolist.model.Task;
 
@@ -130,6 +131,13 @@ public class TaskEditionActivity extends AppCompatActivity {
     }
 
 
+    public void addTag(View view) {
+        Intent intent = new Intent(this, EditionTagActivity.class);
+//        TextView txt = view.findViewById(R.id.cv_Title);
+        intent.putExtra("name", item.getTitle());
+
+        startActivity(intent);
+    }
 
     public void onClickDatePicker(final View v) {
         // Get Current Date
@@ -264,16 +272,15 @@ public class TaskEditionActivity extends AppCompatActivity {
         Integer i = Integer.parseInt(cbx.getText().toString());
 
         Task t = new Task(i, txtv_task.getText().toString(), cbx.isChecked());
-        cbx.setChecked(t.getDone());
         if(t.getDone() == true) {
             txtv_task.setPaintFlags(txtv_task.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
-
             txtv_task.setText(t.getWording());
         } else {
             txtv_task.setPaintFlags(0);
-
             txtv_task.setText(t.getWording());
         }
+        cbx.setChecked(t.getDone());
+
 
         mHelper.updateTask(t);
     }

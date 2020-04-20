@@ -10,6 +10,9 @@ public class Tag {
         this.wording = wording;
     }
 
+    public Tag() {
+    }
+
     public Integer getId() {
         return id;
     }
