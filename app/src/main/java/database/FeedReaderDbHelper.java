@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 
 import com.example.todolist.R;
 import com.example.todolist.model.Item;
+import com.example.todolist.model.Tag;
 import com.example.todolist.model.Task;
 
 import java.text.SimpleDateFormat;
@@ -209,6 +210,16 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return  tasksRow1;
     }
 
+    public Integer insertTag( Tag t) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues valuesTags = new ContentValues();
+
+        valuesTags.put( FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING, t.getWording());
+        long tasksRow1 = db.insert(FeedReaderContract.TagsEntry.TABLE_NAME, null, valuesTags);
+        Integer i = (int) tasksRow1;
+        return  i;
+    }
+
     public void deleteAllData() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(FeedReaderContract.TagsEntry.TABLE_NAME, null, null);
@@ -338,6 +349,46 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         }
 
         return itemList;
+    }
+    public List<Tag> getAllTags() {
+        String s = "";
+        List<Tag> tagList = new ArrayList<Tag>();
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        String[] projection = {
+                BaseColumns._ID,
+                FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING
+        };
+
+//        String selection = FeedReaderContract.ItemsEntry.COLUMN_NAME_WORDING + " = ?";
+//        String[] selectionArgs = { "SPORT" };
+
+        String sortOrder =
+                FeedReaderContract.TagsEntry._ID + " DESC ";
+
+        Cursor cursor = db.query(
+                FeedReaderContract.TagsEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+//        HashMap<Integer, List>items = new HashMap<Integer, List>();
+//        HashMap<Long, String>items = new HashMap<Long, String>();
+        while(cursor.moveToNext()) {
+            Integer id = cursor.getInt(cursor.getColumnIndexOrThrow(FeedReaderContract.TagsEntry._ID));
+            String wording = cursor.getString(cursor.getColumnIndex("wording"));
+            Tag t = new Tag(id, wording);
+            //items.put(itemId, values);
+//            String value = cursor.getString(cursor.getColumnIndex("fk_Items"));
+            tagList.add(t);
+        }
+
+        return tagList;
     }
 
     public Item researchItem(String title){
