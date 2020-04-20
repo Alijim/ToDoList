@@ -150,7 +150,7 @@ public class EditionTagActivity extends AppCompatActivity {
                 }
 
                 tagsItem.remove(tDelete);
-                mHelper.deleteTagItem(item.getId(), tDelete.getId());
+               Integer i = mHelper.deleteTagItem(item.getId(), tDelete.getId());
 //                tagListAdapter.notifyDataSetChanged();
                 btn.setBackgroundColor(btn.getContext().getResources().getColor(R.color.bckgrdGreen));
                 btn.setText("Ajouter");

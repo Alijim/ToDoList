@@ -883,13 +883,31 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         String selection = FeedReaderContract.TagsEntry._ID + " LIKE ?";
         String[] selectionArgs = { id.toString() };
         int deletedRows = db.delete(FeedReaderContract.TagsEntry.TABLE_NAME, selection, selectionArgs);
+
+        deleteTagsInTagsItem(id);
+    }
+
+    public void deleteTagsInTagsItem(Integer id) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String selection = FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_TAGS + " LIKE ?";
+        String[] selectionArgs = { id.toString() };
+        int deletedRows = db.delete(FeedReaderContract.TagsItemsEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public void deleteItemInTagsItem(Integer id) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String selection = FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_ITEMS + " LIKE ?";
+        String[] selectionArgs = { id.toString() };
+        int deletedRows = db.delete(FeedReaderContract.TagsItemsEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     public int deleteTagItem(Integer i, Integer t){
         SQLiteDatabase db = getWritableDatabase();
 
         String selection = FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_TAGS + " LIKE ? AND "+FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_ITEMS+" LIKE ?";
-        String[] selectionArgs = { i.toString(), t.toString() };
+        String[] selectionArgs = { t.toString(), i.toString() };
         int deletedRows = db.delete(FeedReaderContract.TagsItemsEntry.TABLE_NAME, selection, selectionArgs);
         return deletedRows;
     }
@@ -909,6 +927,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         String selection = FeedReaderContract.ItemsEntry._ID + " LIKE ?";
         String[] selectionArgs = { id.toString() };
         int deletedRows = db.delete(FeedReaderContract.ItemsEntry.TABLE_NAME, selection, selectionArgs);
+
+        deleteItemInTagsItem(id);
     }
 
     public void testDelete(Integer id) {
