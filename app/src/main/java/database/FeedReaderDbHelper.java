@@ -494,7 +494,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     }
 
     public List<Task> getTasksFromItem(Integer id) {
-        String s = "";
 //        Integer id = getAnyID("Items", "Title", args);
         List values = new ArrayList<>();
         List<Task> taskList = new ArrayList<Task>();
@@ -591,6 +590,59 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         }
 
         return tagList;
+
+        //return items.toString();
+    }
+    public String getTagFromItemListDisplay(Integer id) {
+        String s = "\n";
+//        Integer id = getAnyID("Items", "Title", args);
+        List values = new ArrayList<>();
+        List<String> tagList = new ArrayList<String>();
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        String[] projection = {
+                BaseColumns._ID,
+                FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_ITEMS,
+                FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_TAGS
+        };
+
+        String selection = FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_ITEMS + " = ?";
+        String[] selectionArgs = {  id.toString()};
+
+        String sortOrder =
+                FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_ITEMS + " ASC ";
+
+        Cursor cursor = db.query(
+                FeedReaderContract.TagsItemsEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+//        HashMap<Long, String>items = new HashMap<Long, String>();
+//        HashMap<Long, String>items = new HashMap<Long, String>();
+        while(cursor.moveToNext()) {
+            Integer idTag = cursor.getInt(cursor.getColumnIndexOrThrow("fk_tags"));
+                Tag t = researchTag(idTag);
+//            In wording = cursor.getString(cursor.getColumnIndex("wording"));
+//            Integer done = cursor.getInt(cursor.getColumnIndex("done"));
+//            if(done == 1) {
+//                 b = Boolean.FALSE;
+//            } else {
+//                 b = Boolean.FALSE;
+//            }
+//            Tag t = new Tag(idTag, wording);
+            if(t.getWording() != null) {
+                s += "["+t.getWording()+"] ";
+
+            }
+        }
+
+        return s;
 
         //return items.toString();
     }
