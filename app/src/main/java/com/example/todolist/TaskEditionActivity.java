@@ -26,6 +26,7 @@ import android.widget.TimePicker;
 
 import com.example.todolist.menu.EditionTagActivity;
 import com.example.todolist.model.Item;
+import com.example.todolist.model.Tag;
 import com.example.todolist.model.Task;
 
 import java.text.DateFormat;
@@ -52,6 +53,7 @@ public class TaskEditionActivity extends AppCompatActivity {
     private ListView mTaskListView;
     private List<String> tasks;
     private List<Task> listTask;
+    private List<String> listTag;
     private List<Integer> itemsId;
     private Integer idItem;
     private CheckBoxAdapter cbxAdapter;
@@ -67,6 +69,7 @@ public class TaskEditionActivity extends AppCompatActivity {
         ConstraintLayout l = findViewById(R.id.mainEdition);
         btnDatePicker= findViewById(R.id.btn_Date);
         txt_Date = findViewById(R.id.txtv_Date);
+        TextView txt_Tag = findViewById(R.id.lv_ItemTag);
 
 
         mHelper = new FeedReaderDbHelper(this);
@@ -80,10 +83,11 @@ public class TaskEditionActivity extends AppCompatActivity {
         this.item = mHelper.researchItem(txt);
         this.tasks = new ArrayList<String>();
         this.listTask = item.getListTasks();
+        this.listTag = new ArrayList<String>();
 
         Integer color = Integer.parseInt(item.getBackground_color());
 
-
+//        txt_Tag.setText(" Test : "+item.getListTags().toString());
         l.setBackgroundResource(color);
 
         if (cbxAdapter != null) {
@@ -98,6 +102,21 @@ public class TaskEditionActivity extends AppCompatActivity {
         //txtV.setPaintFlags(txtV.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
         //txtV.setText(item);
 //        String vvvvv = mHelper.readDone("salut").toString();
+        for(Tag tag : item.getListTags()) {
+            if(tag.getId() != null) {
+                listTag.add(tag.getWording());
+            }
+        }
+
+        String displayTag = "";
+        if(listTag.size() > 0) {
+            for(String s : listTag) {
+                displayTag += "["+s+"] ";
+            }
+        }
+
+
+        txt_Tag.setText(displayTag);
 
         txtV.setText(item.getTitle());
 
