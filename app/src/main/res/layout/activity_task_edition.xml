@@ -21,16 +21,19 @@
 
     <TextView
         android:id="@+id/titleDisplay"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:onClick="updateTitle"
         android:text="Titre"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/txtv_Date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageTask" />
 
@@ -108,7 +111,7 @@
         android:onClick="addTag"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_popup_reminder" />
+        app:srcCompat="@android:drawable/ic_input_get" />
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
@@ -193,13 +196,16 @@
     <TextView
         android:id="@+id/txtv_Date"
         android:layout_width="wrap_content"
-        android:layout_height="26dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btnAddTask"
         app:layout_constraintEnd_toStartOf="@+id/btn_Date"
+        app:layout_constraintStart_toEndOf="@+id/titleDisplay"
         app:layout_constraintTop_toBottomOf="@+id/imageTask" />
 
     <ImageButton
@@ -217,16 +223,19 @@
         app:layout_constraintTop_toBottomOf="@+id/imageTask"
         app:srcCompat="@android:drawable/ic_menu_my_calendar" />
 
-    <ListView
+    <TextView
         android:id="@+id/lv_ItemTag"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="411dp"
+        android:layout_marginRight="411dp"
         android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/btnDelete"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taskListView">
 
-    </ListView>
+    </TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
