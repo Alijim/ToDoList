@@ -86,6 +86,11 @@ public class TaskEditionActivity extends AppCompatActivity {
         this.listTask = item.getListTasks();
         this.listTag = new ArrayList<String>();
 
+        if (item.getImage() != null) {
+            txt_Date.setText(item.getImage());
+        }
+
+
         Integer color = Integer.parseInt(item.getBackground_color());
 
 //        txt_Tag.setText(" Test : "+item.getListTags().toString());
@@ -174,7 +179,7 @@ public class TaskEditionActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
-                        txtDate = dayOfMonth + " " + (getTextMonthFR(mMonth+1)) + " " + year;
+                        txtDate = dayOfMonth + " " + (getTextMonthFR(monthOfYear+1)) + " " + year;
                         displayTimePickerDialog(v);
 //                        txt_Date.setText(dayOfMonth + " " + (getTextMonthFR(mMonth+1)) + " " + year);
 
@@ -212,7 +217,8 @@ public class TaskEditionActivity extends AppCompatActivity {
                         }
                         String str = datee.toString();
 
-                        item.setDeadline(datee);
+                        item.setImage(txtDate);
+                        mHelper.updateItem(item);
                         txt_Date.setText(txtDate);
                     }
                 }, mHour, mMinute, true);

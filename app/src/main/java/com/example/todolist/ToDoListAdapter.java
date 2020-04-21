@@ -73,11 +73,20 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
 
         public void bindTo(Item myCurrent){
             // Populate the textviews with data.
-            myTitre.setText(myCurrent.getTitle());
+
+                myTitre.setText(myCurrent.getTitle());
             Integer color = Integer.parseInt(myCurrent.getBackground_color());
             myTitre.getRootView().setBackgroundResource(color);
 
+
+
             String myListItem = "";
+            if(myCurrent.getImage() == null) {
+                myListItem += "";
+            } else {
+               myListItem += "\uD83D\uDCC5 Date de fin : "+myCurrent.getImage()+"\n";
+
+            }
             if (myCurrent.getListTasks() != null) {
                 List<Task> myItemTab = myCurrent.getListTasks();
                 StringBuilder sb = new StringBuilder();
@@ -90,7 +99,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
 
                     }
                 }
-                myListItem = sb.toString();
+                myListItem += "\n"+sb.toString();
             }
             myListItem += mHelper.getTagFromItemListDisplay(myCurrent.getId());
             myItem.setText(myListItem);
