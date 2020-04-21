@@ -12,7 +12,8 @@
         <activity android:name=".TaskEditionActivity"
             android:label="@string/TaskActivityLabel"
             android:windowSoftInputMode="adjustPan"
-        android:parentActivityName=".MainActivity">
+            android:theme="@style/AppThemeNo">
+        <!--        android:parentActivityName=".MainActivity">-->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
 
@@ -29,13 +30,37 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".menu.EditionTagFragmentActivity"
+            android:label="@string/tag_list"
+            android:theme="@style/AppThemeNo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".menu.EditionTagActivity"
+            android:label="@string/tag_list"
+            android:theme="@style/AppThemeNo"
+            android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

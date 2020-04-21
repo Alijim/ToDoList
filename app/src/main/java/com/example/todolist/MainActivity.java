@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -49,8 +50,23 @@ public class MainActivity extends AppCompatActivity {
         //mHelper.deleteAllData();
 //        mHelper.insertFakeData();
 
+//        Boolean bTest = Boolean.FALSE;
+//        Boolean bTrue = Boolean.FALSE;
+//
+//        bTest = mHelper.isTagItem(10, 17);
+//        bTrue = mHelper.isTagItem(10, 20);
+//
+//        String s = ";";
+
+//        Integer delete = mHelper.deleteTagItem(2,2);
+//
+//        String s = "";
+
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+//        Task t = new Task(2, "salut", true);
+//        mHelper.updateTask(t);
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
@@ -68,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.initialisationData();
 
+
         //Creation du menu
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -75,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, myAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+//        TextView txt_Item = myRecyclerView.getChildItemId(R.id.Item);
+//        String txtI = txt_Item.getText().toString();
+//        txt_Item.setText(txtI+=" SKUKU");
+
 
     }
 

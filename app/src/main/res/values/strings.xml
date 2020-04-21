@@ -6,6 +6,6 @@
     <string name="info_placeholder">Here is some news</string>
     <string name="menu_todolist">ToDoList</string>
     <string name="menu_editiontag">EditionTag</string>
-    <string name="tag_list">Edition Tag</string>
-    <string name="TaskActivityLabel">Edition Task</string>
+    <string name="tag_list">Edition des tags</string>
+    <string name="TaskActivityLabel">Edition des tâches</string>
 </resources>
