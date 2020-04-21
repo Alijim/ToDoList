@@ -49,6 +49,7 @@ public class TaskEditionActivity extends AppCompatActivity {
     private View vw;
     private Item item;
     private String txtDate = "";
+    private String txtToTest;
 
     private ListView mTaskListView;
     private List<String> tasks;
@@ -154,9 +155,10 @@ public class TaskEditionActivity extends AppCompatActivity {
         Intent intent = new Intent(this, EditionTagActivity.class);
 //        TextView txt = view.findViewById(R.id.cv_Title);
         intent.putExtra("name", item.getTitle());
-
         startActivity(intent);
     }
+
+
 
     public void onClickDatePicker(final View v) {
         // Get Current Date
@@ -345,5 +347,13 @@ public class TaskEditionActivity extends AppCompatActivity {
         item.setBackground_color(color.toString());
         mHelper.updateItem(item);
         l.setBackgroundResource(R.color.bckgrdWhite);
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
 }
