@@ -16,6 +16,8 @@ import com.example.todolist.model.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.FeedReaderDbHelper;
+
 import static androidx.core.content.ContextCompat.startActivities;
 
 //L'adapter est un composant qui permet de faire la liaison (Bind) entre la vue RecyclerView et une liste de données.
@@ -24,12 +26,14 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
     private final List<Item> myToDoList;
     private LayoutInflater myInflater;
     private Context myContext;
+    private FeedReaderDbHelper mHelper;
 
     //Constructeur
     public ToDoListAdapter(Context context, List<Item> toDoList) {
         myInflater = LayoutInflater.from(context);
         myContext = context;
         this.myToDoList = toDoList;
+        mHelper = new FeedReaderDbHelper(context);
     }
 
     @Override
@@ -88,7 +92,9 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
                 }
                 myListItem = sb.toString();
             }
+            myListItem += mHelper.getTagFromItemListDisplay(myCurrent.getId());
             myItem.setText(myListItem);
+
             // Load the images into the ImageView using the Glide library.
             Glide.with(myContext).load(myCurrent.getImageRessource()).into(myImage);
 

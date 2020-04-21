@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.initialisationData();
 
+
         //Creation du menu
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -91,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, myAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+//        TextView txt_Item = myRecyclerView.getChildItemId(R.id.Item);
+//        String txtI = txt_Item.getText().toString();
+//        txt_Item.setText(txtI+=" SKUKU");
+
 
     }
 
