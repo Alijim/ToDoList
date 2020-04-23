@@ -7,10 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-import com.example.todolist.R;
-import com.example.todolist.model.Item;
-import com.example.todolist.model.Tag;
-import com.example.todolist.model.Task;
+import com.project.todolist.model.Item;
+import com.project.todolist.model.Tag;
+import com.project.todolist.model.Task;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

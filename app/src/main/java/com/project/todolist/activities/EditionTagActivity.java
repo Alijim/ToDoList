@@ -1,4 +1,4 @@
-package com.example.todolist.menu;
+package com.project.todolist.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,25 +10,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
-import com.example.todolist.MainActivity;
-import com.example.todolist.R;
-import com.example.todolist.TagListAdapter;
-import com.example.todolist.TaskEditionActivity;
-import com.example.todolist.model.Item;
-import com.example.todolist.model.Tag;
-import com.google.android.material.navigation.NavigationView;
+import com.project.todolist.activities.MainActivity;
+import com.project.todolist.R;
+import com.project.todolist.TagListAdapter;
+import com.project.todolist.activities.TaskEditionActivity;
+import com.project.todolist.model.Item;
+import com.project.todolist.model.Tag;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import database.FeedReaderDbHelper;
 

@@ -1,12 +1,13 @@
-package com.example.todolist;
+package com.project.todolist.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.todolist.model.Item;
-import com.example.todolist.model.Task;
+import com.project.todolist.R;
+import com.project.todolist.adapters.ToDoListAdapter;
+import com.project.todolist.model.Item;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -26,9 +27,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import database.FeedReaderDbHelper;
+import com.project.todolist.DAO.ItemDAO;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,27 +47,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ItemDAO itemDAO = new ItemDAO(this);
+        Item newItem = new Item();
+        newItem.setTitle("WSH");
+        Integer color = R.color.bckgrdWhite;
+        newItem.setBackground_color(color.toString());
+        itemDAO.insert(newItem);
+
         mHelper = new FeedReaderDbHelper(this);
-        //mHelper.deleteAllData();
-//        mHelper.insertFakeData();
-
-//        Boolean bTest = Boolean.FALSE;
-//        Boolean bTrue = Boolean.FALSE;
-//
-//        bTest = mHelper.isTagItem(10, 17);
-//        bTrue = mHelper.isTagItem(10, 20);
-//
-//        String s = ";";
-
-//        Integer delete = mHelper.deleteTagItem(2,2);
-//
-//        String s = "";
 
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        Task t = new Task(2, "salut", true);
-//        mHelper.updateTask(t);
 
         FloatingActionButton fab = findViewById(R.id.fab);
 

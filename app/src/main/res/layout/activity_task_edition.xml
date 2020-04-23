@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bckgrdWhite"
-    tools:context=".TaskEditionActivity">
+    tools:context=".activities.TaskEditionActivity">
 
     <ImageView
         android:id="@+id/imageTask"
@@ -14,10 +14,10 @@
         android:layout_height="138dp"
         android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toTopOf="@+id/titleDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img_addapicture"
-        tools:srcCompat="@drawable/img_addapicture" />
+        />
 
     <TextView
         android:id="@+id/titleDisplay"

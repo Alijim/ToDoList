@@ -1,6 +1,5 @@
-package com.example.todolist;
+package com.project.todolist.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -13,11 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.todolist.model.Item;
-import com.example.todolist.model.Task;
+import com.project.todolist.R;
+import com.project.todolist.model.Task;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CheckBoxAdapter extends ArrayAdapter {
@@ -51,10 +48,11 @@ public class CheckBoxAdapter extends ArrayAdapter {
             name.setText(task.getWording());
             checkBox.setChecked(true);
         } else {
-            name.setPaintFlags(0);
-            name.setText(task.getWording());
             checkBox.setText(task.getId().toString());
             checkBox.setChecked(false);
+            name.setPaintFlags(0);
+            name.setText(task.getWording());
+
         }
         return convertView;
 

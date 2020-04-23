@@ -1,4 +1,4 @@
-package com.example.todolist;
+package com.project.todolist.activities;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,29 +11,29 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.example.todolist.menu.EditionTagActivity;
-import com.example.todolist.model.Item;
-import com.example.todolist.model.Tag;
-import com.example.todolist.model.Task;
+import com.project.todolist.adapters.CheckBoxAdapter;
+import com.project.todolist.R;
+import com.project.todolist.model.Item;
+import com.project.todolist.model.Tag;
+import com.project.todolist.model.Task;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,7 +44,10 @@ import database.FeedReaderDbHelper;
 public class TaskEditionActivity extends AppCompatActivity {
 
     private FeedReaderDbHelper mHelper;
+    private ImageView  imgv_image;
     private ImageButton btnDatePicker;
+    private static final int PICK_IMAGE = 100;
+    private Uri imageUri;
     private TextView txt_Date;
     private View vw;
     private Item item;
@@ -71,7 +74,8 @@ public class TaskEditionActivity extends AppCompatActivity {
         btnDatePicker= findViewById(R.id.btn_Date);
         txt_Date = findViewById(R.id.txtv_Date);
         TextView txt_Tag = findViewById(R.id.lv_ItemTag);
-
+        ImageView img = findViewById(R.id.imageTask);
+        this.imgv_image = img;
 
         mHelper = new FeedReaderDbHelper(this);
         String txt = "";
@@ -130,24 +134,21 @@ public class TaskEditionActivity extends AppCompatActivity {
             tasks.add(t.getWording());
         }
 
-//        itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.task_title, items);
 
-//        CheckBoxAdapter cbxAdapter = new CheckBoxAdapter(this, items );
         itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.chkBox, tasks);
-
-//        for (Integer i : itemsId) {
-//            if(mHelper.readDone(i) == 0) {
-//                CheckBox cbx = null;
-//                cbx.setChecked(true);
-//                itemsAdapter.add(cbx);
-//            } else {
-//
-//            }
-//        }
-//        itemsAdapter.add("test");
 
         ListView lv = findViewById(R.id.taskListView);
         lv.setAdapter(cbxAdapter);
+
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    openGallery();
+                }
+        });{
+
+        }
+
 
 //        lv.setAdapter(itemsAdapter);
 
@@ -155,6 +156,37 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     }
 
+    private void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+            imageUri = data.getData();
+            imgv_image.setImageDrawable(null);
+            imgv_image.setImageURI(imageUri);
+        }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+//            imageUri = data.getData();
+//
+//            try {
+////                Uri selectedImage = data.getData();
+//                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+//                imgv_image.setImageBitmap(bitmap);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+    }
 
     public void addTag(View view) {
         Intent intent = new Intent(this, EditionTagActivity.class);

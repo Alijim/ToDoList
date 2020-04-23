@@ -1,4 +1,4 @@
-package com.example.todolist;
+package com.project.todolist.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,10 +10,10 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.todolist.model.Item;
-import com.example.todolist.model.Task;
+import com.project.todolist.R;
+import com.project.todolist.model.Item;
+import com.project.todolist.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import database.FeedReaderDbHelper;

@@ -1,4 +1,4 @@
-package com.example.todolist.model;
+package com.project.todolist.model;
 
 public class Tag {
     private Integer id;
