@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import database.FeedReaderDbHelper;
-import com.project.todolist.DAO.ItemDAO;
+import com.project.todolist.DAO.ItemsDAO;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private ToDoListAdapter myAdapter;
     private FeedReaderDbHelper mHelper;
     private List<Item> items;
+    private ItemsDAO itemsDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +48,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ItemDAO itemDAO = new ItemDAO(this);
-        Item newItem = new Item();
-        newItem.setTitle("WSH");
-        Integer color = R.color.bckgrdWhite;
-        newItem.setBackground_color(color.toString());
-        itemDAO.insert(newItem);
+        ItemsDAO iDAO = new ItemsDAO(this);
+        this.itemsDAO = iDAO;
 
-        mHelper = new FeedReaderDbHelper(this);
+//        mHelper = new FeedReaderDbHelper(this);
 
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -96,17 +93,18 @@ public class MainActivity extends AppCompatActivity {
     //Méthode à redéfinir avec les données de la BD
     public void initialisationData() {
 
-        mHelper = new FeedReaderDbHelper(this);
+//        mHelper = new FeedReaderDbHelper(this);
 
         HashMap<Integer, List> dbItemList = new HashMap<Integer, List>();
+        ItemsDAO iDAO = new ItemsDAO(this);
 
-        this.items = mHelper.getAllItems();
+//        this.items = mHelper.getAllItems();
+        this.items = iDAO.getAllItems();
 
 
 
         for (Item i : items) {
             i.setImageRessource(R.drawable.img_addapicture);
-
             myToDoList.add(i);
 
         }
@@ -142,8 +140,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void launchEditionDialog(View v) {
-        mHelper = new FeedReaderDbHelper(this);
-
+//        mHelper = new FeedReaderDbHelper(this);
+        ItemsDAO iDAO = new ItemsDAO(this);
         // Création d'un alert dialog pour l'ajout d'une tâche
         final EditText taskEditText = new EditText(this);
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -158,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                         Integer color = R.color.bckgrdWhite;
                         i.setBackground_color(color.toString());
 //                        i.setBackground_color(R.color.bckgrdWhite);
-                        mHelper.insertIntoItems(i);
+                        itemsDAO.insert(i);
                         launchTaskEditionActivityF(i.getTitle());
                     }
                 })

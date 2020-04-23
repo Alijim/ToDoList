@@ -68,10 +68,10 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_DELETE_ENTRIES);
         onCreate(db);
     }
+
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
-
 
     public int getAnyID(String tableName, String columnName, String args) {
         String s = "";
@@ -197,6 +197,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         long itemsRow1 = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
     }
+
     public void insertTagItems(Item i, Tag t) {
 
         SQLiteDatabase db = getWritableDatabase();
@@ -542,6 +543,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         //return items.toString();
     }
+
     public List<Tag> getTagFromItem(Integer id) {
         String s = "";
 //        Integer id = getAnyID("Items", "Title", args);
@@ -592,6 +594,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         //return items.toString();
     }
+
     public String getTagFromItemListDisplay(Integer id) {
         String s = "\n";
 //        Integer id = getAnyID("Items", "Title", args);
@@ -645,6 +648,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         //return items.toString();
     }
+
     public Boolean isTagItem(Integer i, Integer t){
         Boolean s = Boolean.FALSE;
 //        Integer id = getAnyID("Items", "Title", args);
@@ -894,6 +898,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                 selection,
                 null);
     }
+
     public void updateTask(Task t) {
         SQLiteDatabase db = getWritableDatabase();
 
