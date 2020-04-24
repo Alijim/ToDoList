@@ -1,5 +1,7 @@
-package com.example.todolist.menu;
+package com.project.todolist.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,27 +10,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
-import com.example.todolist.MainActivity;
-import com.example.todolist.R;
-import com.example.todolist.TagListAdapter;
-import com.example.todolist.TaskEditionActivity;
-import com.example.todolist.model.Item;
-import com.example.todolist.model.Tag;
-import com.google.android.material.navigation.NavigationView;
+import com.project.todolist.DAO.ItemsDAO;
+import com.project.todolist.DAO.TagsDAO;
+import com.project.todolist.DAO.TagsItemsDAO;
+import com.project.todolist.DAO.TasksDAO;
+import com.project.todolist.R;
+import com.project.todolist.adapters.TagListAdapter;
+import com.project.todolist.model.Item;
+import com.project.todolist.model.Tag;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import database.FeedReaderDbHelper;
 
@@ -44,6 +40,10 @@ public class EditionTagActivity extends AppCompatActivity {
     private ArrayAdapter<String> itemsAdapter;
     private TagListAdapter tagListAdapter;
     private Boolean parentIsActivityA;
+    private TasksDAO tasksDAO;
+    private TagsDAO tagsDAO;
+    private TagsItemsDAO tagsItemsDAO;
+    private ItemsDAO itemsDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +53,15 @@ public class EditionTagActivity extends AppCompatActivity {
         Button btnAdd = findViewById(R.id.btn_AddTag);
         EditText edtx = findViewById(R.id.edtxt_Tag);
 
+
         TextView textViewTag = findViewById(R.id.txtv_DisplayTxtTag);
         Bundle extras = getIntent().getExtras();
         mHelper = new FeedReaderDbHelper(this);
+        itemsDAO = new ItemsDAO(this);
+        tasksDAO = new TasksDAO(this);
+        tagsDAO = new TagsDAO(this);
+        tagsItemsDAO = new TagsItemsDAO(this);
+
         parentIsActivityA = Boolean.FALSE;
 
 
@@ -64,7 +70,7 @@ public class EditionTagActivity extends AppCompatActivity {
         if(txt != null){
             parentIsActivityA = Boolean.TRUE;
             this.isItem = Boolean.TRUE;
-            item = mHelper.researchItem(txt);
+            item = itemsDAO.researchItem(txt);
             textViewTag.setText("Gérer les tags de : "+item.getTitle());
             btnAdd.setVisibility(View.INVISIBLE);
             edtx.setVisibility(View.INVISIBLE);
@@ -73,9 +79,9 @@ public class EditionTagActivity extends AppCompatActivity {
         this.tags = new ArrayList<Tag>();
         this.tagsItem = new ArrayList<Tag>();
         this.tagList = new ArrayList<String>();
-        tags = mHelper.getAllTags();
+        tags = tagsDAO.getAllTags();
         if(txt != null){
-           tagsItem = mHelper.getTagFromItem(item.getId());
+           tagsItem = tagsDAO.getTagFromItem(item.getId());
             if(tagsItem.size() >= 1) {
                 for(Tag t : tagsItem) {
                     tagList.add(t.getWording());
@@ -115,9 +121,9 @@ public class EditionTagActivity extends AppCompatActivity {
             EditText tv = findViewById(R.id.edtxt_Tag);
 
             t.setWording(tv.getText().toString());
-            Integer id = mHelper.insertTag(t);
+            Integer id = tagsDAO.insertTag(t);
             Tag tt = new Tag(id, t.getWording());
-            mHelper.insertTagItems(item, tt);
+            tagsItemsDAO.insertTagItems(item, tt);
             tags.add(tt);
             tagListAdapter.add(t.getWording());
             tagListAdapter.notifyDataSetChanged();
@@ -125,17 +131,65 @@ public class EditionTagActivity extends AppCompatActivity {
         } else {
             Tag t = new Tag();
             EditText tv = findViewById(R.id.edtxt_Tag);
-
+            if(tv.getText().toString().isEmpty()) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Tag vide ! ", Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
             t.setWording(tv.getText().toString());
-            Integer id = mHelper.insertTag(t);
+            Integer id = tagsDAO.insertTag(t);
             Tag tt = new Tag(id, t.getWording());
             tags.add(tt);
             itemsAdapter.add(t.getWording());
             itemsAdapter.notifyDataSetChanged();
             tv.getText().clear();
+            }
         }
 
     }
+
+    public void onClickUpdateTag(View view) {
+        if(item != null) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Rendez-vous dans le menu d'édition pour modifier ! ", Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            View parent = (View) view.getParent();
+            TextView txv_tag = parent.findViewById(R.id.txtv_TagItem);
+            final EditText taskEditText = new EditText(this);
+            Tag t = new Tag();
+
+
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle("Modifier le titre")
+                    .setMessage("Entrez votre nouveau titre")
+                    .setView(taskEditText)
+                    .setPositiveButton("Ajouter", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String tag = String.valueOf(taskEditText.getText());
+
+                            if(taskEditText.getText().toString().isEmpty()) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Labelle vide ! ", Toast.LENGTH_SHORT);
+                                toast.show();
+                            } else {
+                                Integer i = tagsDAO.getIdFromTitle(txv_tag.getText().toString());
+                                tagsDAO.updateTagFromWording(i, tag);
+                                tagList.remove(txv_tag.getText().toString());
+                                tagList.add(tag);
+//                            mHelper.updateItem(item);
+                                itemsAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    })
+                    .setNegativeButton("Annuler", null)
+                    .create();
+            dialog.show();
+        }
+//            mHelper = new FeedReaderDbHelper(this);
+
+        // Création d'un alert dialog pour l'ajout d'une tâche
+
+    }
+
 
 
     public void deleteTag(View view) {
@@ -157,7 +211,7 @@ public class EditionTagActivity extends AppCompatActivity {
                 }
 
                 tagsItem.remove(tDelete);
-               Integer i = mHelper.deleteTagItem(item.getId(), tDelete.getId());
+               Integer i = tagsItemsDAO.deleteTagItem(item.getId(), tDelete.getId());
 //                tagListAdapter.notifyDataSetChanged();
                 btn.setBackgroundColor(btn.getContext().getResources().getColor(R.color.bckgrdGreen));
                 btn.setText("Ajouter");
@@ -175,7 +229,7 @@ public class EditionTagActivity extends AppCompatActivity {
 //                tAdd = tags.(tag.getText().toString());
 //                Tag tat = new Tag(id, tAdd.getWording());
                 tagsItem.add(tAdd);
-                mHelper.insertTagItems(item, tAdd);
+                tagsItemsDAO.insertTagItems(item, tAdd);
 //                tagListAdapter.notifyDataSetChanged();
 
 //                ListView lv = findViewById(R.id.lv_Tag);
@@ -200,7 +254,7 @@ public class EditionTagActivity extends AppCompatActivity {
 
                 tags.remove(tDelete);
 
-                mHelper.deleteTag(tDelete.getId());
+                tagsDAO.deleteTag(tDelete.getId());
                 itemsAdapter.remove(t);
                 itemsAdapter.notifyDataSetChanged();
 //                btn.setBackgroundColor(btn.getContext().getResources().getColor(R.color.bckgrdGreen));
@@ -315,5 +369,13 @@ public class EditionTagActivity extends AppCompatActivity {
         }
 
         return i;
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
 }

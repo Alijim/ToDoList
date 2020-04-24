@@ -1,12 +1,13 @@
-package com.example.todolist;
+package com.project.todolist.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.todolist.model.Item;
-import com.example.todolist.model.Task;
+import com.project.todolist.R;
+import com.project.todolist.adapters.ToDoListAdapter;
+import com.project.todolist.model.Item;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -26,9 +27,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import database.FeedReaderDbHelper;
+import com.project.todolist.DAO.ItemsDAO;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private ToDoListAdapter myAdapter;
     private FeedReaderDbHelper mHelper;
     private List<Item> items;
+    private ItemsDAO itemsDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,27 +48,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mHelper = new FeedReaderDbHelper(this);
-        //mHelper.deleteAllData();
-//        mHelper.insertFakeData();
+        ItemsDAO iDAO = new ItemsDAO(this);
+        this.itemsDAO = iDAO;
 
-//        Boolean bTest = Boolean.FALSE;
-//        Boolean bTrue = Boolean.FALSE;
-//
-//        bTest = mHelper.isTagItem(10, 17);
-//        bTrue = mHelper.isTagItem(10, 20);
-//
-//        String s = ";";
-
-//        Integer delete = mHelper.deleteTagItem(2,2);
-//
-//        String s = "";
+//        mHelper = new FeedReaderDbHelper(this);
 
         Toolbar toolbar = this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        Task t = new Task(2, "salut", true);
-//        mHelper.updateTask(t);
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
@@ -105,17 +93,18 @@ public class MainActivity extends AppCompatActivity {
     //Méthode à redéfinir avec les données de la BD
     public void initialisationData() {
 
-        mHelper = new FeedReaderDbHelper(this);
+//        mHelper = new FeedReaderDbHelper(this);
 
         HashMap<Integer, List> dbItemList = new HashMap<Integer, List>();
+        ItemsDAO iDAO = new ItemsDAO(this);
 
-        this.items = mHelper.getAllItems();
+//        this.items = mHelper.getAllItems();
+        this.items = iDAO.getAllItems();
 
 
 
         for (Item i : items) {
-            i.setImageRessource(R.drawable.img_addapicture);
-
+//            i.setImageRessource(R.drawable.img_addapicture);
             myToDoList.add(i);
 
         }
@@ -140,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
     public void launchTaskEditionActivityF(String s) {
         Intent intent = new Intent(this, TaskEditionActivity.class);
         intent.putExtra("name", s);
-
         startActivity(intent);
     }
 
@@ -151,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void launchEditionDialog(View v) {
-        mHelper = new FeedReaderDbHelper(this);
-
+//        mHelper = new FeedReaderDbHelper(this);
+        ItemsDAO iDAO = new ItemsDAO(this);
         // Création d'un alert dialog pour l'ajout d'une tâche
         final EditText taskEditText = new EditText(this);
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -163,17 +151,29 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Item i = new Item();
-                        i.setTitle(String.valueOf(taskEditText.getText()));
+                        if(taskEditText.getText().toString().isEmpty()) {
+                            i.setTitle("Nouvelle tâche");
+                        } else {
+                            i.setTitle(String.valueOf(taskEditText.getText()));
+                        }
                         Integer color = R.color.bckgrdWhite;
                         i.setBackground_color(color.toString());
 //                        i.setBackground_color(R.color.bckgrdWhite);
-                        mHelper.insertIntoItems(i);
+                        itemsDAO.insert(i);
                         launchTaskEditionActivityF(i.getTitle());
                     }
                 })
                 .setNegativeButton("Annuler", null)
                 .create();
         dialog.show();
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
 
 }

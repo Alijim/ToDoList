@@ -1,21 +1,17 @@
-package com.example.todolist.model;
+package com.project.todolist.model;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Item {
     private Integer id;
     private String title;
-    private Date deadline;
+    private Integer deadline;
     private List<Task> listTasks;
     private List<Tag> listTags;
     private String image;
     private String background_color;
-    private Integer imageRessource;
 
 
     public List<Tag> getListTags() {
@@ -28,7 +24,7 @@ public class Item {
 
     public Item(){};
 
-    public Item(Integer id, String title, Date deadline, List<Task> listTasks, List<Tag> listTags, String image, String background_color) {
+    public Item(Integer id, String title, Integer deadline, List<Task> listTasks, List<Tag> listTags, String image, String background_color) {
         this.id = id;
         this.title = title;
         this.deadline = deadline;
@@ -64,7 +60,6 @@ public class Item {
     public Item(String title, List<Task> listTasks, Integer image) {
         this.title = title;
         this.listTasks = listTasks;
-        this.imageRessource = image;
     }
 
     public Integer getId() {
@@ -95,11 +90,15 @@ public class Item {
         this.title = title;
     }
 
-    public Date getDeadline() {
+    public Integer getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+//    public String displayDeadline() {
+//
+//    }
+
+    public void setDeadline(Integer deadline) {
         this.deadline = deadline;
     }
 
@@ -111,11 +110,5 @@ public class Item {
         this.background_color = background_color;
     }
 
-    public Integer getImageRessource() {
-        return imageRessource;
-    }
 
-    public void setImageRessource(Integer imageRessource) {
-        this.imageRessource = imageRessource;
-    }
 }

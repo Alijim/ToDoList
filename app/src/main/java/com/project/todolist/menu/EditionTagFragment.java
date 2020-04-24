@@ -1,20 +1,6 @@
-package com.example.todolist.menu;
+package com.project.todolist.menu;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-
-
-import com.example.todolist.MainActivity;
-import com.example.todolist.R;
-import com.example.todolist.TagListActivity;
-import com.example.todolist.TaskEditionActivity;
 
 public class EditionTagFragment extends Fragment {
 

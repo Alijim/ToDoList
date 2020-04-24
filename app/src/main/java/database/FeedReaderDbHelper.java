@@ -7,10 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-import com.example.todolist.R;
-import com.example.todolist.model.Item;
-import com.example.todolist.model.Tag;
-import com.example.todolist.model.Task;
+import com.project.todolist.model.Item;
+import com.project.todolist.model.Tag;
+import com.project.todolist.model.Task;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,8 +37,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_ITEMS =
             "CREATE TABLE " + FeedReaderContract.ItemsEntry.TABLE_NAME + " (" +
                     FeedReaderContract.ItemsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE + " TEXT," +
-                    FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE + " DATE," +
+                    FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE + " TEXT UNIQUE," +
+                    FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE + " INTEGER," +
                     FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE + " TEXT, "+
                     FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR + " TEXT)";
 
@@ -69,10 +68,10 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_DELETE_ENTRIES);
         onCreate(db);
     }
+
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
-
 
     public int getAnyID(String tableName, String columnName, String args) {
         String s = "";
@@ -198,6 +197,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         long itemsRow1 = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
     }
+
     public void insertTagItems(Item i, Tag t) {
 
         SQLiteDatabase db = getWritableDatabase();
@@ -543,6 +543,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         //return items.toString();
     }
+
     public List<Tag> getTagFromItem(Integer id) {
         String s = "";
 //        Integer id = getAnyID("Items", "Title", args);
@@ -593,6 +594,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         //return items.toString();
     }
+
     public String getTagFromItemListDisplay(Integer id) {
         String s = "\n";
 //        Integer id = getAnyID("Items", "Title", args);
@@ -646,6 +648,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         //return items.toString();
     }
+
     public Boolean isTagItem(Integer i, Integer t){
         Boolean s = Boolean.FALSE;
 //        Integer id = getAnyID("Items", "Title", args);
@@ -895,6 +898,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                 selection,
                 null);
     }
+
     public void updateTask(Task t) {
         SQLiteDatabase db = getWritableDatabase();
 

@@ -1,6 +1,11 @@
-package com.example.todolist;
+package com.project.todolist.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +15,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.todolist.model.Item;
-import com.example.todolist.model.Task;
+import com.project.todolist.DAO.TagsDAO;
+import com.project.todolist.R;
+import com.project.todolist.model.Item;
+import com.project.todolist.model.Tag;
+import com.project.todolist.model.Task;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 import database.FeedReaderDbHelper;
@@ -27,13 +35,15 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
     private LayoutInflater myInflater;
     private Context myContext;
     private FeedReaderDbHelper mHelper;
+    private TagsDAO tagsDAO;
 
     //Constructeur
     public ToDoListAdapter(Context context, List<Item> toDoList) {
         myInflater = LayoutInflater.from(context);
         myContext = context;
         this.myToDoList = toDoList;
-        mHelper = new FeedReaderDbHelper(context);
+        tagsDAO = new TagsDAO(context);
+//        mHelper = new FeedReaderDbHelper(context);
     }
 
     @Override
@@ -81,12 +91,11 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
 
 
             String myListItem = "";
-            if(myCurrent.getImage() == null) {
-                myListItem += "";
-            } else {
-               myListItem += "\uD83D\uDCC5 Date de fin : "+myCurrent.getImage()+"\n";
-
-            }
+//            if(myCurrent.getDeadline() == null) {
+//                myListItem += "";
+//            } else {
+//               myListItem += "\uD83D\uDCC5 Date de fin : "+myCurrent.getDeadline()+"\n";
+//            }
             if (myCurrent.getListTasks() != null) {
                 List<Task> myItemTab = myCurrent.getListTasks();
                 StringBuilder sb = new StringBuilder();
@@ -101,11 +110,20 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
                 }
                 myListItem += "\n"+sb.toString();
             }
-            myListItem += mHelper.getTagFromItemListDisplay(myCurrent.getId());
+            myListItem += tagsDAO.getTagFromItemListDisplay(myCurrent.getId());
             myItem.setText(myListItem);
 
-            // Load the images into the ImageView using the Glide library.
-            Glide.with(myContext).load(myCurrent.getImageRessource()).into(myImage);
+            if(myCurrent.getImage() != null ) {
+                String imgUri = myCurrent.getImage();
+                Uri imgur = Uri.parse(imgUri);
+                myImage.setImageURI(imgur);
+            } else {
+                myImage.setImageResource(R.drawable.img_addapicture);
+            }
+
+
+                // Load the images into the ImageView using the Glide library.
+//            Glide.with(myContext).load(myCurrent.getImageRessource()).into(myImage);
 
 //
 //            myTitre.setText(myCurrent.getTitle());
