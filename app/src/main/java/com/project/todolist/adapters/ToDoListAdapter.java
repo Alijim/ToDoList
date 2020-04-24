@@ -10,8 +10,10 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.project.todolist.DAO.TagsDAO;
 import com.project.todolist.R;
 import com.project.todolist.model.Item;
+import com.project.todolist.model.Tag;
 import com.project.todolist.model.Task;
 
 import java.util.List;
@@ -27,13 +29,15 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
     private LayoutInflater myInflater;
     private Context myContext;
     private FeedReaderDbHelper mHelper;
+    private TagsDAO tagsDAO;
 
     //Constructeur
     public ToDoListAdapter(Context context, List<Item> toDoList) {
         myInflater = LayoutInflater.from(context);
         myContext = context;
         this.myToDoList = toDoList;
-        mHelper = new FeedReaderDbHelper(context);
+        tagsDAO = new TagsDAO(context);
+//        mHelper = new FeedReaderDbHelper(context);
     }
 
     @Override
@@ -101,7 +105,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
                 }
                 myListItem += "\n"+sb.toString();
             }
-            myListItem += mHelper.getTagFromItemListDisplay(myCurrent.getId());
+            myListItem += tagsDAO.getTagFromItemListDisplay(myCurrent.getId());
             myItem.setText(myListItem);
 
             // Load the images into the ImageView using the Glide library.
