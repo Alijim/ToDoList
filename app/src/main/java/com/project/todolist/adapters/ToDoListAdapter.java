@@ -116,7 +116,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
             if(myCurrent.getImage() != null ) {
                 String imgUri = myCurrent.getImage();
                 Uri imgur = Uri.parse(imgUri);
-//                myImage.setImageURI(imgur);
+                myImage.setImageURI(imgur);
             } else {
                 myImage.setImageResource(R.drawable.img_addapicture);
             }
