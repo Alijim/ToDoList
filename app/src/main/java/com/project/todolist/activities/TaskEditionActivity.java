@@ -502,6 +502,8 @@ public class TaskEditionActivity extends AppCompatActivity {
 
             // Création d'un alert dialog pour l'ajout d'une tâche
             final EditText taskEditText = new EditText(this);
+
+
             AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle("Modifier le titre")
                     .setMessage("Entrez votre nouveau titre")
@@ -510,11 +512,17 @@ public class TaskEditionActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String task = String.valueOf(taskEditText.getText());
+
+                            if(taskEditText.getText().toString().isEmpty()) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Titre vide ! ", Toast.LENGTH_SHORT);
+                                toast.show();
+                            } else {
                             item.setTitle(task);
                             itemsDAO.updateItem(item);
 //                            mHelper.updateItem(item);
                             TextView txtV = findViewById(R.id.titleDisplay);
                             txtV.setText(task);
+                            }
                         }
                     })
                     .setNegativeButton("Annuler", null)

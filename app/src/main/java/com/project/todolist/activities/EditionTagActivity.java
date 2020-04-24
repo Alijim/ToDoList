@@ -1,5 +1,7 @@
 package com.project.todolist.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -128,7 +131,10 @@ public class EditionTagActivity extends AppCompatActivity {
         } else {
             Tag t = new Tag();
             EditText tv = findViewById(R.id.edtxt_Tag);
-
+            if(tv.getText().toString().isEmpty()) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Tag vide ! ", Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
             t.setWording(tv.getText().toString());
             Integer id = tagsDAO.insertTag(t);
             Tag tt = new Tag(id, t.getWording());
@@ -136,9 +142,54 @@ public class EditionTagActivity extends AppCompatActivity {
             itemsAdapter.add(t.getWording());
             itemsAdapter.notifyDataSetChanged();
             tv.getText().clear();
+            }
         }
 
     }
+
+    public void onClickUpdateTag(View view) {
+        if(item != null) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Rendez-vous dans le menu d'édition pour modifier ! ", Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            View parent = (View) view.getParent();
+            TextView txv_tag = parent.findViewById(R.id.txtv_TagItem);
+            final EditText taskEditText = new EditText(this);
+            Tag t = new Tag();
+
+
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle("Modifier le titre")
+                    .setMessage("Entrez votre nouveau titre")
+                    .setView(taskEditText)
+                    .setPositiveButton("Ajouter", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String tag = String.valueOf(taskEditText.getText());
+
+                            if(taskEditText.getText().toString().isEmpty()) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Labelle vide ! ", Toast.LENGTH_SHORT);
+                                toast.show();
+                            } else {
+                                Integer i = tagsDAO.getIdFromTitle(txv_tag.getText().toString());
+                                tagsDAO.updateTagFromWording(i, tag);
+                                tagList.remove(txv_tag.getText().toString());
+                                tagList.add(tag);
+//                            mHelper.updateItem(item);
+                                itemsAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    })
+                    .setNegativeButton("Annuler", null)
+                    .create();
+            dialog.show();
+        }
+//            mHelper = new FeedReaderDbHelper(this);
+
+        // Création d'un alert dialog pour l'ajout d'une tâche
+
+    }
+
 
 
     public void deleteTag(View view) {
@@ -318,5 +369,13 @@ public class EditionTagActivity extends AppCompatActivity {
         }
 
         return i;
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
 }

@@ -36,6 +36,58 @@ public class TagsDAO {
         return  i;
     }
 
+    public Integer getIdFromTitle(String s) {
+        Integer i = 0;
+        List values = new ArrayList<Integer>();
+        SQLiteDatabase db = mHelper.getReadableDatabase();
+
+        String[] projection = {
+                BaseColumns._ID,
+                FeedReaderContract.TagsEntry._ID,
+                FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING
+        };
+
+        String selection = FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING + " = ?";
+        String[] selectionArgs = {  s};
+
+        String sortOrder =
+                FeedReaderContract.TagsEntry._ID+ " DESC";
+
+        Cursor cursor = db.query(
+                FeedReaderContract.TagsEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+        while(cursor.moveToNext()) {
+            //long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TaskEntry._ID));
+             i = cursor.getInt(cursor.getColumnIndex("_id"));
+            //items.put(itemId, cursor.getString(cursor.getColumnIndex("wording")));
+        }
+
+        return i;
+
+    }
+
+    public void updateTagFromWording(Integer i, String s) {
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING, s);
+
+        String selection = FeedReaderContract.TagsEntry._ID + " =  "+i.toString();
+
+        int count = db.update(
+                FeedReaderContract.TagsEntry.TABLE_NAME,
+                values,
+                selection,
+                null);
+    }
+
     public List<Tag> getAllTags() {
         String s = "";
         List<Tag> tagList = new ArrayList<Tag>();
