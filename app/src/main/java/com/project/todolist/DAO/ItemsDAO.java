@@ -32,6 +32,7 @@ public class ItemsDAO {
         SQLiteDatabase db = mHelper.getWritableDatabase();
         ContentValues valuesItems = new ContentValues();
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, i.getTitle());
+        valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline());
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, i.getImage());
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR, i.getBackground_color());
 
@@ -123,12 +124,13 @@ public class ItemsDAO {
             String title_1 = cursor.getString(cursor.getColumnIndex("title"));
             List<Task> tasks = tasksDAO.getTasksFromItem(id);
             List<Tag> tags = tagsDAO.getTagFromItem(id);
-//            String deadLine = cursor.getString(cursor.getColumnIndex("deadLine"));
+            Integer deadLine = cursor.getInt(cursor.getColumnIndex("deadLine"));
             String image = cursor.getString(cursor.getColumnIndex("image"));
             String color = cursor.getString(cursor.getColumnIndex("background_color"));
-            Item i = new Item(id, title, tasks, image, color);
+//            Item i = new Item(id, title, tasks, image, color);
+            Item i = new Item(id, title, deadLine, tasks, tags, image, color);
             Item ii = new Item(id, title, tasks, tags, image, color);
-            return ii;
+            return i;
 
         }
 
@@ -141,7 +143,7 @@ public class ItemsDAO {
 
         ContentValues values = new ContentValues();
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE, i.getTitle());
-//        values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline().toString());
+        values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE, i.getDeadline());
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE, i.getImage());
         values.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR, i.getBackground_color());
 

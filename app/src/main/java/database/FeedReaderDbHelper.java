@@ -37,8 +37,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_ITEMS =
             "CREATE TABLE " + FeedReaderContract.ItemsEntry.TABLE_NAME + " (" +
                     FeedReaderContract.ItemsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE + " TEXT," +
-                    FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE + " DATE," +
+                    FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE + " TEXT UNIQUE," +
+                    FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE + " INTEGER," +
                     FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE + " TEXT, "+
                     FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR + " TEXT)";
 

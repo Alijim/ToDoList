@@ -8,4 +8,6 @@
     <string name="menu_editiontag">EditionTag</string>
     <string name="tag_list">Edition des tags</string>
     <string name="TaskActivityLabel">Edition des tâches</string>
+    <string name="channel_name">Channel Name</string>
+    <string name="channel_description">Channel description</string>
 </resources>

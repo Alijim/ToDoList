@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         for (Item i : items) {
-            i.setImageRessource(R.drawable.img_addapicture);
+//            i.setImageRessource(R.drawable.img_addapicture);
             myToDoList.add(i);
 
         }

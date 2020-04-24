@@ -1,6 +1,5 @@
 package com.project.todolist.activities;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,16 +7,26 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,7 +38,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.project.todolist.DAO.ItemsDAO;
 import com.project.todolist.DAO.TasksDAO;
@@ -39,12 +47,13 @@ import com.project.todolist.model.Item;
 import com.project.todolist.model.Tag;
 import com.project.todolist.model.Task;
 
-import java.text.ParseException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import database.FeedReaderDbHelper;
 
@@ -53,7 +62,7 @@ public class TaskEditionActivity extends AppCompatActivity {
     private FeedReaderDbHelper mHelper;
     private ImageView  imgv_image;
     private ImageButton btnDatePicker;
-    private static final int IMAGE_PICK_CODE = 1000;
+    private static final int PICK_IMAGE = 1;
     private static final int PERSMISSION_CODE = 1001;
     private Uri imageUri;
     private TextView txt_Date;
@@ -61,8 +70,12 @@ public class TaskEditionActivity extends AppCompatActivity {
     private Item item;
     private String txtDate = "";
     private String txtToTest;
+
     private ItemsDAO itemsDAO;
     private TasksDAO tasksDAO;
+    private int yr;
+    private int mth;
+    private int dt;
 
     private ListView mTaskListView;
     private List<String> tasks;
@@ -74,11 +87,17 @@ public class TaskEditionActivity extends AppCompatActivity {
     private ArrayAdapter<String> itemsAdapter;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
+    private Calendar myCalendar = Calendar.getInstance () ;
+    private Calendar notification ;
+    private Date mdate = myCalendar.getTime() ;
+    private Date dateNotification;
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_edition);
+        createNotificationChannel();
 //        View l = findViewById(R.id.cv_Title).getRootView();
         ConstraintLayout l = findViewById(R.id.mainEdition);
         btnDatePicker= findViewById(R.id.btn_Date);
@@ -91,7 +110,7 @@ public class TaskEditionActivity extends AppCompatActivity {
         this.itemsDAO = iDAO;
         this.tasksDAO = tDAO;
 
-        this.imgv_image = img;
+        imgv_image = img;
 
         mHelper = new FeedReaderDbHelper(this);
         String txt = "";
@@ -108,9 +127,27 @@ public class TaskEditionActivity extends AppCompatActivity {
         this.listTag = new ArrayList<String>();
 
         if (item.getImage() != null) {
-            txt_Date.setText(item.getImage());
+            String imgUri = item.getImage();
+            Uri imgur = Uri.parse(imgUri);
+
+            try (ParcelFileDescriptor pfd = this.getContentResolver().openFileDescriptor(imgur, "r")) {
+                if (pfd != null) {
+                    Bitmap bm = BitmapFactory.decodeFileDescriptor(pfd.getFileDescriptor());
+//                            Bitmap decode = BitmapFactory.decodeByteArray(strBm, 0, strBm.length());
+                    imgv_image.setImageBitmap(bm);
+
+                }
+            } catch (IOException ex) {
+
+            }
+
+        } else {
+            imgv_image.setImageResource(R.drawable.img_addapicture);
         }
 
+//        if(item.getDeadline() != null ) {
+//            txt_Date.setText(item.getDeadline());
+//        }
 
         Integer color = Integer.parseInt(item.getBackground_color());
 
@@ -157,24 +194,6 @@ public class TaskEditionActivity extends AppCompatActivity {
         ListView lv = findViewById(R.id.taskListView);
         lv.setAdapter(cbxAdapter);
 
-        img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                withImage = true;
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        requestPermissions(permissions, PERSMISSION_CODE);
-                    }else{
-                        // permission already granted
-                        pickImageFromGallery();
-                    }
-                }else{
-                    // system OS is less than marshmallow
-                    pickImageFromGallery();
-                }
-            }
-        });
 
 
 //
@@ -194,42 +213,180 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     }
 
-    private void pickImageFromGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, IMAGE_PICK_CODE);
-
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("667", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
+    private void scheduleNotification (Context context, long time/*, String title, String text*/) {
+
+        Intent intent = new Intent(this, MyNotificationPublisher.class);
+        PendingIntent pending = PendingIntent.getBroadcast(
+                TaskEditionActivity.this,
+                0,
+                intent,
+                0);
+
+        // Schdedule notification
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        //manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pending);
+        manager.set(AlarmManager.RTC_WAKEUP, time, pending);
+    }
+
+    @SuppressLint("WrongConstant")
+//    public void updateLabelButtonDateTime(View view){
+//        String myFormat = "dd/MM/yyyy' 'HH'h'mm':'ss"; //In which you need put here
+//        SimpleDateFormat sdf = new SimpleDateFormat(myFormat , Locale.getDefault ());
+//        myCalendar.add(12, 1);
+//        Date date = myCalendar.getTime();
+////        btnDateTime.setText("NOTIF A: "+sdf.format(date));
+//        long l = myCalendar.getTimeInMillis();
+//
+//        scheduleNotification(this, l);
+//    }
+    public void setupNotification(Calendar myCalendar){
+        String myFormat = "dd/MM/yyyy' 'HH'h'mm':'ss"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat , Locale.getDefault ());
+//        myCalendar.add(12, 1);
+        Date date = myCalendar.getTime();
+//        btnDateTime.setText("NOTIF A: "+sdf.format(date));
+        long l = myCalendar.getTimeInMillis();
+
+        scheduleNotification(this, l);
+    }
+
+    public void onClickSetImage(View v) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                requestPermissions(permissions, PERSMISSION_CODE);
+            }else{
+                // permission already granted
+                openGallery();
+            }
+        }else{
+            // system OS is less than marshmallow
+            openGallery();
+        }
+    }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+//            imageUri = data.getData();
+//            String imgUri = imageUri.toString();
+//
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+//                item.setImage(imgUri);
+//                itemsDAO.updateItem(item);
+//                imgv_image.setImageBitmap(bitmap);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        switch(requestCode){
+//            case PERSMISSION_CODE : {
+//                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+//                    openGallery();
+//                }else{
+//                    Toast errorToast = Toast.makeText(TaskEditionActivity.this, "erreur", Toast.LENGTH_SHORT);
+//                    errorToast.show();
+//                }
+//            }
+//
+//        }
+//    }
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode){
-            case PERSMISSION_CODE : {
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    pickImageFromGallery();
-                }else{
-                    Toast errorToast = Toast.makeText(TaskEditionActivity.this, "erreur", Toast.LENGTH_SHORT);
-                    errorToast.show();
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+
+            String[] projection = new String[]{
+                    MediaStore.Images.ImageColumns._ID,
+                    MediaStore.Images.ImageColumns.DATA,
+                    MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                    MediaStore.Images.ImageColumns.DATE_TAKEN,
+                    MediaStore.Images.ImageColumns.MIME_TYPE,
+                    MediaStore.Images.ImageColumns.DISPLAY_NAME,
+            };
+            final Cursor cursor = this.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+            if (cursor.moveToFirst()) {
+                final ImageView imageView = (ImageView) findViewById(R.id.imageTask);
+
+
+                if (Build.VERSION.SDK_INT >= 29) {
+                    // You can replace '0' by 'cursor.getColumnIndex(MediaStore.Images.ImageColumns._ID)'
+                    // Note that now, you read the column '_ID' and not the column 'DATA'
+                    Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns._ID)));
+                    String imgUri = imageUri.toString();
+                    Uri imgur = Uri.parse(imgUri);
+
+                    // now that you have the media URI, you can decode it to a bitmap
+                    try (ParcelFileDescriptor pfd = this.getContentResolver().openFileDescriptor(imgur, "r")) {
+                        if (pfd != null) {
+                            Bitmap bm = BitmapFactory.decodeFileDescriptor(pfd.getFileDescriptor());
+                            item.setImage(imgUri);
+                            itemsDAO.updateItem(item);
+//                            Bitmap decode = BitmapFactory.decodeByteArray(strBm, 0, strBm.length());
+                            imageView.setImageBitmap(bm);
+                        }
+                    } catch (IOException ex) {
+
+                    }
+                } else {
+                    // Repeat the code you already are using
                 }
             }
 
         }
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            imgv_image.setImageURI(data.getData());
-            imageUri = data.getData();
-        }
-    }
+////        @Override
+////    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+////        super.onActivityResult(requestCode, resultCode, data);
+////        if(resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
+////            // Accès à l'image à partir de data
+////            Uri selectedImage = data.getData();
+////            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+////            // Curseur d'accès au chemin de l'image
+////            Cursor cursor = this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+////// Position sur la première ligne (normalement une seule)
+////            if(cursor.moveToFirst()){
+////                // Récupération du chemin précis de l'image
+////                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+////                String photoPath = cursor.getString(columnIndex);
+////                cursor.close();
+////                // Récupération image
+////                Bitmap image = BitmapFactory.decodeFile(photoPath);
+////                // Affichage
+////                imgv_image.setImageBitmap(image);
+////            }
+////
+////        }
+//    }
 
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, IMAGE_PICK_CODE);
+        startActivityForResult(gallery, PICK_IMAGE);
     }
-
 
     public void addTag(View view) {
         Intent intent = new Intent(this, EditionTagActivity.class);
@@ -245,15 +402,22 @@ public class TaskEditionActivity extends AppCompatActivity {
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
-
+//        dateNotification = c.getTime();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
+
                         txtDate = dayOfMonth + " " + (getTextMonthFR(monthOfYear+1)) + " " + year;
-                        displayTimePickerDialog(v);
+//                        notification.add
+                        yr = year;
+                        mth = monthOfYear;
+                        dt = dayOfMonth;
+
+
+                        displayTimePickerDialog(v, year, monthOfYear, dayOfMonth);
 //                        txt_Date.setText(dayOfMonth + " " + (getTextMonthFR(mMonth+1)) + " " + year);
 
 
@@ -263,10 +427,11 @@ public class TaskEditionActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    public void displayTimePickerDialog(View v) {
+    public void displayTimePickerDialog(View v, int y, int m, int d) {
         final Calendar c = Calendar.getInstance();
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
+//        dateNotification = c.getTime();
 
         // Launch Time Picker Dialog
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
@@ -280,21 +445,27 @@ public class TaskEditionActivity extends AppCompatActivity {
                         txtDate += " à "+hourOfDay+ ":"+ minute;
 //                        String date = mYear+"-"+mMonth+"-"+mDay+" "+mHour+":"+mMinute;
                         String date = mDay+"-"+mMonth+1+"-"+mYear+" "+mHour+":"+mMinute;
-                        Date datee = null;
 
-
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm");
-                        try {
-                            datee = new SimpleDateFormat("dd-M-yyyy hh:mm").parse(date);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        String str = datee.toString();
-
-                        item.setImage(txtDate);
+                        Calendar ca = Calendar.getInstance();
+                        ca.set(yr, mth, dt, hourOfDay, minute, 0);
+                        notification = ca;
+                        setupNotification(ca);
+                        dateNotification = ca.getTime();
+                        Integer in  = (int)dateNotification.getTime();
+                        item.setDeadline(in);
                         itemsDAO.updateItem(item);
+//                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm");
+//                        try {
+//                            datee = new SimpleDateFormat("dd-M-yyyy hh:mm").parse(date);
+//                        } catch (ParseException e) {
+//                            e.printStackTrace();
+//                        }
+//                        String str = datee.toString();
+//
+//                        item.setImage(txtDate);
+//                        itemsDAO.updateItem(item);
 //                        mHelper.updateItem(item);
-                        txt_Date.setText(txtDate);
+                        txt_Date.setText(dateNotification.toString());
                     }
                 }, mHour, mMinute, true);
         timePickerDialog.show();
@@ -411,35 +582,40 @@ public class TaskEditionActivity extends AppCompatActivity {
         Integer color = R.color.bckgrdBlue;
         item.setBackground_color(color.toString());
         itemsDAO.updateItem(item);
-//        mHelper.updateItem(item);        l.setBackgroundResource(color);
+//        mHelper.updateItem(item);
+        l.setBackgroundResource(color);
     }
     public void goYellow(View view) {
         ConstraintLayout l = findViewById(R.id.mainEdition);
         Integer color = R.color.bckgrdYellow;
         item.setBackground_color(color.toString());
         itemsDAO.updateItem(item);
-//        mHelper.updateItem(item);        l.setBackgroundResource(R.color.bckgrdYellow);
+//        mHelper.updateItem(item);
+        l.setBackgroundResource(R.color.bckgrdYellow);
     }
     public void goRed(View view) {
         ConstraintLayout l = findViewById(R.id.mainEdition);
         Integer color = R.color.bckgrdRed;
         item.setBackground_color(color.toString());
         itemsDAO.updateItem(item);
-//        mHelper.updateItem(item);        l.setBackgroundResource(color);
+//        mHelper.updateItem(item);
+        l.setBackgroundResource(color);
     }
     public void goWhite(View view) {
          ConstraintLayout l = findViewById(R.id.mainEdition);
         Integer color = R.color.bckgrdWhite;
         item.setBackground_color(color.toString());
         itemsDAO.updateItem(item);
-//        mHelper.updateItem(item);        l.setBackgroundResource(R.color.bckgrdWhite);
+//        mHelper.updateItem(item);
+        l.setBackgroundResource(R.color.bckgrdWhite);
     }
 
-    @Override
-    public void onRestart()
-    {
-        super.onRestart();
-        finish();
-        startActivity(getIntent());
-    }
+//
+//    @Override
+//    public void onRestart()
+//    {
+////        super.onRestart();
+////        finish();
+////        startActivity(getIntent());
+//    }
 }
