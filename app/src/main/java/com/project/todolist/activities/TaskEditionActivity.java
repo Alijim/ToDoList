@@ -31,6 +31,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.project.todolist.DAO.ItemsDAO;
+import com.project.todolist.DAO.TasksDAO;
 import com.project.todolist.adapters.CheckBoxAdapter;
 import com.project.todolist.R;
 import com.project.todolist.model.Item;
@@ -59,6 +61,8 @@ public class TaskEditionActivity extends AppCompatActivity {
     private Item item;
     private String txtDate = "";
     private String txtToTest;
+    private ItemsDAO itemsDAO;
+    private TasksDAO tasksDAO;
 
     private ListView mTaskListView;
     private List<String> tasks;
@@ -81,6 +85,12 @@ public class TaskEditionActivity extends AppCompatActivity {
         txt_Date = findViewById(R.id.txtv_Date);
         TextView txt_Tag = findViewById(R.id.lv_ItemTag);
         ImageView img =  findViewById(R.id.imageTask);
+        ItemsDAO iDAO = new ItemsDAO(this);
+        TasksDAO tDAO = new TasksDAO(this);
+
+        this.itemsDAO = iDAO;
+        this.tasksDAO = tDAO;
+
         this.imgv_image = img;
 
         mHelper = new FeedReaderDbHelper(this);
@@ -91,7 +101,8 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         txt = extras.getString("name");
 
-        this.item = mHelper.researchItem(txt);
+        this.item = itemsDAO.researchItem(txt);
+//        this.item = mHelper.researchItem(txt);
         this.tasks = new ArrayList<String>();
         this.listTask = item.getListTasks();
         this.listTag = new ArrayList<String>();
@@ -271,6 +282,7 @@ public class TaskEditionActivity extends AppCompatActivity {
                         String date = mDay+"-"+mMonth+1+"-"+mYear+" "+mHour+":"+mMinute;
                         Date datee = null;
 
+
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm");
                         try {
                             datee = new SimpleDateFormat("dd-M-yyyy hh:mm").parse(date);
@@ -280,7 +292,8 @@ public class TaskEditionActivity extends AppCompatActivity {
                         String str = datee.toString();
 
                         item.setImage(txtDate);
-                        mHelper.updateItem(item);
+                        itemsDAO.updateItem(item);
+//                        mHelper.updateItem(item);
                         txt_Date.setText(txtDate);
                     }
                 }, mHour, mMinute, true);
@@ -292,7 +305,8 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         Task t = new Task(edtTask.getText().toString(), Boolean.FALSE);
 
-        long id = mHelper.insertTask(item.getId(), t);
+//        long id = mHelper.insertTask(item.getId(), t);
+        long id = tasksDAO.insertTask(item.getId(), t);
         Integer iId = (int) (long) id;
 
         Task tWithId = new Task(iId, t.getWording(), t.getDone());
@@ -324,14 +338,15 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     public void deleteThisItem(View view){
         Intent intent = new Intent(this, MainActivity.class);
-        mHelper.deleteItemById(item.getId());
+        itemsDAO.deleteItemById(item.getId());
+//        mHelper.deleteItemById(item.getId());
         startActivity(intent);
 
     }
 
     public void updateTitle(View view) {
 
-            mHelper = new FeedReaderDbHelper(this);
+//            mHelper = new FeedReaderDbHelper(this);
 
             // Création d'un alert dialog pour l'ajout d'une tâche
             final EditText taskEditText = new EditText(this);
@@ -344,7 +359,8 @@ public class TaskEditionActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             String task = String.valueOf(taskEditText.getText());
                             item.setTitle(task);
-                            mHelper.updateItem(item);
+                            itemsDAO.updateItem(item);
+//                            mHelper.updateItem(item);
                             TextView txtV = findViewById(R.id.titleDisplay);
                             txtV.setText(task);
                         }
@@ -371,7 +387,8 @@ public class TaskEditionActivity extends AppCompatActivity {
         cbx.setChecked(t.getDone());
 
 
-        mHelper.updateTask(t);
+        tasksDAO.updateTask(t);
+//        mHelper.updateTask(t);
     }
 
     public void updateDate(Integer y, Integer m, Integer d) {
@@ -385,36 +402,37 @@ public class TaskEditionActivity extends AppCompatActivity {
          ConstraintLayout l = findViewById(R.id.mainEdition);
         Integer color = R.color.bckgrdGreen;
         item.setBackground_color(color.toString());
-        mHelper.updateItem(item);
+        itemsDAO.updateItem(item);
+//        mHelper.updateItem(item);
       l.setBackgroundResource(R.color.bckgrdGreen);
     }
     public void goBlue(View view) {
         ConstraintLayout l = findViewById(R.id.mainEdition);
         Integer color = R.color.bckgrdBlue;
         item.setBackground_color(color.toString());
-        mHelper.updateItem(item);
-        l.setBackgroundResource(color);
+        itemsDAO.updateItem(item);
+//        mHelper.updateItem(item);        l.setBackgroundResource(color);
     }
     public void goYellow(View view) {
         ConstraintLayout l = findViewById(R.id.mainEdition);
         Integer color = R.color.bckgrdYellow;
         item.setBackground_color(color.toString());
-        mHelper.updateItem(item);
-        l.setBackgroundResource(R.color.bckgrdYellow);
+        itemsDAO.updateItem(item);
+//        mHelper.updateItem(item);        l.setBackgroundResource(R.color.bckgrdYellow);
     }
     public void goRed(View view) {
         ConstraintLayout l = findViewById(R.id.mainEdition);
         Integer color = R.color.bckgrdRed;
         item.setBackground_color(color.toString());
-        mHelper.updateItem(item);
-        l.setBackgroundResource(color);
+        itemsDAO.updateItem(item);
+//        mHelper.updateItem(item);        l.setBackgroundResource(color);
     }
     public void goWhite(View view) {
          ConstraintLayout l = findViewById(R.id.mainEdition);
         Integer color = R.color.bckgrdWhite;
         item.setBackground_color(color.toString());
-        mHelper.updateItem(item);
-        l.setBackgroundResource(R.color.bckgrdWhite);
+        itemsDAO.updateItem(item);
+//        mHelper.updateItem(item);        l.setBackgroundResource(R.color.bckgrdWhite);
     }
 
     @Override
