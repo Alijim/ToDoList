@@ -15,10 +15,8 @@ import com.project.todolist.DAO.ItemsDAO;
 import com.project.todolist.DAO.TagsDAO;
 import com.project.todolist.DAO.TagsItemsDAO;
 import com.project.todolist.DAO.TasksDAO;
-import com.project.todolist.activities.MainActivity;
 import com.project.todolist.R;
-import com.project.todolist.TagListAdapter;
-import com.project.todolist.activities.TaskEditionActivity;
+import com.project.todolist.adapters.TagListAdapter;
 import com.project.todolist.model.Item;
 import com.project.todolist.model.Tag;
 

@@ -1,4 +1,4 @@
-package com.project.todolist;
+package com.project.todolist.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.project.todolist.DAO.TagsItemsDAO;
+import com.project.todolist.R;
 import com.project.todolist.model.Item;
 import com.project.todolist.model.Tag;
 
@@ -19,13 +21,14 @@ import java.util.List;
 import database.FeedReaderDbHelper;
 
 public class TagListAdapter extends ArrayAdapter {
-    Context context;
-    Item item;
-    List<Tag> allTags;
-    FeedReaderDbHelper mHelper;
-    List<Boolean> checkboxState;
-    List<Integer> itemsState;
-    List<String> checkboxItems;
+    private Context context;
+    private Item item;
+    private List<Tag> allTags;
+    private FeedReaderDbHelper mHelper;
+    private List<Boolean> checkboxState;
+    private List<Integer> itemsState;
+    private List<String> checkboxItems;
+    private TagsItemsDAO tagsItemsDAO;
 
     public TagListAdapter(Context context, List<Tag> resource, Item i) {
         super(context, 0, resource);
@@ -33,7 +36,9 @@ public class TagListAdapter extends ArrayAdapter {
         this.context = context;
         this.item = i;
         this.allTags = resource;
-        mHelper = new FeedReaderDbHelper(context);
+        this.tagsItemsDAO = new TagsItemsDAO(context);
+//        mHelper = new FeedReaderDbHelper(context);
+
 
         //this.checkboxItems = resource;
         //this.checkboxState = new ArrayList<Boolean>(Collections.nCopies(resource.size(), true));
@@ -50,7 +55,7 @@ public class TagListAdapter extends ArrayAdapter {
         Button btn = convertView.findViewById(R.id.btn_DeleteTag);
         List<Tag> itemTag = allTags;
 
-            if(mHelper.isTagItem(item.getId(), t.getId())) {
+            if(tagsItemsDAO.isTagItem(item.getId(), t.getId())) {
                 name.setText(t.getWording());
                 btn.setBackgroundColor(btn.getContext().getResources().getColor(R.color.bckgrdRed));
                 btn.setText("Supprimer");
