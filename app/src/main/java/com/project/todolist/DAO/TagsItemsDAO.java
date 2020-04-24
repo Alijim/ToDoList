@@ -1,7 +1,11 @@
 package com.project.todolist.DAO;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.project.todolist.model.Item;
+import com.project.todolist.model.Tag;
 
 import database.FeedReaderContract;
 import database.FeedReaderDbHelper;
@@ -41,6 +45,17 @@ public class TagsItemsDAO {
         String[] selectionArgs = { t.toString(), i.toString() };
         int deletedRows = db.delete(FeedReaderContract.TagsItemsEntry.TABLE_NAME, selection, selectionArgs);
         return deletedRows;
+    }
+
+    public void insertTagItems(Item i, Tag t) {
+
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+        ContentValues valuesItems = new ContentValues();
+
+        valuesItems.put(FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_ITEMS, i.getId());
+        valuesItems.put(FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_TAGS, t.getId());
+
+        long itemsRow1 = db.insert(FeedReaderContract.TagsItemsEntry.TABLE_NAME, null, valuesItems);
     }
 
 }

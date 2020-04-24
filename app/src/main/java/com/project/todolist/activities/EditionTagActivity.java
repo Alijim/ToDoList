@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.project.todolist.DAO.ItemsDAO;
+import com.project.todolist.DAO.TagsDAO;
+import com.project.todolist.DAO.TagsItemsDAO;
+import com.project.todolist.DAO.TasksDAO;
 import com.project.todolist.activities.MainActivity;
 import com.project.todolist.R;
 import com.project.todolist.TagListAdapter;
@@ -35,6 +39,10 @@ public class EditionTagActivity extends AppCompatActivity {
     private ArrayAdapter<String> itemsAdapter;
     private TagListAdapter tagListAdapter;
     private Boolean parentIsActivityA;
+    private TasksDAO tasksDAO;
+    private TagsDAO tagsDAO;
+    private TagsItemsDAO tagsItemsDAO;
+    private ItemsDAO itemsDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +52,15 @@ public class EditionTagActivity extends AppCompatActivity {
         Button btnAdd = findViewById(R.id.btn_AddTag);
         EditText edtx = findViewById(R.id.edtxt_Tag);
 
+
         TextView textViewTag = findViewById(R.id.txtv_DisplayTxtTag);
         Bundle extras = getIntent().getExtras();
         mHelper = new FeedReaderDbHelper(this);
+        itemsDAO = new ItemsDAO(this);
+        tasksDAO = new TasksDAO(this);
+        tagsDAO = new TagsDAO(this);
+        tagsItemsDAO = new TagsItemsDAO(this);
+
         parentIsActivityA = Boolean.FALSE;
 
 
@@ -55,7 +69,7 @@ public class EditionTagActivity extends AppCompatActivity {
         if(txt != null){
             parentIsActivityA = Boolean.TRUE;
             this.isItem = Boolean.TRUE;
-            item = mHelper.researchItem(txt);
+            item = itemsDAO.researchItem(txt);
             textViewTag.setText("Gérer les tags de : "+item.getTitle());
             btnAdd.setVisibility(View.INVISIBLE);
             edtx.setVisibility(View.INVISIBLE);
@@ -64,9 +78,9 @@ public class EditionTagActivity extends AppCompatActivity {
         this.tags = new ArrayList<Tag>();
         this.tagsItem = new ArrayList<Tag>();
         this.tagList = new ArrayList<String>();
-        tags = mHelper.getAllTags();
+        tags = tagsDAO.getAllTags();
         if(txt != null){
-           tagsItem = mHelper.getTagFromItem(item.getId());
+           tagsItem = tagsDAO.getTagFromItem(item.getId());
             if(tagsItem.size() >= 1) {
                 for(Tag t : tagsItem) {
                     tagList.add(t.getWording());
@@ -106,9 +120,9 @@ public class EditionTagActivity extends AppCompatActivity {
             EditText tv = findViewById(R.id.edtxt_Tag);
 
             t.setWording(tv.getText().toString());
-            Integer id = mHelper.insertTag(t);
+            Integer id = tagsDAO.insertTag(t);
             Tag tt = new Tag(id, t.getWording());
-            mHelper.insertTagItems(item, tt);
+            tagsItemsDAO.insertTagItems(item, tt);
             tags.add(tt);
             tagListAdapter.add(t.getWording());
             tagListAdapter.notifyDataSetChanged();
@@ -118,7 +132,7 @@ public class EditionTagActivity extends AppCompatActivity {
             EditText tv = findViewById(R.id.edtxt_Tag);
 
             t.setWording(tv.getText().toString());
-            Integer id = mHelper.insertTag(t);
+            Integer id = tagsDAO.insertTag(t);
             Tag tt = new Tag(id, t.getWording());
             tags.add(tt);
             itemsAdapter.add(t.getWording());
@@ -148,7 +162,7 @@ public class EditionTagActivity extends AppCompatActivity {
                 }
 
                 tagsItem.remove(tDelete);
-               Integer i = mHelper.deleteTagItem(item.getId(), tDelete.getId());
+               Integer i = tagsItemsDAO.deleteTagItem(item.getId(), tDelete.getId());
 //                tagListAdapter.notifyDataSetChanged();
                 btn.setBackgroundColor(btn.getContext().getResources().getColor(R.color.bckgrdGreen));
                 btn.setText("Ajouter");
@@ -166,7 +180,7 @@ public class EditionTagActivity extends AppCompatActivity {
 //                tAdd = tags.(tag.getText().toString());
 //                Tag tat = new Tag(id, tAdd.getWording());
                 tagsItem.add(tAdd);
-                mHelper.insertTagItems(item, tAdd);
+                tagsItemsDAO.insertTagItems(item, tAdd);
 //                tagListAdapter.notifyDataSetChanged();
 
 //                ListView lv = findViewById(R.id.lv_Tag);
@@ -191,7 +205,7 @@ public class EditionTagActivity extends AppCompatActivity {
 
                 tags.remove(tDelete);
 
-                mHelper.deleteTag(tDelete.getId());
+                tagsDAO.deleteTag(tDelete.getId());
                 itemsAdapter.remove(t);
                 itemsAdapter.notifyDataSetChanged();
 //                btn.setBackgroundColor(btn.getContext().getResources().getColor(R.color.bckgrdGreen));
