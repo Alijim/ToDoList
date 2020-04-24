@@ -127,19 +127,12 @@ public class TaskEditionActivity extends AppCompatActivity {
         this.listTag = new ArrayList<String>();
 
         if (item.getImage() != null) {
+//            Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
             String imgUri = item.getImage();
             Uri imgur = Uri.parse(imgUri);
 
-            try (ParcelFileDescriptor pfd = this.getContentResolver().openFileDescriptor(imgur, "r")) {
-                if (pfd != null) {
-                    Bitmap bm = BitmapFactory.decodeFileDescriptor(pfd.getFileDescriptor());
-//                            Bitmap decode = BitmapFactory.decodeByteArray(strBm, 0, strBm.length());
-                    imgv_image.setImageBitmap(bm);
-
-                }
-            } catch (IOException ex) {
-
-            }
+                    imgv_image.setImageURI(imgur);
 
         } else {
             imgv_image.setImageResource(R.drawable.img_addapicture);
@@ -317,48 +310,13 @@ public class TaskEditionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
+            imgv_image.setImageURI(data.getData());
+            imageUri = data.getData();
+            item.setImage(imageUri.toString());
+            itemsDAO.updateItem(item);
 
-            String[] projection = new String[]{
-                    MediaStore.Images.ImageColumns._ID,
-                    MediaStore.Images.ImageColumns.DATA,
-                    MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
-                    MediaStore.Images.ImageColumns.DATE_TAKEN,
-                    MediaStore.Images.ImageColumns.MIME_TYPE,
-                    MediaStore.Images.ImageColumns.DISPLAY_NAME,
-            };
-            final Cursor cursor = this.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
-            if (cursor.moveToFirst()) {
-                final ImageView imageView = (ImageView) findViewById(R.id.imageTask);
-
-
-                if (Build.VERSION.SDK_INT >= 29) {
-                    // You can replace '0' by 'cursor.getColumnIndex(MediaStore.Images.ImageColumns._ID)'
-                    // Note that now, you read the column '_ID' and not the column 'DATA'
-                    Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns._ID)));
-                    String imgUri = imageUri.toString();
-                    Uri imgur = Uri.parse(imgUri);
-
-                    // now that you have the media URI, you can decode it to a bitmap
-                    try (ParcelFileDescriptor pfd = this.getContentResolver().openFileDescriptor(imgur, "r")) {
-                        if (pfd != null) {
-                            Bitmap bm = BitmapFactory.decodeFileDescriptor(pfd.getFileDescriptor());
-                            item.setImage(imgUri);
-                            itemsDAO.updateItem(item);
-//                            Bitmap decode = BitmapFactory.decodeByteArray(strBm, 0, strBm.length());
-                            imageView.setImageBitmap(bm);
-                        }
-                    } catch (IOException ex) {
-
-                    }
-                } else {
-                    // Repeat the code you already are using
-                }
-            }
-
-        }
-    }
+        } }
 ////        @Override
 ////    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 ////        super.onActivityResult(requestCode, resultCode, data);
@@ -384,8 +342,9 @@ public class TaskEditionActivity extends AppCompatActivity {
 //    }
 
     private void openGallery() {
-        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, PICK_IMAGE);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE);
     }
 
     public void addTag(View view) {
