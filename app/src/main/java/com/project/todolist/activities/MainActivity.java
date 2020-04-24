@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
     public void launchTaskEditionActivityF(String s) {
         Intent intent = new Intent(this, TaskEditionActivity.class);
         intent.putExtra("name", s);
-
         startActivity(intent);
     }
 
@@ -152,7 +151,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Item i = new Item();
-                        i.setTitle(String.valueOf(taskEditText.getText()));
+                        if(taskEditText.getText().toString().isEmpty()) {
+                            i.setTitle("Nouvelle tâche");
+                        } else {
+                            i.setTitle(String.valueOf(taskEditText.getText()));
+                        }
                         Integer color = R.color.bckgrdWhite;
                         i.setBackground_color(color.toString());
 //                        i.setBackground_color(R.color.bckgrdWhite);

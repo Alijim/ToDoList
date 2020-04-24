@@ -57,6 +57,11 @@ public class CheckBoxAdapter extends ArrayAdapter {
         return convertView;
 
     }
+    @Override
+    public void notifyDataSetChanged()
+    {
+        super.notifyDataSetChanged();
+    }
 
     /*public CheckBoxAdapter(Context context, List<String> resource, List<Integer> state) {
         super(context, R.layout.item_todo, resource);

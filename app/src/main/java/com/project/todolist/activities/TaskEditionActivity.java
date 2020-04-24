@@ -38,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.project.todolist.DAO.ItemsDAO;
 import com.project.todolist.DAO.TasksDAO;
@@ -432,20 +433,41 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     public void insertTaskIntoItem(View view) {
         EditText edtTask = findViewById(R.id.txtTask);
-
-        Task t = new Task(edtTask.getText().toString(), Boolean.FALSE);
+        if (edtTask.getText().toString().isEmpty()) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Tâche vide ! ", Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            Task t = new Task(edtTask.getText().toString(), Boolean.FALSE);
 
 //        long id = mHelper.insertTask(item.getId(), t);
-        long id = tasksDAO.insertTask(item.getId(), t);
-        Integer iId = (int) (long) id;
+            long id = tasksDAO.insertTask(item.getId(), t);
+            Integer iId = (int) (long) id;
 
-        Task tWithId = new Task(iId, t.getWording(), t.getDone());
+            Task tWithId = new Task(iId, t.getWording(), t.getDone());
 
-        item.getListTasks().add(tWithId);
-        tasks.add(edtTask.getText().toString());
-        itemsAdapter.notifyDataSetChanged();
-        edtTask.getText().clear();
-        //startActivity(intent);
+            item.getListTasks().add(tWithId);
+            tasks.add(edtTask.getText().toString());
+            itemsAdapter.notifyDataSetChanged();
+            edtTask.getText().clear();
+            //startActivity(intent);
+        }
+    }
+
+    public void deleteTask(View view) {
+        View parent = (View) view.getParent();
+        CheckBox cbx = parent.findViewById(R.id.chkBox);
+        TextView txtv_task = parent.findViewById(R.id.txtv_task);
+        Integer i = Integer.parseInt(cbx.getText().toString());
+
+        Task t = new Task(i, txtv_task.getText().toString(), cbx.isChecked());
+        tasksDAO.deleteTask(i);
+        item.setListTasks(tasksDAO.getTasksFromItem(item.getId()));
+        listTask = item.getListTasks();
+        cbxAdapter = new CheckBoxAdapter(this, listTask);
+
+        ListView lv = findViewById(R.id.taskListView);
+        lv.setAdapter(cbxAdapter);
+
     }
 
     public String getTextMonthFR(Integer m) {
