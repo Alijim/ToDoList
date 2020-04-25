@@ -30,13 +30,11 @@ import database.FeedReaderDbHelper;
 
 public class EditionTagActivity extends AppCompatActivity {
 
-    private FeedReaderDbHelper mHelper;
     private List<Tag> tags;
     private List<Tag> tagsItem;
     private Item item;
     private Boolean isItem;
     private List<String> tagList;
-    private List<String> listTag;
     private ArrayAdapter<String> itemsAdapter;
     private TagListAdapter tagListAdapter;
     private Boolean parentIsActivityA;

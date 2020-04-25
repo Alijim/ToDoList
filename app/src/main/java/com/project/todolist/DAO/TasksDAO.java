@@ -27,6 +27,14 @@ public class TasksDAO {
 
     }
 
+    /*  Petit lexique pour comprendre le fonctionnement :
+     *   - projection    : les colonnes que l'on veut récupérer
+     *   - selection     : condition WHERE
+     *   - selectionArgs : Arguments de la condition
+     *   - sortOrder     : comment on veut trier nos données.
+     *   Le cursoor contient les résultats de la requête.
+     * */
+
     public long insertTask(Integer id, Task t) {
         SQLiteDatabase db = mHelper.getWritableDatabase();
         ContentValues valuesTasks = new ContentValues();

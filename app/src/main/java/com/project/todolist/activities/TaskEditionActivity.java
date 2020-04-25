@@ -427,8 +427,6 @@ public class TaskEditionActivity extends AppCompatActivity {
             txtv_task.setText(t.getWording());
         }
         cbx.setChecked(t.getDone());
-
-
         tasksDAO.updateTask(t);
     }
 

@@ -27,6 +27,14 @@ public class TagsItemsDAO {
 
     }
 
+    /*  Petit lexique pour comprendre le fonctionnement :
+     *   - projection    : les colonnes que l'on veut récupérer
+     *   - selection     : condition WHERE
+     *   - selectionArgs : Arguments de la condition
+     *   - sortOrder     : comment on veut trier nos données.
+     *   Le cursoor contient les résultats de la requête.
+     * */
+
     public void deleteTagsInTagsItem(Integer id) {
         SQLiteDatabase db = mHelper.getWritableDatabase();
 

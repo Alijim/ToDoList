@@ -28,6 +28,14 @@ public class ItemsDAO {
         this.context = c;
     }
 
+    /*  Petit lexique pour comprendre le fonctionnement :
+    *   - projection    : les colonnes que l'on veut récupérer
+    *   - selection     : condition WHERE
+    *   - selectionArgs : Arguments de la condition
+    *   - sortOrder     : comment on veut trier nos données.
+    *   Le cursoor contient les résultats de la requête.
+    * */
+
     public void insert(Item i) {
         SQLiteDatabase db = mHelper.getWritableDatabase();
         ContentValues valuesItems = new ContentValues();

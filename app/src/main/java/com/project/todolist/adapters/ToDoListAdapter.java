@@ -72,17 +72,16 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
 
         ToDoListViewHolder(View itemView, ToDoListAdapter adapter) {
             super(itemView);
-            // Initialize the views.
+
             myTitre = itemView.findViewById(R.id.cv_Title);
             myItem = itemView.findViewById(R.id.Item);
             myImage = itemView.findViewById(R.id.Image);
 
         }
-
+        /* Permet d'afficher les données dans le CardView.*/
         public void bindTo(Item myCurrent){
-            // Populate the textviews with data.
 
-                myTitre.setText(myCurrent.getTitle());
+            myTitre.setText(myCurrent.getTitle());
             Integer color = Integer.parseInt(myCurrent.getBackground_color());
             myTitre.getRootView().setBackgroundResource(color);
 
@@ -108,7 +107,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
                 }
                 myListItem += "\n"+sb.toString();
             }
-            myListItem += tagsDAO.getTagFromItemListDisplay(myCurrent.getId());
+            myListItem += tagsDAO.getTagFromItemListDisplay(myCurrent.getId()); //Récupère les tags sous forme "affichable"
             myItem.setText(myListItem);
 
             if(myCurrent.getImage() != null ) {
