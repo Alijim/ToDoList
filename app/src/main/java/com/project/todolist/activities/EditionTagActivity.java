@@ -52,35 +52,39 @@ public class EditionTagActivity extends AppCompatActivity {
 
         Button btnAdd = findViewById(R.id.btn_AddTag);
         EditText edtx = findViewById(R.id.edtxt_Tag);
-
-
         TextView textViewTag = findViewById(R.id.txtv_DisplayTxtTag);
+
+        this.tags = new ArrayList<Tag>();
+        this.tagsItem = new ArrayList<Tag>();
+        this.tagList = new ArrayList<String>();
+
         Bundle extras = getIntent().getExtras();
-        mHelper = new FeedReaderDbHelper(this);
+        parentIsActivityA = Boolean.FALSE;
+
         itemsDAO = new ItemsDAO(this);
         tasksDAO = new TasksDAO(this);
         tagsDAO = new TagsDAO(this);
         tagsItemsDAO = new TagsItemsDAO(this);
 
-        parentIsActivityA = Boolean.FALSE;
 
 
-        String txt = extras.getString("name");
+        String itemName = extras.getString("name");
         this.isItem = Boolean.FALSE;
-        if(txt != null){
+        if(itemName != null){
             parentIsActivityA = Boolean.TRUE;
             this.isItem = Boolean.TRUE;
-            item = itemsDAO.researchItem(txt);
+            item = itemsDAO.researchItem(itemName);
             textViewTag.setText("Gérer les tags de : "+item.getTitle());
             btnAdd.setVisibility(View.INVISIBLE);
             edtx.setVisibility(View.INVISIBLE);
         }
 
-        this.tags = new ArrayList<Tag>();
-        this.tagsItem = new ArrayList<Tag>();
-        this.tagList = new ArrayList<String>();
+
+
+
+
         tags = tagsDAO.getAllTags();
-        if(txt != null){
+        if(itemName != null){
            tagsItem = tagsDAO.getTagFromItem(item.getId());
             if(tagsItem.size() >= 1) {
                 for(Tag t : tagsItem) {
@@ -104,7 +108,7 @@ public class EditionTagActivity extends AppCompatActivity {
 
         ListView lv = findViewById(R.id.lv_Tag);
 
-        if(txt != null) {
+        if(itemName != null) {
             lv.setAdapter(tagListAdapter);
 
         } else {

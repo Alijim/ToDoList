@@ -5,6 +5,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/img_addapicture"/>
+            android:src="@drawable/ic_icon_appli"/>
     </item>
 </layer-list>
