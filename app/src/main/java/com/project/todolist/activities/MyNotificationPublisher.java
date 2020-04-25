@@ -15,10 +15,12 @@ public class MyNotificationPublisher extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        String title = intent.getStringExtra("itemName");
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "667")
                 .setSmallIcon(android.R.drawable.alert_dark_frame)
-                .setContentTitle("title")
-                .setContentText("text")
+                .setContentTitle("Délai arrivé !")
+                .setContentText("Le délai de votre tâche : "+title+", est arrivé à sa fin.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         Intent intent2 = new Intent(context, TaskEditionActivity.class);

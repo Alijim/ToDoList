@@ -113,6 +113,8 @@ public class TaskEditionActivity extends AppCompatActivity {
 
         imgv_image = img;
 
+
+
         mHelper = new FeedReaderDbHelper(this);
         String txt = "";
 
@@ -122,7 +124,6 @@ public class TaskEditionActivity extends AppCompatActivity {
         txt = extras.getString("name");
 
         this.item = itemsDAO.researchItem(txt);
-//        this.item = mHelper.researchItem(txt);
         this.tasks = new ArrayList<String>();
         this.listTask = item.getListTasks();
         this.listTag = new ArrayList<String>();
@@ -139,27 +140,24 @@ public class TaskEditionActivity extends AppCompatActivity {
             imgv_image.setImageResource(R.drawable.img_addapicture);
         }
 
-//        if(item.getDeadline() != null ) {
-//            txt_Date.setText(item.getDeadline());
-//        }
+        if(item.getDeadline() != 0 ) {
+            txt_Date.setText(item.displayDeadline());
+        }
 
         Integer color = Integer.parseInt(item.getBackground_color());
 
-//        txt_Tag.setText(" Test : "+item.getListTags().toString());
         l.setBackgroundResource(color);
 
         if (cbxAdapter != null) {
             tasks.clear();
             cbxAdapter.clear();
         }
-//        listItems = mHelper.getListItemByTodo(task.getNumID());
+
         cbxAdapter = new CheckBoxAdapter(this, listTask);
 
 
         TextView txtV = findViewById(R.id.titleDisplay);
-        //txtV.setPaintFlags(txtV.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
-        //txtV.setText(item);
-//        String vvvvv = mHelper.readDone("salut").toString();
+
         for(Tag tag : item.getListTags()) {
             if(tag.getId() != null) {
                 listTag.add(tag.getWording());
@@ -188,23 +186,6 @@ public class TaskEditionActivity extends AppCompatActivity {
         ListView lv = findViewById(R.id.taskListView);
         lv.setAdapter(cbxAdapter);
 
-
-
-//
-//        img.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                    openGallery();
-//                }
-//        });{
-//
-//        }
-
-
-//        lv.setAdapter(itemsAdapter);
-
-
-
     }
 
     private void createNotificationChannel() {
@@ -226,6 +207,7 @@ public class TaskEditionActivity extends AppCompatActivity {
     private void scheduleNotification (Context context, long time/*, String title, String text*/) {
 
         Intent intent = new Intent(this, MyNotificationPublisher.class);
+        intent.putExtra("itemName", item.getTitle());
         PendingIntent pending = PendingIntent.getBroadcast(
                 TaskEditionActivity.this,
                 0,
@@ -238,23 +220,11 @@ public class TaskEditionActivity extends AppCompatActivity {
         manager.set(AlarmManager.RTC_WAKEUP, time, pending);
     }
 
-    @SuppressLint("WrongConstant")
-//    public void updateLabelButtonDateTime(View view){
-//        String myFormat = "dd/MM/yyyy' 'HH'h'mm':'ss"; //In which you need put here
-//        SimpleDateFormat sdf = new SimpleDateFormat(myFormat , Locale.getDefault ());
-//        myCalendar.add(12, 1);
-//        Date date = myCalendar.getTime();
-////        btnDateTime.setText("NOTIF A: "+sdf.format(date));
-//        long l = myCalendar.getTimeInMillis();
-//
-//        scheduleNotification(this, l);
-//    }
+
     public void setupNotification(Calendar myCalendar){
         String myFormat = "dd/MM/yyyy' 'HH'h'mm':'ss"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat , Locale.getDefault ());
-//        myCalendar.add(12, 1);
         Date date = myCalendar.getTime();
-//        btnDateTime.setText("NOTIF A: "+sdf.format(date));
         long l = myCalendar.getTimeInMillis();
 
         scheduleNotification(this, l);
@@ -275,39 +245,6 @@ public class TaskEditionActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
-//            imageUri = data.getData();
-//            String imgUri = imageUri.toString();
-//
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-//                item.setImage(imgUri);
-//                itemsDAO.updateItem(item);
-//                imgv_image.setImageBitmap(bitmap);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        switch(requestCode){
-//            case PERSMISSION_CODE : {
-//                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-//                    openGallery();
-//                }else{
-//                    Toast errorToast = Toast.makeText(TaskEditionActivity.this, "erreur", Toast.LENGTH_SHORT);
-//                    errorToast.show();
-//                }
-//            }
-//
-//        }
-//    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -318,29 +255,6 @@ public class TaskEditionActivity extends AppCompatActivity {
             itemsDAO.updateItem(item);
 
         } }
-////        @Override
-////    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-////        super.onActivityResult(requestCode, resultCode, data);
-////        if(resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-////            // Accès à l'image à partir de data
-////            Uri selectedImage = data.getData();
-////            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-////            // Curseur d'accès au chemin de l'image
-////            Cursor cursor = this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-////// Position sur la première ligne (normalement une seule)
-////            if(cursor.moveToFirst()){
-////                // Récupération du chemin précis de l'image
-////                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-////                String photoPath = cursor.getString(columnIndex);
-////                cursor.close();
-////                // Récupération image
-////                Bitmap image = BitmapFactory.decodeFile(photoPath);
-////                // Affichage
-////                imgv_image.setImageBitmap(image);
-////            }
-////
-////        }
-//    }
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -350,19 +264,17 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     public void addTag(View view) {
         Intent intent = new Intent(this, EditionTagActivity.class);
-//        TextView txt = view.findViewById(R.id.cv_Title);
         intent.putExtra("name", item.getTitle());
         startActivity(intent);
     }
 
     public void onClickDatePicker(final View v) {
-        // Get Current Date
         final Calendar c = Calendar.getInstance();
         long now = c.getTimeInMillis();
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
-//        dateNotification = c.getTime();
+        Locale.setDefault(Locale.FRANCE);
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
@@ -371,14 +283,12 @@ public class TaskEditionActivity extends AppCompatActivity {
                                           int monthOfYear, int dayOfMonth) {
 
                         txtDate = dayOfMonth + " " + (getTextMonthFR(monthOfYear+1)) + " " + year;
-//                        notification.add
                         yr = year;
                         mth = monthOfYear;
                         dt = dayOfMonth;
 
 
                         displayTimePickerDialog(v, year, monthOfYear, dayOfMonth);
-//                        txt_Date.setText(dayOfMonth + " " + (getTextMonthFR(mMonth+1)) + " " + year);
 
 
                     }
@@ -391,7 +301,8 @@ public class TaskEditionActivity extends AppCompatActivity {
         final Calendar c = Calendar.getInstance();
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
-//        dateNotification = c.getTime();
+        Locale.setDefault(Locale.FRANCE);
+
 
         // Launch Time Picker Dialog
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
@@ -403,7 +314,6 @@ public class TaskEditionActivity extends AppCompatActivity {
                                           int minute) {
 
                         txtDate += " à "+hourOfDay+ ":"+ minute;
-//                        String date = mYear+"-"+mMonth+"-"+mDay+" "+mHour+":"+mMinute;
                         String date = mDay+"-"+mMonth+1+"-"+mYear+" "+mHour+":"+mMinute;
 
                         Calendar ca = Calendar.getInstance();
@@ -411,21 +321,12 @@ public class TaskEditionActivity extends AppCompatActivity {
                         notification = ca;
                         setupNotification(ca);
                         dateNotification = ca.getTime();
-                        Integer in  = (int)dateNotification.getTime();
-                        item.setDeadline(in);
+                        long ln = dateNotification.getTime();
+                        item.setDeadline(ln);
                         itemsDAO.updateItem(item);
-//                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm");
-//                        try {
-//                            datee = new SimpleDateFormat("dd-M-yyyy hh:mm").parse(date);
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                        }
-//                        String str = datee.toString();
-//
-//                        item.setImage(txtDate);
-//                        itemsDAO.updateItem(item);
-//                        mHelper.updateItem(item);
-                        txt_Date.setText(dateNotification.toString());
+                        txt_Date.setText(item.displayDeadline());
+                        Toast toast = Toast.makeText(getApplicationContext(), "Vous serez notifié quand la date limite arrivera. ", Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 }, mHour, mMinute, true);
         timePickerDialog.show();
@@ -491,14 +392,11 @@ public class TaskEditionActivity extends AppCompatActivity {
     public void deleteThisItem(View view){
         Intent intent = new Intent(this, MainActivity.class);
         itemsDAO.deleteItemById(item.getId());
-//        mHelper.deleteItemById(item.getId());
         startActivity(intent);
 
     }
 
     public void updateTitle(View view) {
-
-//            mHelper = new FeedReaderDbHelper(this);
 
             // Création d'un alert dialog pour l'ajout d'une tâche
             final EditText taskEditText = new EditText(this);
@@ -548,14 +446,8 @@ public class TaskEditionActivity extends AppCompatActivity {
 
 
         tasksDAO.updateTask(t);
-//        mHelper.updateTask(t);
     }
 
-    public void updateDate(Integer y, Integer m, Integer d) {
-        Date dt = new Date();
-//        dt.
-//        item.setDeadline();
-    }
 
 
     public void goGreen(View view) {
@@ -563,7 +455,6 @@ public class TaskEditionActivity extends AppCompatActivity {
         Integer color = R.color.bckgrdGreen;
         item.setBackground_color(color.toString());
         itemsDAO.updateItem(item);
-//        mHelper.updateItem(item);
       l.setBackgroundResource(R.color.bckgrdGreen);
     }
     public void goBlue(View view) {
@@ -571,7 +462,6 @@ public class TaskEditionActivity extends AppCompatActivity {
         Integer color = R.color.bckgrdBlue;
         item.setBackground_color(color.toString());
         itemsDAO.updateItem(item);
-//        mHelper.updateItem(item);
         l.setBackgroundResource(color);
     }
     public void goYellow(View view) {
@@ -579,7 +469,6 @@ public class TaskEditionActivity extends AppCompatActivity {
         Integer color = R.color.bckgrdYellow;
         item.setBackground_color(color.toString());
         itemsDAO.updateItem(item);
-//        mHelper.updateItem(item);
         l.setBackgroundResource(R.color.bckgrdYellow);
     }
     public void goRed(View view) {

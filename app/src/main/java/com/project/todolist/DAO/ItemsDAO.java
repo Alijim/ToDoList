@@ -124,7 +124,7 @@ public class ItemsDAO {
             String title_1 = cursor.getString(cursor.getColumnIndex("title"));
             List<Task> tasks = tasksDAO.getTasksFromItem(id);
             List<Tag> tags = tagsDAO.getTagFromItem(id);
-            Integer deadLine = cursor.getInt(cursor.getColumnIndex("deadLine"));
+            Long deadLine = cursor.getLong(cursor.getColumnIndex("deadLine"));
             String image = cursor.getString(cursor.getColumnIndex("image"));
             String color = cursor.getString(cursor.getColumnIndex("background_color"));
 //            Item i = new Item(id, title, tasks, image, color);

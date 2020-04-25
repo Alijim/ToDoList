@@ -7,7 +7,7 @@ import java.util.List;
 public class Item {
     private Integer id;
     private String title;
-    private Integer deadline;
+    private Long deadline;
     private List<Task> listTasks;
     private List<Tag> listTags;
     private String image;
@@ -24,7 +24,7 @@ public class Item {
 
     public Item(){};
 
-    public Item(Integer id, String title, Integer deadline, List<Task> listTasks, List<Tag> listTags, String image, String background_color) {
+    public Item(Integer id, String title, Long deadline, List<Task> listTasks, List<Tag> listTags, String image, String background_color) {
         this.id = id;
         this.title = title;
         this.deadline = deadline;
@@ -90,15 +90,17 @@ public class Item {
         this.title = title;
     }
 
-    public Integer getDeadline() {
+    public Long getDeadline() {
         return deadline;
     }
 
-//    public String displayDeadline() {
-//
-//    }
+    public String displayDeadline() {
+        Date date=new Date(deadline);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+        return dateFormat.format(date);
+    }
 
-    public void setDeadline(Integer deadline) {
+    public void setDeadline(Long deadline) {
         this.deadline = deadline;
     }
 

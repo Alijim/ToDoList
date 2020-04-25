@@ -101,10 +101,7 @@ public class EditionTagActivity extends AppCompatActivity {
 
         tagListAdapter = new TagListAdapter(this, tags, item);
 
-//        tagList.add("Coucou");
-            itemsAdapter = new ArrayAdapter<String>(this,R.layout.tag_item, R.id.txtv_TagItem, tagList);
-
-
+        itemsAdapter = new ArrayAdapter<String>(this,R.layout.tag_item, R.id.txtv_TagItem, tagList);
 
         ListView lv = findViewById(R.id.lv_Tag);
 
@@ -179,7 +176,6 @@ public class EditionTagActivity extends AppCompatActivity {
                                 tagsDAO.updateTagFromWording(i, tag);
                                 tagList.remove(txv_tag.getText().toString());
                                 tagList.add(tag);
-//                            mHelper.updateItem(item);
                                 itemsAdapter.notifyDataSetChanged();
                             }
                         }
