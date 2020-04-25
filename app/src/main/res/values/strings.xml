@@ -10,4 +10,7 @@
     <string name="TaskActivityLabel">Edition des tâches</string>
     <string name="channel_name">Channel Name</string>
     <string name="channel_description">Channel description</string>
+    <string name="nav_header_title">ToDoList</string>
+    <string name="nav_header_subtitle">Créer facilement votre To Do List</string>
+    <string name="nav_header_desc">Navigation header</string>
 </resources>
