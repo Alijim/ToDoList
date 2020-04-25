@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private final List<Item> myToDoList = new ArrayList<Item>();
     private RecyclerView myRecyclerView;
     private ToDoListAdapter myAdapter;
-    private FeedReaderDbHelper mHelper;
     private List<Item> items;
     private ItemsDAO itemsDAO;
 
@@ -51,24 +50,20 @@ public class MainActivity extends AppCompatActivity {
         ItemsDAO iDAO = new ItemsDAO(this);
         this.itemsDAO = iDAO;
 
-//        mHelper = new FeedReaderDbHelper(this);
-
         Toolbar toolbar = this.findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         FloatingActionButton fab = findViewById(R.id.fab);
 
-        // Get a handle to the RecyclerView.
+        setSupportActionBar(toolbar);
+
+
+
         myRecyclerView = findViewById(R.id.recyclerview);
-        // Create an adapter and supply the data to be displayed.
+        // Créer l'adaptateur qui va afficher les valeurs de la todolist
         myAdapter = new ToDoListAdapter(this, myToDoList);
-        // Connect the adapter with the RecyclerView.
         // L'adapter est un composant qui permet de faire la liaison (Bind) entre la vue RecyclerView et une liste de données.
         myRecyclerView.setAdapter(myAdapter);
-        // Give the RecyclerView a default layout manager.
         // Le LayoutManager permet de positionner correctement l'ensemble des données de la liste.
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        mHelper.testDate();
 
         this.initialisationData();
 
@@ -81,30 +76,16 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, myAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-//        TextView txt_Item = myRecyclerView.getChildItemId(R.id.Item);
-//        String txtI = txt_Item.getText().toString();
-//        txt_Item.setText(txtI+=" SKUKU");
-
-
     }
 
 
 
     //Méthode à redéfinir avec les données de la BD
     public void initialisationData() {
-
-//        mHelper = new FeedReaderDbHelper(this);
-
-        HashMap<Integer, List> dbItemList = new HashMap<Integer, List>();
         ItemsDAO iDAO = new ItemsDAO(this);
-
-//        this.items = mHelper.getAllItems();
         this.items = iDAO.getAllItems();
 
-
-
         for (Item i : items) {
-//            i.setImageRessource(R.drawable.img_addapicture);
             myToDoList.add(i);
 
         }
@@ -117,26 +98,20 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, myAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
-    //Activité lancé lorsqu'on clique sur le fab+ ou sur une carte
+    //Activité lancé lorsqu'on clique sur le fab+ ou sur une carte, elle permet de lancer l'activité d'édition de l'item sélectionné
     public void launchTaskEditionActivity(View view) {
         Intent intent = new Intent(this, TaskEditionActivity.class);
         TextView txt = view.findViewById(R.id.cv_Title);
         intent.putExtra("name", txt.getText());
-
         startActivity(intent);
     }
 
+    //Même comportement que précédement, sauf qu'ici on lui passe un String en paramètre, vu qu'elle est appelée depuis le bouton flottant
     public void launchTaskEditionActivityF(String s) {
         Intent intent = new Intent(this, TaskEditionActivity.class);
         intent.putExtra("name", s);
         startActivity(intent);
     }
-
-    public void refreshUI() {
-        finish();
-        startActivity(getIntent());
-    }
-
 
     public void launchEditionDialog(View v) {
 //        mHelper = new FeedReaderDbHelper(this);
