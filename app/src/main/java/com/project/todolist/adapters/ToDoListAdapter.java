@@ -118,35 +118,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
             } else {
                 myImage.setImageResource(R.drawable.img_addapicture);
             }
-
-
-                // Load the images into the ImageView using the Glide library.
-//            Glide.with(myContext).load(myCurrent.getImageRessource()).into(myImage);
-
-//
-//            myTitre.setText(myCurrent.getTitle());
-//            String myListItem = "Vide";
-//            if (myCurrent.getListTasks() != null) {
-//                List myItemTab = myCurrent.getListTasks();
-//                StringBuilder sb = new StringBuilder();
-//                for (int i=0; i<myItemTab.size(); i++) {
-//                    sb.append(myItemTab.get(i)+"\n");
-//                }
-//                myListItem = sb.toString();
-//            }
-//            myItem.setText(myListItem);
-//            // Load the images into the ImageView using the Glide library.
-//            Glide.with(myContext).load(myCurrent.getImage()).into(myImage);
         }
-
-        // Ici on implémente l'action qui suit un click sur la cards
-        /*@Override
-        public void onClick(View view) {
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-            // Mettre ici un Intent pour lancer TaskEditionActivity
-            //Intent intent = new Intent(myContext, TaskEditionActivity.class);
-            //startActivity(intent);
-        }*/
     }
 }
 

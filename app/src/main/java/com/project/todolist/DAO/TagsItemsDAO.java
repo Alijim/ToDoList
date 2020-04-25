@@ -33,6 +33,7 @@ public class TagsItemsDAO {
         String selection = FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_TAGS + " LIKE ?";
         String[] selectionArgs = { id.toString() };
         int deletedRows = db.delete(FeedReaderContract.TagsItemsEntry.TABLE_NAME, selection, selectionArgs);
+        db.close();
     }
 
     public void deleteItemInTagsItem(Integer id) {
@@ -41,6 +42,7 @@ public class TagsItemsDAO {
         String selection = FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_ITEMS + " LIKE ?";
         String[] selectionArgs = { id.toString() };
         int deletedRows = db.delete(FeedReaderContract.TagsItemsEntry.TABLE_NAME, selection, selectionArgs);
+        db.close();
     }
 
     public int deleteTagItem(Integer i, Integer t){
@@ -49,7 +51,9 @@ public class TagsItemsDAO {
         String selection = FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_TAGS + " LIKE ? AND "+FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_ITEMS+" LIKE ?";
         String[] selectionArgs = { t.toString(), i.toString() };
         int deletedRows = db.delete(FeedReaderContract.TagsItemsEntry.TABLE_NAME, selection, selectionArgs);
+        db.close();
         return deletedRows;
+
     }
 
     public void insertTagItems(Item i, Tag t) {
@@ -61,11 +65,11 @@ public class TagsItemsDAO {
         valuesItems.put(FeedReaderContract.TagsItemsEntry.COLUMN_NAME_FK_TAGS, t.getId());
 
         long itemsRow1 = db.insert(FeedReaderContract.TagsItemsEntry.TABLE_NAME, null, valuesItems);
+        db.close();
     }
 
     public Boolean isTagItem(Integer i, Integer t){
         Boolean s = Boolean.FALSE;
-//        Integer id = getAnyID("Items", "Title", args);
         List values = new ArrayList<>();
         List<Tag> tagList = new ArrayList<Tag>();
         SQLiteDatabase db = mHelper.getReadableDatabase();
@@ -93,22 +97,11 @@ public class TagsItemsDAO {
                 sortOrder               // The sort order
         );
 
-//        HashMap<Long, String>items = new HashMap<Long, String>();
-//        HashMap<Long, String>items = new HashMap<Long, String>();
+
         while(cursor.moveToNext()) {
             s = Boolean.TRUE;
-//            Integer idTag = cursor.getInt(cursor.getColumnIndexOrThrow("fk_tags"));
-//            Tag t = researchTag(idTag);
-//            In wording = cursor.getString(cursor.getColumnIndex("wording"));
-//            Integer done = cursor.getInt(cursor.getColumnIndex("done"));
-//            if(done == 1) {
-//                 b = Boolean.FALSE;
-//            } else {
-//                 b = Boolean.FALSE;
-//            }
-//            Tag t = new Tag(idTag, wording);
         }
-
+        db.close();
         return s;
     }
 

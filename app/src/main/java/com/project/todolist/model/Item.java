@@ -14,13 +14,7 @@ public class Item {
     private String background_color;
 
 
-    public List<Tag> getListTags() {
-        return listTags;
-    }
 
-    public void setListTags(List<Tag> listTags) {
-        this.listTags = listTags;
-    }
 
     public Item(){};
 
@@ -33,37 +27,17 @@ public class Item {
         this.image = image;
         this.background_color = background_color;
     }
-    public Item(Integer id, String title, List<Task> listTasks, List<Tag> listTags, String image, String background_color) {
-        this.id = id;
-        this.title = title;
-        this.listTasks = listTasks;
-        this.listTags = listTags;
-        this.image = image;
-        this.background_color = background_color;
-    }
-
-    public Item(Integer id, String title, List<Task> listTasks, String image, String background_color) {
-        this.id = id;
-        this.title = title;
-        this.listTasks = listTasks;
-        this.image = image;
-        this.background_color = background_color;
-    }
-
-    public Item(Integer id, String title, List<Task> listTasks, String background_color) {
-        this.id = id;
-        this.title = title;
-        this.listTasks = listTasks;
-        this.background_color = background_color;
-    }
-
-    public Item(String title, List<Task> listTasks, Integer image) {
-        this.title = title;
-        this.listTasks = listTasks;
-    }
 
     public Integer getId() {
         return id;
+    }
+
+    public List<Tag> getListTags() {
+        return listTags;
+    }
+
+    public void setListTags(List<Tag> listTags) {
+        this.listTags = listTags;
     }
 
     public List<Task> getListTasks() {
@@ -94,12 +68,6 @@ public class Item {
         return deadline;
     }
 
-    public String displayDeadline() {
-        Date date=new Date(deadline);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
-        return dateFormat.format(date);
-    }
-
     public void setDeadline(Long deadline) {
         this.deadline = deadline;
     }
@@ -111,6 +79,14 @@ public class Item {
     public void setBackground_color(String background_color) {
         this.background_color = background_color;
     }
+
+    /*Affichage la date dans un joli format!*/
+    public String displayDeadline() {
+        Date date=new Date(deadline);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+        return dateFormat.format(date);
+    }
+
 
 
 }

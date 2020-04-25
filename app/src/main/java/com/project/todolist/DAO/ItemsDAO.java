@@ -37,6 +37,7 @@ public class ItemsDAO {
         valuesItems.put(FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR, i.getBackground_color());
 
         long itemsRow1 = db.insert(FeedReaderContract.ItemsEntry.TABLE_NAME, null, valuesItems);
+        db.close();
     }
 
     public List<Item> getAllItems() {
@@ -44,7 +45,6 @@ public class ItemsDAO {
         SQLiteDatabase db = mHelper.getReadableDatabase();
         TasksDAO tasksDAO = new TasksDAO(context);
         TagsDAO tagsDAO = new TagsDAO(context);
-
 
         String[] projection = {
                 BaseColumns._ID,
@@ -76,17 +76,13 @@ public class ItemsDAO {
             String image = cursor.getString(cursor.getColumnIndex("image"));
             String color = cursor.getString(cursor.getColumnIndex("background_color"));
             Item i = new Item(id, title, deadLine, tasks, tags, image, color);
-            //items.put(itemId, values);
-//            String value = cursor.getString(cursor.getColumnIndex("fk_Items"));
             itemList.add(i);
         }
-
+        db.close();
         return itemList;
     }
 
     public Item researchItem(String title){
-        String s = "";
-        List values = new ArrayList<>();
         SQLiteDatabase db = mHelper.getWritableDatabase();
 
         TagsDAO tagsDAO = new TagsDAO(context);
@@ -118,23 +114,18 @@ public class ItemsDAO {
                 sortOrder               // The sort order
         );
 
-//        HashMap<Long, String>items = new HashMap<Long, String>();
-//        HashMap<Long, String>items = new HashMap<Long, String>();
         while(cursor.moveToNext()) {
             Integer id = cursor.getInt(cursor.getColumnIndex("_id"));
-            String title_1 = cursor.getString(cursor.getColumnIndex("title"));
             List<Task> tasks = tasksDAO.getTasksFromItem(id);
             List<Tag> tags = tagsDAO.getTagFromItem(id);
             Long deadLine = cursor.getLong(cursor.getColumnIndex("deadLine"));
             String image = cursor.getString(cursor.getColumnIndex("image"));
             String color = cursor.getString(cursor.getColumnIndex("background_color"));
-//            Item i = new Item(id, title, tasks, image, color);
             Item i = new Item(id, title, deadLine, tasks, tags, image, color);
-            Item ii = new Item(id, title, tasks, tags, image, color);
             return i;
 
         }
-
+        db.close();
         return i_n;
 
     }
@@ -143,11 +134,6 @@ public class ItemsDAO {
         Boolean b = Boolean.FALSE;
         SQLiteDatabase db = mHelper.getWritableDatabase();
 
-        TagsDAO tagsDAO = new TagsDAO(context);
-        TasksDAO tasksDAO = new TasksDAO(context);
-
-        Item i_n = new Item();
-
         String[] projection = {
                 BaseColumns._ID,
                 FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE,
@@ -172,14 +158,11 @@ public class ItemsDAO {
                 sortOrder               // The sort order
         );
 
-//        HashMap<Long, String>items = new HashMap<Long, String>();
-//        HashMap<Long, String>items = new HashMap<Long, String>();
         while(cursor.moveToNext()) {
             b = Boolean.TRUE;
         }
-
+        db.close();
         return b;
-
     }
 
     public void updateItem(Item i) {
@@ -198,6 +181,7 @@ public class ItemsDAO {
                 values,
                 selection,
                 null);
+        db.close();
     }
 
     public void deleteItemById(Integer id) {
@@ -209,8 +193,6 @@ public class ItemsDAO {
 
         List<Integer> l = new ArrayList<Integer>(tasksDAO.getTasksIdFromItem(id));
 
-//        deleteTask(25);
-
         for(Integer i : l) {
             tasksDAO.deleteTask(i);
         }
@@ -220,6 +202,7 @@ public class ItemsDAO {
         int deletedRows = db.delete(FeedReaderContract.ItemsEntry.TABLE_NAME, selection, selectionArgs);
 
         tagsItemsDAO.deleteItemInTagsItem(id);
+        db.close();
     }
 
 

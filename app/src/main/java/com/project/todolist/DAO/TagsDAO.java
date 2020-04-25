@@ -33,12 +33,12 @@ public class TagsDAO {
         valuesTags.put( FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING, t.getWording());
         long tasksRow1 = db.insert(FeedReaderContract.TagsEntry.TABLE_NAME, null, valuesTags);
         Integer i = (int) tasksRow1;
+        db.close();
         return  i;
     }
 
     public Integer getIdFromTitle(String s) {
         Integer i = 0;
-        List values = new ArrayList<Integer>();
         SQLiteDatabase db = mHelper.getReadableDatabase();
 
         String[] projection = {
@@ -64,11 +64,9 @@ public class TagsDAO {
         );
 
         while(cursor.moveToNext()) {
-            //long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TaskEntry._ID));
              i = cursor.getInt(cursor.getColumnIndex("_id"));
-            //items.put(itemId, cursor.getString(cursor.getColumnIndex("wording")));
         }
-
+        db.close();
         return i;
 
     }
@@ -99,9 +97,6 @@ public class TagsDAO {
                 FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING
         };
 
-//        String selection = FeedReaderContract.ItemsEntry.COLUMN_NAME_WORDING + " = ?";
-//        String[] selectionArgs = { "SPORT" };
-
         String sortOrder =
                 FeedReaderContract.TagsEntry.COLUMN_NAME_WORDING + " DESC ";
 
@@ -115,23 +110,17 @@ public class TagsDAO {
                 sortOrder               // The sort order
         );
 
-//        HashMap<Integer, List>items = new HashMap<Integer, List>();
-//        HashMap<Long, String>items = new HashMap<Long, String>();
         while(cursor.moveToNext()) {
             Integer id = cursor.getInt(cursor.getColumnIndexOrThrow(FeedReaderContract.TagsEntry._ID));
             String wording = cursor.getString(cursor.getColumnIndex("wording"));
             Tag t = new Tag(id, wording);
-            //items.put(itemId, values);
-//            String value = cursor.getString(cursor.getColumnIndex("fk_Items"));
             tagList.add(t);
         }
-
+        db.close();
         return tagList;
     }
 
     public Tag researchTag(Integer id){
-        String s = "";
-        List values = new ArrayList<>();
         SQLiteDatabase db = mHelper.getReadableDatabase();
         Tag i_n = new Tag();
 
@@ -156,23 +145,18 @@ public class TagsDAO {
                 sortOrder               // The sort order
         );
 
-//        HashMap<Long, String>items = new HashMap<Long, String>();
-//        HashMap<Long, String>items = new HashMap<Long, String>();
         while(cursor.moveToNext()) {
             Integer i = cursor.getInt(cursor.getColumnIndex("_id"));
             String wording = cursor.getString(cursor.getColumnIndex("wording"));
             Tag t = new Tag(i, wording);
             return t;
-
         }
-
+        db.close();
         return i_n;
 
     }
 
     public List<Tag> getTagFromItem(Integer id) {
-        String s = "";
-        List values = new ArrayList<>();
         List<Tag> tagList = new ArrayList<Tag>();
         SQLiteDatabase db = mHelper.getReadableDatabase();
 
@@ -204,7 +188,7 @@ public class TagsDAO {
             Tag t = researchTag(idTag);
             tagList.add(t);
         }
-
+        db.close();
         return tagList;
 
     }
@@ -239,15 +223,12 @@ public class TagsDAO {
             Integer idTag = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
             b = Boolean.TRUE;
         }
-
+        db.close();
         return b;
     }
 
     public String getTagFromItemListDisplay(Integer id) {
         String s = "\n";
-//        Integer id = getAnyID("Items", "Title", args);
-        List values = new ArrayList<>();
-        List<String> tagList = new ArrayList<String>();
         SQLiteDatabase db = mHelper.getReadableDatabase();
 
 
@@ -273,28 +254,17 @@ public class TagsDAO {
                 sortOrder               // The sort order
         );
 
-//        HashMap<Long, String>items = new HashMap<Long, String>();
-//        HashMap<Long, String>items = new HashMap<Long, String>();
         while(cursor.moveToNext()) {
             Integer idTag = cursor.getInt(cursor.getColumnIndexOrThrow("fk_tags"));
             Tag t = researchTag(idTag);
-//            In wording = cursor.getString(cursor.getColumnIndex("wording"));
-//            Integer done = cursor.getInt(cursor.getColumnIndex("done"));
-//            if(done == 1) {
-//                 b = Boolean.FALSE;
-//            } else {
-//                 b = Boolean.FALSE;
-//            }
-//            Tag t = new Tag(idTag, wording);
             if(t.getWording() != null) {
                 s += "["+t.getWording()+"] ";
 
             }
         }
-
+        db.close();
         return s;
 
-        //return items.toString();
     }
 
     //DAO ICI
@@ -307,6 +277,7 @@ public class TagsDAO {
         int deletedRows = db.delete(FeedReaderContract.TagsEntry.TABLE_NAME, selection, selectionArgs);
 
         tagsItemsDAO.deleteTagsInTagsItem(id);
+        db.close();
     }
 
 

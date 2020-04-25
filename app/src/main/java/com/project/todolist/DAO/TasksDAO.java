@@ -35,12 +35,11 @@ public class TasksDAO {
         valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_DONE, t.getDone());
         valuesTasks.put( FeedReaderContract.TaskEntry.COLUMN_NAME_FK, id);
         long tasksRow1 = db.insert(FeedReaderContract.TaskEntry.TABLE_NAME, null, valuesTasks);
+        db.close();
         return  tasksRow1;
     }
 
     public List<Task> getTasksFromItem(Integer id) {
-//        Integer id = getAnyID("Items", "Title", args);
-        List values = new ArrayList<>();
         List<Task> taskList = new ArrayList<Task>();
         SQLiteDatabase db = mHelper.getReadableDatabase();
 
@@ -67,30 +66,21 @@ public class TasksDAO {
                 sortOrder               // The sort order
         );
 
-//        HashMap<Long, String>items = new HashMap<Long, String>();
-//        HashMap<Long, String>items = new HashMap<Long, String>();
+
         while(cursor.moveToNext()) {
             Boolean b = Boolean.FALSE ;
             Integer idTask = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
             String wording = cursor.getString(cursor.getColumnIndex("wording"));
             b = cursor.getInt(cursor.getColumnIndex("done")) > 0;
-//            Integer done = cursor.getInt(cursor.getColumnIndex("done"));
-//            if(done == 1) {
-//                 b = Boolean.FALSE;
-//            } else {
-//                 b = Boolean.FALSE;
-//            }
             Task t = new Task(idTask, wording, b);
             taskList.add(t);
         }
-
+        db.close();
         return taskList;
 
-        //return items.toString();
     }
 
     public List<Integer> getTasksIdFromItem(Integer id) {
-        String s = "";
         List values = new ArrayList<Integer>();
         SQLiteDatabase db = mHelper.getReadableDatabase();
 
@@ -117,11 +107,9 @@ public class TasksDAO {
         );
 
         while(cursor.moveToNext()) {
-            //long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(FeedReaderContract.TaskEntry._ID));
             values.add(cursor.getInt(cursor.getColumnIndex("_id")));
-            //items.put(itemId, cursor.getString(cursor.getColumnIndex("wording")));
         }
-
+        db.close();
         return values;
 
     }
@@ -140,6 +128,7 @@ public class TasksDAO {
                 values,
                 selection,
                 null);
+        db.close();
     }
 
     public void deleteTask(Integer id){
@@ -148,6 +137,7 @@ public class TasksDAO {
         String selection = FeedReaderContract.TaskEntry._ID + " LIKE ?";
         String[] selectionArgs = { id.toString() };
         int deletedRows = db.delete(FeedReaderContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
+        db.close();
     }
 
 
