@@ -67,10 +67,8 @@ public class TaskEditionActivity extends AppCompatActivity {
     private static final int PERSMISSION_CODE = 1001;
     private Uri imageUri;
     private TextView txt_Date;
-    private View vw;
     private Item item;
     private String txtDate = "";
-    private String txtToTest;
 
     private ItemsDAO itemsDAO;
     private TasksDAO tasksDAO;
@@ -78,19 +76,15 @@ public class TaskEditionActivity extends AppCompatActivity {
     private int mth;
     private int dt;
 
-    private ListView mTaskListView;
     private List<String> tasks;
     private List<Task> listTask;
     private List<String> listTag;
-    private List<Integer> itemsId;
-    private Integer idItem;
     private CheckBoxAdapter cbxAdapter;
     private ArrayAdapter<String> itemsAdapter;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     private Calendar myCalendar = Calendar.getInstance () ;
     private Calendar notification ;
-    private Date mdate = myCalendar.getTime() ;
     private Date dateNotification;
 
     @SuppressLint("ResourceType")
@@ -98,56 +92,64 @@ public class TaskEditionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_edition);
+
         createNotificationChannel();
-//        View l = findViewById(R.id.cv_Title).getRootView();
+
+        /* Initalisation des ressources */
         ConstraintLayout l = findViewById(R.id.mainEdition);
         btnDatePicker= findViewById(R.id.btn_Date);
         txt_Date = findViewById(R.id.txtv_Date);
         TextView txt_Tag = findViewById(R.id.lv_ItemTag);
         ImageView img =  findViewById(R.id.imageTask);
+        TextView txtV = findViewById(R.id.titleDisplay);
+        ListView lv = findViewById(R.id.taskListView);
+
+        /* Initialisations */
         ItemsDAO iDAO = new ItemsDAO(this);
         TasksDAO tDAO = new TasksDAO(this);
 
+        Bundle extras = getIntent().getExtras(); //Récupération des valeurs passés dans l'intent (acitivité précédente)
+        String itemName = extras.getString("name");
+
+        /*Initialisation des variables gloables */
         this.itemsDAO = iDAO;
         this.tasksDAO = tDAO;
-
-        imgv_image = img;
-
-
-
-        mHelper = new FeedReaderDbHelper(this);
-        String txt = "";
-
-
-        Bundle extras = getIntent().getExtras();
-
-        txt = extras.getString("name");
-
-        this.item = itemsDAO.researchItem(txt);
+        this.imgv_image = img;
+        this.item = itemsDAO.researchItem(itemName);
         this.tasks = new ArrayList<String>();
         this.listTask = item.getListTasks();
         this.listTag = new ArrayList<String>();
 
-        if (item.getImage() != null) {
-//            Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        /* --------------------------------------------------------  */
+        /*  On va adapter l'affichage selon les données de la base de données : */
 
+        /* Si l'item a une image, alors on affichage l'image.
+        *  si il n'a pas d'image, on va alors afficher l'image par défaut.
+        * */
+        if (item.getImage() != null) {
+            // Récupère l'URI qui est converti en URI et l'affiche
             String imgUri = item.getImage();
             Uri imgur = Uri.parse(imgUri);
-
-                    imgv_image.setImageURI(imgur);
+            imgv_image.setImageURI(imgur);
 
         } else {
             imgv_image.setImageResource(R.drawable.img_addapicture);
         }
 
+
+        /* Si la deadLine est à 0, ca veut dire qu'on a pas saisit de date de fin.
+        *  si elle est différente de 0, alors on affiche la date en format "propre"
+        *  */
         if(item.getDeadline() != 0 ) {
             txt_Date.setText(item.displayDeadline());
         }
 
-        Integer color = Integer.parseInt(item.getBackground_color());
 
+        /*Récupère la couleur de fond. Par défaut, c'est blanc.*/
+        Integer color = Integer.parseInt(item.getBackground_color());
         l.setBackgroundResource(color);
 
+        /* Refresh l'affichage des Checkbox afin d'éviter des problèmes de cohérences entre le model et la view*/
         if (cbxAdapter != null) {
             tasks.clear();
             cbxAdapter.clear();
@@ -156,56 +158,49 @@ public class TaskEditionActivity extends AppCompatActivity {
         cbxAdapter = new CheckBoxAdapter(this, listTask);
 
 
-        TextView txtV = findViewById(R.id.titleDisplay);
-
+        /* Récupère le nom des tags depuis le model*/
         for(Tag tag : item.getListTags()) {
             if(tag.getId() != null) {
                 listTag.add(tag.getWording());
             }
         }
 
+        /* Affiche les tags de manière simple entre crochets : [...]*/
         String displayTag = "";
         if(listTag.size() > 0) {
             for(String s : listTag) {
-                displayTag += "["+s+"] ";
+                displayTag += "[ "+s+" ] ";
             }
         }
-
-
         txt_Tag.setText(displayTag);
 
         txtV.setText(item.getTitle());
 
+        /* Récupère les libelles des tâches depuis le model...*/
         for(Task t : item.getListTasks()) {
             tasks.add(t.getWording());
         }
 
-
-        itemsAdapter = new ArrayAdapter<String>(this,R.layout.item_todo, R.id.chkBox, tasks);
-
-        ListView lv = findViewById(R.id.taskListView);
+        //Affiche les données via l'adapter....
         lv.setAdapter(cbxAdapter);
 
     }
 
     private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
+        // Créer une NotificationChannel. API 26+ seulement!!!
+        // Test si c'est compatible.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel("667", name, importance);
             channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
     }
 
-    private void scheduleNotification (Context context, long time/*, String title, String text*/) {
-
+    private void scheduleNotification (Context context, long time) {
         Intent intent = new Intent(this, MyNotificationPublisher.class);
         intent.putExtra("itemName", item.getTitle());
         PendingIntent pending = PendingIntent.getBroadcast(
@@ -213,13 +208,9 @@ public class TaskEditionActivity extends AppCompatActivity {
                 0,
                 intent,
                 0);
-
-        // Schdedule notification
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        //manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pending);
         manager.set(AlarmManager.RTC_WAKEUP, time, pending);
     }
-
 
     public void setupNotification(Calendar myCalendar){
         String myFormat = "dd/MM/yyyy' 'HH'h'mm':'ss"; //In which you need put here
@@ -233,67 +224,74 @@ public class TaskEditionActivity extends AppCompatActivity {
     public void onClickSetImage(View v) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                //Si les permissions ne sont pas activées, les demandes.
                 String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
                 requestPermissions(permissions, PERSMISSION_CODE);
             }else{
-                // permission already granted
+                //Si les permissions ont déjà été accordées alors on ouvre la galerie
                 openGallery();
             }
         }else{
-            // system OS is less than marshmallow
+            //Si la version est trop vieille...
             openGallery();
         }
     }
 
+    /* Va se lancer après que l'image est été sélectionné. onActivityResult
+    *  va nous permettre de récupérer l'image qui a été choisie par l'utilisateur.
+    */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
+            //Enregistre l'image dans la base de données et l'affiche. On enregistre l'uri sous forme de String, qu'on re-convertira en URI quand il faudra l'afficher.
             imgv_image.setImageURI(data.getData());
             imageUri = data.getData();
             item.setImage(imageUri.toString());
             itemsDAO.updateItem(item);
+        }
+    }
 
-        } }
-
+    /*Ouvre la galerie*/
     private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.setType("image/*");
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT); //Important de mettre OPEN DOCUMENT afin de garder les droits.
+        intent.setType("image/*"); //se placer là où la galerie doit s'ouvrir
         startActivityForResult(intent, PICK_IMAGE);
     }
 
-    public void addTag(View view) {
+    /* Commence l'activité qui va permettre d'éditer les tags associés à cet item. */
+    public void onClickAddTag(View view) {
         Intent intent = new Intent(this, EditionTagActivity.class);
-        intent.putExtra("name", item.getTitle());
+        intent.putExtra("name", item.getTitle()); //important de préciser, afin que EditionTag, édition l'association des tags avec l'item actuel.
         startActivity(intent);
     }
 
+
+    /* Affiche un DatePickerDialog afin de permettre à l'utilisateur de saisir une date */
     public void onClickDatePicker(final View v) {
         final Calendar c = Calendar.getInstance();
-        long now = c.getTimeInMillis();
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
-        Locale.setDefault(Locale.FRANCE);
+
+        Locale.setDefault(Locale.FRANCE); //Pour que les valeurs soit affichées en français
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
-
+                    /* Quand la date est définie : */
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        txtDate = dayOfMonth + " " + (getTextMonthFR(monthOfYear+1)) + " " + year;
                         yr = year;
                         mth = monthOfYear;
                         dt = dayOfMonth;
 
-
+                        //Une fois que l'utilisateur a choisit sa date, on appelle une méthode qui ouvre un TimePickerDialog afin de choisir l'heure pour la notif.
                         displayTimePickerDialog(v, year, monthOfYear, dayOfMonth);
-
 
                     }
                 }, mYear, mMonth, mDay);
-        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000); //Désactive les dates passées
         datePickerDialog.show();
     }
 
@@ -301,10 +299,9 @@ public class TaskEditionActivity extends AppCompatActivity {
         final Calendar c = Calendar.getInstance();
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
-        Locale.setDefault(Locale.FRANCE);
+        Locale.setDefault(Locale.FRANCE); //Affichage en français....
 
-
-        // Launch Time Picker Dialog
+        //Lance le timePickerDialog !
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                 new TimePickerDialog.OnTimeSetListener() {
 
@@ -317,22 +314,26 @@ public class TaskEditionActivity extends AppCompatActivity {
                         String date = mDay+"-"+mMonth+1+"-"+mYear+" "+mHour+":"+mMinute;
 
                         Calendar ca = Calendar.getInstance();
-                        ca.set(yr, mth, dt, hourOfDay, minute, 0);
+                        ca.set(yr, mth, dt, hourOfDay, minute, 0); //La seconde est définie à 0, afin de recevoir la notification à l'heure pile!
                         notification = ca;
-                        setupNotification(ca);
+                        setupNotification(ca); //On appelle la fonction qui va définir la notification.
+
                         dateNotification = ca.getTime();
-                        long ln = dateNotification.getTime();
+                        long ln = dateNotification.getTime(); //Récupère la date et l'heure en long afin de pouvoir la mettre dans la base de données.
                         item.setDeadline(ln);
                         itemsDAO.updateItem(item);
                         txt_Date.setText(item.displayDeadline());
+
+                        /* Informe l'utilisateur qu'il va recevoir une notification ! */
                         Toast toast = Toast.makeText(getApplicationContext(), "Vous serez notifié quand la date limite arrivera. ", Toast.LENGTH_SHORT);
                         toast.show();
                     }
-                }, mHour, mMinute, true);
+                }, mHour, mMinute, true); //Affiche en format 24 heures
         timePickerDialog.show();
     }
 
-    public void insertTaskIntoItem(View view) {
+    //Insert une tâche dans un item....
+    public void onClickInsertTaskIntoItem(View view) {
         EditText edtTask = findViewById(R.id.txtTask);
         if (edtTask.getText().toString().isEmpty()) {
             Toast toast = Toast.makeText(getApplicationContext(), "Tâche vide ! ", Toast.LENGTH_SHORT);
@@ -340,21 +341,22 @@ public class TaskEditionActivity extends AppCompatActivity {
         } else {
             Task t = new Task(edtTask.getText().toString(), Boolean.FALSE);
 
-//        long id = mHelper.insertTask(item.getId(), t);
             long id = tasksDAO.insertTask(item.getId(), t);
             Integer iId = (int) (long) id;
-
             Task tWithId = new Task(iId, t.getWording(), t.getDone());
 
             item.getListTasks().add(tWithId);
             tasks.add(edtTask.getText().toString());
-            itemsAdapter.notifyDataSetChanged();
             edtTask.getText().clear();
-            //startActivity(intent);
         }
     }
-
-    public void deleteTask(View view) {
+    //Supprime la tache lorsqu'on appuie sur le nom de la tâche !
+    /* Je n'ai pas laissé la possibilité de modifier la tâche, j'ai pensé qu'il était plus
+    *  instinctif de permettre uniquement la supression de celle-ci. Car généralement, on ne modifie
+    * pas une tâche afin d'éviter d'avoir une incohérence ! Mais j'ai laissé possibilité de supprimer
+    * afin d'éviter de pas avoir des tâches avec des erreurs de frappes.
+    * */
+    public void onClikDeleteTask(View view) {
         View parent = (View) view.getParent();
         CheckBox cbx = parent.findViewById(R.id.chkBox);
         TextView txtv_task = parent.findViewById(R.id.txtv_task);
@@ -371,55 +373,37 @@ public class TaskEditionActivity extends AppCompatActivity {
 
     }
 
-    public String getTextMonthFR(Integer m) {
-        switch(m){
-            case 1 : return "janvier";
-            case 2 : return "février";
-            case 3 : return "mars";
-            case 4 : return "avril";
-            case 5 : return "mai";
-            case 6 : return "juin";
-            case 7 : return "juillet";
-            case 8 : return "août";
-            case 9 : return "septembre";
-            case 10 : return "octobre";
-            case 11 : return "novembre";
-            case 12 : return "décembre";
-            default :return"erreur";
-        }
-    }
-
-    public void deleteThisItem(View view){
+    public void onClickDeleteThisItem(View view){
         Intent intent = new Intent(this, MainActivity.class);
         itemsDAO.deleteItemById(item.getId());
         startActivity(intent);
 
     }
-
-    public void updateTitle(View view) {
-
+    /* On peut modifier le titre si on clique dessus ! */
+    public void onClickUpdateTitle(View view) {
             // Création d'un alert dialog pour l'ajout d'une tâche
             final EditText taskEditText = new EditText(this);
-
 
             AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle("Modifier le titre")
                     .setMessage("Entrez votre nouveau titre")
                     .setView(taskEditText)
-                    .setPositiveButton("Ajouter", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Modifier", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            String task = String.valueOf(taskEditText.getText());
+                            String itemTitle = String.valueOf(taskEditText.getText());
 
                             if(taskEditText.getText().toString().isEmpty()) {
                                 Toast toast = Toast.makeText(getApplicationContext(), "Titre vide ! ", Toast.LENGTH_SHORT);
                                 toast.show();
+                            } else if (itemsDAO.existItem(itemTitle)) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Ce nom est déjà utilisé ! ", Toast.LENGTH_SHORT);
+                                toast.show();
                             } else {
-                            item.setTitle(task);
-                            itemsDAO.updateItem(item);
-//                            mHelper.updateItem(item);
-                            TextView txtV = findViewById(R.id.titleDisplay);
-                            txtV.setText(task);
+                                item.setTitle(itemTitle);
+                                itemsDAO.updateItem(item);
+                                TextView txtV = findViewById(R.id.titleDisplay);
+                                txtV.setText(itemTitle);
                             }
                         }
                     })
@@ -428,18 +412,18 @@ public class TaskEditionActivity extends AppCompatActivity {
             dialog.show();
         }
 
-    public void updateCheckBox(View view){
+    public void onClickUpdateCheckBox(View view){
         View parent = (View) view.getParent();
         CheckBox cbx = parent.findViewById(R.id.chkBox);
         TextView txtv_task = parent.findViewById(R.id.txtv_task);
         Integer i = Integer.parseInt(cbx.getText().toString());
 
         Task t = new Task(i, txtv_task.getText().toString(), cbx.isChecked());
-        if(t.getDone() == true) {
-            txtv_task.setPaintFlags(txtv_task.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+        if(t.getDone() == true) { //Si la tâche est effectuée ....
+            txtv_task.setPaintFlags(txtv_task.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG); //Barre le text
             txtv_task.setText(t.getWording());
         } else {
-            txtv_task.setPaintFlags(0);
+            txtv_task.setPaintFlags(0); //Remet le texte sans barre
             txtv_task.setText(t.getWording());
         }
         cbx.setChecked(t.getDone());
@@ -449,7 +433,7 @@ public class TaskEditionActivity extends AppCompatActivity {
     }
 
 
-
+    /* Change la couleur selon la couleur selectionnée ! Ce sont tous des OnClick....*/
     public void goGreen(View view) {
          ConstraintLayout l = findViewById(R.id.mainEdition);
         Integer color = R.color.bckgrdGreen;
@@ -476,7 +460,6 @@ public class TaskEditionActivity extends AppCompatActivity {
         Integer color = R.color.bckgrdRed;
         item.setBackground_color(color.toString());
         itemsDAO.updateItem(item);
-//        mHelper.updateItem(item);
         l.setBackgroundResource(color);
     }
     public void goWhite(View view) {
@@ -484,11 +467,10 @@ public class TaskEditionActivity extends AppCompatActivity {
         Integer color = R.color.bckgrdWhite;
         item.setBackground_color(color.toString());
         itemsDAO.updateItem(item);
-//        mHelper.updateItem(item);
         l.setBackgroundResource(R.color.bckgrdWhite);
     }
 
-//
+//Refresh l'activité lors d'un restart pour éviter une incohérence des données
     @Override
     public void onRestart()
     {

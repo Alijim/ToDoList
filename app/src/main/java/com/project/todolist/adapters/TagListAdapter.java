@@ -24,26 +24,19 @@ public class TagListAdapter extends ArrayAdapter {
     private Context context;
     private Item item;
     private List<Tag> allTags;
-    private FeedReaderDbHelper mHelper;
-    private List<Boolean> checkboxState;
-    private List<Integer> itemsState;
-    private List<String> checkboxItems;
     private TagsItemsDAO tagsItemsDAO;
 
     public TagListAdapter(Context context, List<Tag> resource, Item i) {
         super(context, 0, resource);
-
         this.context = context;
         this.item = i;
         this.allTags = resource;
         this.tagsItemsDAO = new TagsItemsDAO(context);
-//        mHelper = new FeedReaderDbHelper(context);
-
-
-        //this.checkboxItems = resource;
-        //this.checkboxState = new ArrayList<Boolean>(Collections.nCopies(resource.size(), true));
     }
-
+    /* Si l'assocation entre l'item et le tag existe, alors le bouton btnDeleteTag aura un comportement
+     différent.
+    *
+    * */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -55,7 +48,7 @@ public class TagListAdapter extends ArrayAdapter {
         Button btn = convertView.findViewById(R.id.btn_DeleteTag);
         List<Tag> itemTag = allTags;
 
-            if(tagsItemsDAO.isTagItem(item.getId(), t.getId())) {
+            if(tagsItemsDAO.isTagItem(item.getId(), t.getId())) { //Si le tag est associé au TAG alors on affiche "Supprimer" sinon  on affiche "Ajouter"
                 name.setText(t.getWording());
                 btn.setBackgroundColor(btn.getContext().getResources().getColor(R.color.bckgrdRed));
                 btn.setText("Supprimer");

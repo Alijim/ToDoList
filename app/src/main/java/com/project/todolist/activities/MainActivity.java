@@ -112,9 +112,12 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("name", s);
         startActivity(intent);
     }
-
-    public void launchEditionDialog(View v) {
-//        mHelper = new FeedReaderDbHelper(this);
+    /*Lorsqu'on appuie sur le bouton flottant, cela va créer un AlertDialog afin de créer un nouvel item
+    * Vu que le nom d'un item est unique, si l'utilisateur saisit un nom qui existe déjà, cela va quand même
+    * ouvrir l'activité TaskEditionActivity mais au lieu d'ajouter dans la base de données, ça va afficher l'item
+    * qui a le même nom.
+    * */
+    public void onClickLaunchEditionDialog(View v) {
         ItemsDAO iDAO = new ItemsDAO(this);
         // Création d'un alert dialog pour l'ajout d'une tâche
         final EditText taskEditText = new EditText(this);
@@ -126,14 +129,14 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Item i = new Item();
-                        if(taskEditText.getText().toString().isEmpty()) {
+                        if(taskEditText.getText().toString().isEmpty()) { //Si l'utilisateur n'a saisit aucun nom, alors par défaut on va quand même lui créer une tâche. (gain de temps)
                             i.setTitle("Nouvelle tâche");
                         } else {
                             i.setTitle(String.valueOf(taskEditText.getText()));
                         }
+                        //Le Background par défaut d'un item est blanc, on le précise ici.
                         Integer color = R.color.bckgrdWhite;
                         i.setBackground_color(color.toString());
-//                        i.setBackground_color(R.color.bckgrdWhite);
                         itemsDAO.insert(i);
                         launchTaskEditionActivityF(i.getTitle());
                     }
@@ -142,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 .create();
         dialog.show();
     }
-
+    /* Rafraichit l'activité au Restart, afin d'afficher correctement les changements notamment au niveau des Tags.*/
     @Override
     public void onRestart()
     {

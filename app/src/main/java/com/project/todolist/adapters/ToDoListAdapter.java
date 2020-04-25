@@ -77,8 +77,6 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
             myItem = itemView.findViewById(R.id.Item);
             myImage = itemView.findViewById(R.id.Image);
 
-            // Set the OnClickListener to the entire view.
-            //itemView.setOnClickListener(this);
         }
 
         public void bindTo(Item myCurrent){
@@ -91,11 +89,11 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
 
 
             String myListItem = "";
-//            if(myCurrent.getDeadline() == null) {
-//                myListItem += "";
-//            } else {
-//               myListItem += "\uD83D\uDCC5 Date de fin : "+myCurrent.getDeadline()+"\n";
-//            }
+            if(myCurrent.getDeadline() == 0 && myCurrent.getDeadline() != null) {
+                myListItem += "";
+            } else {
+               myListItem += "\uD83D\uDCC5 Date de fin : "+myCurrent.displayDeadline()+"\n";
+            }
             if (myCurrent.getListTasks() != null) {
                 List<Task> myItemTab = myCurrent.getListTasks();
                 StringBuilder sb = new StringBuilder();

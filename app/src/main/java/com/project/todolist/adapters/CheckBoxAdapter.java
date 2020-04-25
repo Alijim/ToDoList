@@ -32,18 +32,20 @@ public class CheckBoxAdapter extends ArrayAdapter {
         //this.checkboxState = new ArrayList<Boolean>(Collections.nCopies(resource.size(), true));
     }
 
+    /* Si la tâche est "done"(faite) donc si done = true, alors on la checkbox doit être déjà sous "checked" et le texte doit être barrée. Sinon, c'est l'inverse.*/
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Task task = (Task) getItem(position);
+        Task task = (Task) getItem(position); //Savoir la position où nous nous trouvons dans la liste
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo, parent, false);
         }
         TextView name = convertView.findViewById(R.id.txtv_task);
         CheckBox checkBox = convertView.findViewById(R.id.chkBox);
-//        name.setText(task.getWording());
+        /*  Si la tâche est effecutée, alors on affiche le tâche cochée et barrée, sinon on l'affiche normalement. */
         if(task.getDone() == true){
-            checkBox.setText(task.getId().toString());
+            checkBox.setText(task.getId().toString()); //Je met l'ID ici afin de pouvoir faire des modifications. L'ID n'est pas visible pour l'utilisateur.
             name.setPaintFlags(name.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
             name.setText(task.getWording());
             checkBox.setChecked(true);
@@ -52,7 +54,6 @@ public class CheckBoxAdapter extends ArrayAdapter {
             checkBox.setChecked(false);
             name.setPaintFlags(0);
             name.setText(task.getWording());
-
         }
         return convertView;
 
@@ -63,37 +64,4 @@ public class CheckBoxAdapter extends ArrayAdapter {
         super.notifyDataSetChanged();
     }
 
-    /*public CheckBoxAdapter(Context context, List<String> resource, List<Integer> state) {
-        super(context, R.layout.item_todo, resource);
-
-        this.context = context;
-        this.checkboxItems = resource;
-//        this.checkboxState = new ArrayList<Boolean>(Collections.nCopies(resource.size(), true));
-        this.itemsState = state;
-    }
-
-
-    public void matchItemState() {
-
-
-//        for(checkboxItems.size()) {
-//            TextView textView = (TextView) convertView.findViewById(R.id.txtv_task);
-//            CheckBox cb = (CheckBox) convertView.findViewById(R.id.chkBox);
-//        }
-    }
-
-
-    public  View getView(int position, View convertView) {
-
-        TextView textView = (TextView) convertView.findViewById(R.id.txtv_task);
-        CheckBox cb = (CheckBox) convertView.findViewById(R.id.chkBox);
-
-        textView.setText(checkboxItems.get(position));
-        cb.setChecked(checkboxState.get(position));
-        return convertView;
-    }
-
-    void setChecked(boolean state, int position) {
-        checkboxState.set(position, state);
-    }*/
 }

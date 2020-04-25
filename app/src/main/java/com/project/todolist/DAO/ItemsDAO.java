@@ -43,6 +43,7 @@ public class ItemsDAO {
         List<Item> itemList = new ArrayList<Item>();
         SQLiteDatabase db = mHelper.getReadableDatabase();
         TasksDAO tasksDAO = new TasksDAO(context);
+        TagsDAO tagsDAO = new TagsDAO(context);
 
 
         String[] projection = {
@@ -66,15 +67,15 @@ public class ItemsDAO {
                 sortOrder               // The sort order
         );
 
-        HashMap<Integer, List> items = new HashMap<Integer, List>();
         while(cursor.moveToNext()) {
             Integer id = cursor.getInt(cursor.getColumnIndexOrThrow(FeedReaderContract.ItemsEntry._ID));
             String title = cursor.getString(cursor.getColumnIndex("title"));
             List<Task> tasks = tasksDAO.getTasksFromItem(id);
-            String deadLine = cursor.getString(cursor.getColumnIndex("deadLine"));
+            List<Tag> tags = tagsDAO.getTagFromItem(id);
+            Long deadLine = cursor.getLong(cursor.getColumnIndex("deadLine"));
             String image = cursor.getString(cursor.getColumnIndex("image"));
             String color = cursor.getString(cursor.getColumnIndex("background_color"));
-            Item i = new Item(id, title, tasks, image, color);
+            Item i = new Item(id, title, deadLine, tasks, tags, image, color);
             //items.put(itemId, values);
 //            String value = cursor.getString(cursor.getColumnIndex("fk_Items"));
             itemList.add(i);
@@ -135,6 +136,49 @@ public class ItemsDAO {
         }
 
         return i_n;
+
+    }
+
+    public Boolean existItem(String title){
+        Boolean b = Boolean.FALSE;
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+
+        TagsDAO tagsDAO = new TagsDAO(context);
+        TasksDAO tasksDAO = new TasksDAO(context);
+
+        Item i_n = new Item();
+
+        String[] projection = {
+                BaseColumns._ID,
+                FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE,
+                FeedReaderContract.ItemsEntry.COLUMN_NAME_DEADLINE,
+                FeedReaderContract.ItemsEntry.COLUMN_NAME_BGCOLOR,
+                FeedReaderContract.ItemsEntry.COLUMN_NAME_IMAGE
+        };
+
+        String selection = FeedReaderContract.ItemsEntry.COLUMN_NAME_TITLE + " = ?";
+        String[] selectionArgs = {  title };
+
+        String sortOrder =
+                FeedReaderContract.ItemsEntry._ID + " DESC";
+
+        Cursor cursor = db.query(
+                FeedReaderContract.ItemsEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+//        HashMap<Long, String>items = new HashMap<Long, String>();
+//        HashMap<Long, String>items = new HashMap<Long, String>();
+        while(cursor.moveToNext()) {
+            b = Boolean.TRUE;
+        }
+
+        return b;
 
     }
 
